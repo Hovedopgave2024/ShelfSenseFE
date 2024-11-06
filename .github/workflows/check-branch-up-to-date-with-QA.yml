@@ -1,0 +1,32 @@
+name: Check Branch Up-to-Date with QA
+
+on:
+  pull_request:
+    branches:
+      - main  # Only run this workflow for PRs targeting the 'main' branch
+    types: [opened, edited, synchronize]
+
+jobs:
+  check-up-to-date:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Fetch all branches
+        run: git fetch origin QA
+
+      - name: Check if branch is up-to-date with QA
+        run: |
+          # Compare the PR branch with the latest commit in QA
+          BASE=$(git rev-parse origin/QA)
+          HEAD=$(git rev-parse HEAD)
+          
+          # Check if the branch is up-to-date with QA
+          if [ "$(git merge-base HEAD $BASE)" != "$BASE" ]; then
+            echo "The pull request branch is not up-to-date with 'QA'. Please merge or rebase 'QA' into your branch."
+            exit 1
+          else
+            echo "The pull request branch is up-to-date with 'QA'."
+          fi
