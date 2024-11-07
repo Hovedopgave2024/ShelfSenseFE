@@ -3,7 +3,7 @@ name: Check Branch Up-to-Date with QA
 on:
   pull_request:
     branches:
-      - main  # Only run this workflow for PRs targeting the 'main' branch
+      - QA  # Only run this workflow for PRs targeting the 'QA' branch
     types: [opened, edited, synchronize]
 
 jobs:
@@ -12,9 +12,9 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Fetch all branches
+      - name: Fetch QA branch
         run: git fetch origin QA
 
       - name: Check if branch is up-to-date with QA
