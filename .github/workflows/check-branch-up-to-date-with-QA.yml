@@ -1,0 +1,30 @@
+name: Check Branch Up-to-Date with QA
+
+on:
+  pull_request:
+    branches:
+      - QA
+    types: [opened, edited, synchronize]
+
+jobs:
+  check-up-to-date:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout PR branch with shallow fetch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1  # Only fetch the latest commit on the PR branch
+
+      - name: Fetch latest QA commit
+        run: git fetch origin QA --depth=1
+
+      - name: Check if branch is up-to-date with QA
+        run: |
+          BASE=$(git rev-parse origin/QA)
+          if ! git diff --quiet HEAD $BASE; then
+            echo "The pull request branch is not up-to-date with 'QA'. Please merge or rebase 'QA' into your branch."
+            exit 1
+          else
+            echo "The pull request branch is up-to-date with 'QA'."
+          fi
