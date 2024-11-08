@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid2';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
-import { fetchProducts } from '../../api/productApi';
+import { fetchProducts } from '../../services/productService';
 import ProductCard from "./ProductCard";
 
 const ProductList = () => {
@@ -18,9 +18,7 @@ const ProductList = () => {
         } catch (error) {
             console.error("Failed to load products:", error);
         } finally {
-            setTimeout(() => { // for sjov for at se animationerne
-                setLoading(false);
-            }, 5000);
+            setLoading(false);
         }
     };
 
@@ -34,8 +32,7 @@ const ProductList = () => {
             <Grid
                 container
                 spacing={2}
-                // justifyContent="center"
-                // alignItems="center"
+
             >
                 {loading ? (
                     <>
@@ -51,7 +48,7 @@ const ProductList = () => {
                     </>
                 ) : (
                     products.map((product) => (
-                        <Grid item size={{ xs: 12, md: 6 }} key={product.id}>
+                        <Grid item size={{ xs: 12, md: 6, lg: 3 }} key={product.id}>
                             <ProductCard product={product} />
                         </Grid>
                     ))
