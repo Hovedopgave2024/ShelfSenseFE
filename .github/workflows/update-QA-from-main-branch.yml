@@ -23,8 +23,9 @@ jobs:
 
       - name: Create temporary sync branch
         run: |
-          git checkout -b sync-main-to-qa  # Create a new branch from the current main
-          git merge origin/QA --no-edit --allow-unrelated-histories  # Merge QA into this branch to avoid conflicts
+          git checkout -b sync-main-to-qa
+          git merge origin/QA --no-edit --allow-unrelated-histories
+          git commit --allow-empty -m "Sync main to QA"
           git push origin sync-main-to-qa --force
 
       - name: Create Pull Request to QA
