@@ -25,8 +25,12 @@ jobs:
         run: |
           git checkout -b sync-main-to-qa
           git merge origin/QA --no-edit --allow-unrelated-histories
-          git commit --allow-empty -m "Sync main to QA"
+          rm -f .github/sync.log
+          echo "Sync triggered on $(date)" > .github/sync.log
+          git add .github/sync.log
+          git commit -m "Sync changes from main to QA with timestamp"
           git push origin sync-main-to-qa --force
+      
 
       - name: Create Pull Request to QA
         id: pr
