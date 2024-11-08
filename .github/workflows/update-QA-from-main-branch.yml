@@ -3,7 +3,7 @@ name: Create Sync PR from Main to QA
 on:
   push:
     branches:
-      - main
+      - main  # Trigger on any push to main
 
 jobs:
   create_sync_pr:
@@ -19,21 +19,21 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Fetch QA branch
-        run: git fetch origin QA
+        run: git fetch origin QA  # Fetch only the QA branch for efficiency
 
       - name: Create temporary sync branch
         run: |
-          git checkout -b sync-main-to-qa
-          git merge origin/QA --no-edit --allow-unrelated-histories
+          git checkout -b sync-main-to-qa  # Create a new branch from the current main
+          git merge origin/QA --no-edit --allow-unrelated-histories  # Merge QA into this branch to avoid conflicts
           git push origin sync-main-to-qa --force
 
       - name: Create Pull Request to QA
-        id: pr 
+        id: pr
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Sync changes from main to QA"
-          branch: sync-main-to-qa
+          branch: sync-main-to-qa  # PR from sync-main-to-qa to QA
           title: "Sync Main to QA"
           body: "This pull request syncs the latest changes from the main branch to the QA branch."
-          base: QA
+          base: QA  # Target branch is QA
