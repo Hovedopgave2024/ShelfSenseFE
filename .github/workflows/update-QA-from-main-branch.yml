@@ -24,11 +24,11 @@ jobs:
       - name: Create temporary sync branch
         run: |
           git checkout -b sync-main-to-qa
-          git merge origin/QA --no-edit  # Ensures no conflicts with QA
+          git merge origin/QA --no-edit --allow-unrelated-histories
           git push origin sync-main-to-qa --force
 
       - name: Create Pull Request to QA
-        id: pr  # Sets an ID for referencing the PR number later
+        id: pr 
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
