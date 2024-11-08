@@ -1,0 +1,39 @@
+name: Create Sync PR from Main to QA
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create_sync_pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch QA branch
+        run: git fetch origin QA
+
+      - name: Create temporary sync branch
+        run: |
+          git checkout -b sync-main-to-qa
+          git merge origin/QA --no-edit  # Ensures no conflicts with QA
+          git push origin sync-main-to-qa --force
+
+      - name: Create Pull Request to QA
+        id: pr  # Sets an ID for referencing the PR number later
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Sync changes from main to QA"
+          branch: sync-main-to-qa
+          title: "Sync Main to QA"
+          body: "This pull request syncs the latest changes from the main branch to the QA branch."
+          base: QA
