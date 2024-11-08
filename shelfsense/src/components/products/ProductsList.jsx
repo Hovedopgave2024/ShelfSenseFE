@@ -4,9 +4,9 @@ import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import { fetchProducts } from '../../services/productService';
-import ProductCard from "./ProductCard";
+import ProductsCard from "./ProductsCard";
 
-const ProductList = () => {
+const ProductsList = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -36,7 +36,7 @@ const ProductList = () => {
             >
                 {loading ? (
                     <>
-                        {[...Array(8)].map((_, index) => (
+                        {Array.from({ length: 4 }).map((_, index) => (
                             <Grid item size={{ xs: 12, md: 6 }} key={index}>
                                 <Stack spacing={1}>
                                     <Skeleton animation="wave" variant="rectangular" width={210} height={120} />
@@ -49,7 +49,7 @@ const ProductList = () => {
                 ) : (
                     products.map((product) => (
                         <Grid item size={{ xs: 12, md: 6, lg: 3 }} key={product.id}>
-                            <ProductCard product={product} />
+                            <ProductsCard product={product} />
                         </Grid>
                     ))
                 )}
@@ -57,4 +57,4 @@ const ProductList = () => {
     );
 };
 
-export default ProductList;
+export default ProductsList;

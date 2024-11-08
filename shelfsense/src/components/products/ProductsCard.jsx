@@ -1,8 +1,8 @@
-// src/components/ProductCard.jsx
+// src/components/ProductsCard.jsx
 import React from 'react';
 import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 
-const ProductCard = ({ product }) => (
+const ProductsCard = ({ product }) => (
     <Card>
         <CardMedia
             component="img"
@@ -21,4 +21,4 @@ const ProductCard = ({ product }) => (
     </Card>
 );
 
-export default ProductCard;
+export default ProductsCard;

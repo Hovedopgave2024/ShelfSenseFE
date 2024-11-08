@@ -1,14 +1,14 @@
 import React from 'react';
 import { Container, Typography } from '@mui/material';
-import ProductList from '../components/product/ProductList';
+import ComponentTable from '../components/components/ComponentsTable';
 
-const ProductsPage = () => (
+const ComponentsPage = () => (
     <Container sx={{ py: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-            Our Products
+            Our Components
         </Typography>
-        <ProductList />
+        <ComponentTable />
     </Container>
 );
 
-export default ProductsPage;
+export default ComponentsPage;
