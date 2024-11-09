@@ -1,6 +1,13 @@
 # React + Vite
 
-to run this project:
+## Available Scripts
 
-1. run npm i
-2. npm run dev
+Run these the project directory:
+
+### To install and run this project
+
+### `npm install`
+
+### `npm run dev`
+
+Runs the app in the development mode.
