@@ -5,7 +5,7 @@ const ProductsCard = ({ product }) => (
         <CardMedia
             component="img"
             sx={{height: "70%", width: "100%", objectFit: "cover"}}
-            image={product.picture != null ? product.picture : `${import.meta.env.VITE_PUBLIC_URL}/defaultProductPic.jpeg`}
+            image={product.picture != null ? product.picture : `/public/defaultProductPic.jpeg`}
             alt={product.name}
         />
         <CardContent>
