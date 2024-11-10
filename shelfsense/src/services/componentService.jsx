@@ -1,5 +1,5 @@
 
-const COMPONENTS_URL = 'http://localhost:8080/components';
+const COMPONENTS_URL = `${import.meta.env.VITE_API_URL}/components`;
 
 export const fetchComponents = async () => {
     try {

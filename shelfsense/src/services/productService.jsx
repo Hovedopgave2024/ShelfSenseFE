@@ -1,5 +1,5 @@
 
-const PRODUCTS_URL = 'http://localhost:8080/products';
+const PRODUCTS_URL = `${import.meta.env.VITE_API_URL}/products`;
 
 export const fetchProducts = async () => {
     try {
