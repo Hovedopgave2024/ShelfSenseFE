@@ -3,10 +3,7 @@ import { useState } from 'react';
 import { Typography, Button, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ProductsList from '../components/products/ProductsList';
-import Sidebar from '../components/sidebar/sidebar.jsx';
-
-const drawerWidth = 200;
-const collapsedWidth = 90;
+import {Sidebar, collapsedWidth, drawerWidth} from '../components/sidebar/sidebar.jsx';
 
 const ProductsPage = () => {
     const [open, setOpen] = useState(false);
@@ -24,11 +21,9 @@ const ProductsPage = () => {
         <Box sx={{ display: 'flex' }}>
             <Sidebar open={open} toggleDrawer={toggleDrawer} />
             <Box
-                component="main"
                 sx={{
                     flexGrow: 1,
                     transition: 'margin-left 0.3s',
-                    width: `calc(100% - ${open ? drawerWidth : collapsedWidth}px)`,
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',

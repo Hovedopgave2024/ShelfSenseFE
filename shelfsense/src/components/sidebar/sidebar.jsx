@@ -17,10 +17,10 @@ import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
 import ComponentOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 
-const drawerWidth = 180;
-const collapsedWidth = 60;
+export const drawerWidth = 180;
+export const collapsedWidth = 60;
 
-const Sidebar = ({ open, toggleDrawer }) => {
+export const Sidebar = ({ open, toggleDrawer }) => {
 
     const mainMenuItems = [
         { text: 'Dashboard', icon: <DashboardOutlinedIcon /> },
@@ -114,5 +114,3 @@ const Sidebar = ({ open, toggleDrawer }) => {
         </Drawer>
     );
 };
-
-export default Sidebar;
