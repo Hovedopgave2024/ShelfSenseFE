@@ -21,16 +21,22 @@ const ProductsPage = () => {
     };
 
     return (
-        <Box>
+        <Box sx={{ display: 'flex' }}>
             <Sidebar open={open} toggleDrawer={toggleDrawer} />
             <Box
                 component="main"
                 sx={{
-                    marginLeft: open ? `${drawerWidth}px` : `${collapsedWidth}px`,
+                    flexGrow: 1,
                     transition: 'margin-left 0.3s',
+                    width: `calc(100% - ${open ? drawerWidth : collapsedWidth}px)`,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    p: 3,
                 }}
             >
-                <Typography variant="h4" component="h1" gutterBottom>
+                <Typography variant="h4" component="h1" gutterBottom sx={{justifyContent: 'center'}}>
                     Our Products
                 </Typography>
                 <Button
