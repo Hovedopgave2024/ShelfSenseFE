@@ -16,7 +16,7 @@ const ComponentsTable = () => {
     const [components, setComponents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -110,7 +110,7 @@ const ComponentsTable = () => {
                         </Table>
                     </TableContainer>
                     <TablePagination
-                        rowsPerPageOptions={[1, 2, 3]}
+                        rowsPerPageOptions={[5, 10, 15]}
                         component="div"
                         count={components.length}
                         rowsPerPage={rowsPerPage}
