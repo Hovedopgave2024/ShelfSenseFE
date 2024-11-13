@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Typography, Button, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ProductsList from '../components/products/ProductsList';
-import {Sidebar, collapsedWidth, drawerWidth} from '../components/sidebar/sidebar.jsx';
+import {Sidebar} from '../components/sidebar/sidebar.jsx';
 
 const ProductsPage = () => {
     const [open, setOpen] = useState(false);
