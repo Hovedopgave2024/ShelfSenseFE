@@ -1,7 +1,7 @@
 import {Skeleton, Stack} from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { useEffect, useState } from 'react';
-import { fetchProducts } from '../../util/services/productService';
+import { fetchProducts } from '../../util/services/productService.js';
 import ProductsCard from "./ProductsCard";
 
 const ProductsList = () => {
