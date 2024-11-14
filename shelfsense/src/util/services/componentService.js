@@ -9,10 +9,11 @@ export const fetchComponents = async () => {
         if (!response.ok) {
             throw new Error('Failed to fetch components');
         }
-        console.log(response);
-        return await response.json();
+        const components = await response.json();
+        console.log(components);
+        return components;
     } catch (error) {
         console.error(error);
-        return [];
+        return null;
     }
 };

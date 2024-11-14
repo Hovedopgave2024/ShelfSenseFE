@@ -10,12 +10,14 @@ export const login = async (name, password) => {
         });
 
         if (!response.ok) {
-            return { success: false, message: "Invalid username or password" };
+            console.error('Login failed:', response.statusText);
+            return;
         }
-        console.log(response);
-        return { success: true, message: "Login successful" };
+        const user = await response.json();
+        console.log(user);
+        return user;
     } catch (error) {
         console.error(error);
-        return { success: false, message: "An error occurred. Please try again." };
+        return null;
     }
 };

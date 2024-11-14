@@ -9,10 +9,11 @@ export const fetchProducts = async () => {
         if (!response.ok) {
             throw new Error('Failed to fetch products');
         }
-        console.log(response);
-        return await response.json();
+        const products = await response.json();
+        console.log(products);
+        return products;
     } catch (error) {
         console.error(error);
-        return [];
+        return null;
     }
 };

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Box, Button, Card, CardContent, TextField, Typography, CircularProgress } from '@mui/material';
 import { login } from '../util/services/userService.js';
 import { useNavigate } from 'react-router-dom';
+import useSessionStore from '../stores/useSessionStore.js';
 
 const LoginPage = () => {
     const [name, setName] = useState('');
@@ -9,6 +10,8 @@ const LoginPage = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const setGlobalUser = useSessionStore((state) => state.setUser);
+    const globalUser = useSessionStore((state) => state.user);
 
     const handleNavigation = () => {
         navigate('/products');
@@ -20,11 +23,16 @@ const LoginPage = () => {
 
         const response = await login(name, password);
 
-        if (!response.success) {
-            setError(response.message || 'Login failed. Please try again.');
-        } else {
-            handleNavigation();
+        if (!response) {
+            console.log("unauthorized")
+            setError("Username or password is wrong, please try again.")
+            setLoading(false);
+            return;
         }
+        setGlobalUser(response);
+        console.log("Response: ", response);
+        console.log("Global user: " + globalUser.name)
+        handleNavigation();
 
         setLoading(false);
     };
