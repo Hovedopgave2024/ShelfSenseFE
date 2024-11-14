@@ -10,7 +10,6 @@ const LoginPage = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const setGlobalUser = useSessionStore((state) => state.setUser);
     const globalUser = useSessionStore((state) => state.user);
 
     const handleNavigation = () => {
@@ -29,9 +28,6 @@ const LoginPage = () => {
             setLoading(false);
             return;
         }
-        setGlobalUser(response);
-        console.log("Response: ", response);
-        console.log("Global user: " + globalUser.name)
         handleNavigation();
 
         setLoading(false);
