@@ -10,7 +10,7 @@ const LoginPage = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const globalUser = useSessionStore((state) => state.user);
+    const setGlobalUser = useSessionStore((state) => state.setUser);
 
     const handleNavigation = () => {
         navigate('/products');
@@ -28,9 +28,9 @@ const LoginPage = () => {
             setLoading(false);
             return;
         }
-        handleNavigation();
-
+        setGlobalUser(response);
         setLoading(false);
+        handleNavigation();
     };
 
 
