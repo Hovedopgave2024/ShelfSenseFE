@@ -1,5 +1,7 @@
 // src/components/ProtectedRouteGuard.js
-import React, { useEffect, useState } from 'react';
+/*
+
+import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import useSessionStore from '../../stores/useSessionStore';
 import fetchSession from '../../services/fetchSession';
@@ -40,3 +42,5 @@ const ProtectedRouteGuard = ({ children }) => {
 };
 
 export default ProtectedRouteGuard;
+
+*/
