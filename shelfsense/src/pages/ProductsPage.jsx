@@ -4,10 +4,12 @@ import { Typography, Button, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ProductsList from '../components/products/ProductsList';
 import {Sidebar} from '../components/sidebar/sidebar.jsx';
+import useSessionStore from "../stores/useSessionStore.js";
 
 const ProductsPage = () => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
+    const user = useSessionStore((state) => state.user);
 
     const toggleDrawer = () => {
         setOpen((prevOpen) => !prevOpen);
@@ -20,6 +22,7 @@ const ProductsPage = () => {
     return (
         <Box sx={{ display: 'flex' }}>
             <Sidebar open={open} toggleDrawer={toggleDrawer} />
+            <Typography>Hello {user ? user.name : 'Guest'}</Typography>
             <Box
                 sx={{
                     flexGrow: 1,

@@ -9,7 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
-import { fetchComponents } from '../../services/componentService';
+import { fetchComponents } from '../../util/services/componentService.js';
 import ComponentsTableRow from './ComponentsTableRow';
 
 const ComponentsTable = () => {

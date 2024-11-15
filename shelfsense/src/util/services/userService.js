@@ -5,15 +5,19 @@ export const login = async (name, password) => {
         const response = await fetch(LOGIN_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify({ name, password }),
         });
 
         if (!response.ok) {
-            return { success: false, message: "Invalid username or password" };
+            console.error('Login failed:', response.statusText);
+            return;
         }
-        return { success: true, message: "Login successful" };
+        const user = await response.json();
+        console.log(user);
+        return user;
     } catch (error) {
         console.error(error);
-        return { success: false, message: "An error occurred. Please try again." };
+        return null;
     }
 };
