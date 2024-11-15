@@ -1,6 +1,9 @@
-const LOGIN_URL = `${import.meta.env.VITE_API_URL}/login`;
+import { getRequest } from './getRequestService.js';
 
 export const login = async (name, password) => {
+
+    const LOGIN_URL = `${import.meta.env.VITE_API_URL}/login`;
+
     try {
         const response = await fetch(LOGIN_URL, {
             method: "POST",
@@ -21,3 +24,7 @@ export const login = async (name, password) => {
         return null;
     }
 };
+
+export const validateSession = async () => {
+    return await getRequest(`session`)
+}

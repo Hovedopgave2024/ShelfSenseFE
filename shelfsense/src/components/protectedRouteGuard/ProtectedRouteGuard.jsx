@@ -1,46 +1,47 @@
-// src/components/ProtectedRouteGuard.js
-/*
-
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import useSessionStore from '../../stores/useSessionStore';
-import fetchSession from '../../services/fetchSession';
+import { validateSession } from '../../util/services/userService.js';
+import useSessionStore from "../../stores/useSessionStore.js";
+import { CircularProgress, Box } from '@mui/material';
 
 const ProtectedRouteGuard = ({ children }) => {
     const user = useSessionStore((state) => state.user);
-    const setUser = useSessionStore((state) => state.setUser);
-    const [isAuthenticated, setIsAuthenticated] = useState(null);  // null for loading state
+    const [isAuthenticated, setIsAuthenticated] = useState(null);
 
     useEffect(() => {
         const verifySession = async () => {
-            const sessionDTO = await fetchSession();
-
-            if (sessionDTO) {
-                setUser(sessionDTO);
-                setIsAuthenticated(true);
-            } else {
-                setIsAuthenticated(false);
-            }
+            const sessionDTO = await validateSession();
+            console.log("User:", user, "sessionDTO:", sessionDTO);
+            user == null || sessionDTO == null || user.id !== sessionDTO.id ? setIsAuthenticated(false) : setIsAuthenticated(true);
         };
 
-        if (!user) {
-            verifySession(); // Only verify session if user isn't already set
-        } else {
-            setIsAuthenticated(true); // User already in state, so authenticated
-        }
-    }, [user, setUser]);
+        (async () => {
+            await verifySession();
+        })();
+    }, [user]);
 
     if (isAuthenticated === null) {
-        return <div>Loading...</div>; // Show loading while verifying session
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh', // Full viewport height
+                }}
+            >
+                <CircularProgress />
+            </Box>
+        );
     }
+
 
     if (!isAuthenticated) {
-        return <Navigate to="/login" replace />; // Redirect if not authenticated
+        console.error("Session expired or does not match the server session")
+        return <Navigate to="/login" replace />;
     }
-
+    console.log("Session runs with user: ", user)
     return children;
 };
 
 export default ProtectedRouteGuard;
-
-*/

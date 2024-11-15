@@ -102,8 +102,8 @@ const ComponentsTable = () => {
                                 <>
                                     {components
                                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                        .map((component) => (
-                                            <ComponentsTableRow key={component.id} component={component} />
+                                        .map((data) => (
+                                            <ComponentsTableRow key={data.id} component={data} />
                                     ))}
                                 </>
                             </TableBody>
