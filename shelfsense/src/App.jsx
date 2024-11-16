@@ -6,7 +6,7 @@ import ProtectedRouteGuard from "./components/protectedRouteGuard/ProtectedRoute
 
 const App = () => (
     <Routes>
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<LoginPage />} />
         <Route path="/products" element={
             <ProtectedRouteGuard>
                 <ProductsPage />
