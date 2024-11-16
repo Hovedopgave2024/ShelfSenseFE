@@ -38,7 +38,7 @@ const ProtectedRouteGuard = ({ children }) => {
 
     if (!isAuthenticated) {
         console.error("Session expired or does not match the server session")
-        return <Navigate to="/login" replace />;
+        return <Navigate to="/" replace />;
     }
     console.log("Session runs with user: ", user)
     return children;
