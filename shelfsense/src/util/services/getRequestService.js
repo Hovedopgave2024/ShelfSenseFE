@@ -1,20 +1,24 @@
 export const getRequest = async (url) => {
-
     const BASE_URL = `${import.meta.env.VITE_API_URL}/`;
 
     try {
         const response = await fetch(BASE_URL + url, {
             credentials: "include",
         });
-        if (!response.ok) {
-            console.error('Failed to fetch products');
+
+        if (response.status === 401) {
+            console.error('Unauthorized get request while fetching:', url);
             return null;
         }
-        const data = await response.json();
-        console.log(data);
-        return data;
+
+        if (!response.ok) {
+            console.error('Get request for:', url, ' failed with status: ', response.status);
+            return null;
+        }
+
+        return await response.json();
     } catch (error) {
-        console.error(error);
+        console.error('Network error occurred while fetching:', url, error);
         return null;
     }
 };
