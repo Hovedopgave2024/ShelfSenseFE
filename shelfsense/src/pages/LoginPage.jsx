@@ -23,7 +23,7 @@ const LoginPage = () => {
         const response = await login(name, password);
 
         if (!response) {
-            console.log("unauthorized")
+            console.error("unauthorized")
             setError("Username or password is wrong, please try again.")
             setLoading(false);
             return;

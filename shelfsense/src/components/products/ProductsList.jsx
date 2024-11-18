@@ -12,7 +12,9 @@ const ProductsList = () => {
         setLoading(true);
         try {
             const productsData = await fetchProducts();
-            setProducts(productsData);
+            if (productsData) {
+                setProducts(productsData);
+            }
         } catch (error) {
             console.error("Failed to load products:", error);
         } finally {

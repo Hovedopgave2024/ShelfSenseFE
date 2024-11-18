@@ -6,8 +6,12 @@ import LoginPage from './pages/LoginPage';
 const App = () => (
     <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route path="/products" element={<ProductsPage />} />
-        <Route path="/components" element={<ComponentsPage />} />
+        <Route path="/products" element={
+                <ProductsPage />
+        }/>
+        <Route path="/components" element={
+                <ComponentsPage />
+        }/>
     </Routes>
 );
 

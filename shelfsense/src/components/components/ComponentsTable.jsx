@@ -31,7 +31,9 @@ const ComponentsTable = () => {
         setLoading(true);
         try {
             const componentsData = await fetchComponents();
-            setComponents(componentsData);
+            if (componentsData) {
+                setComponents(componentsData);
+            }
         } catch (error) {
             console.error("Failed to load components:", error);
         } finally {
@@ -100,11 +102,17 @@ const ComponentsTable = () => {
                             </TableHead>
                             <TableBody>
                                 <>
-                                    {components
-                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                        .map((component) => (
-                                            <ComponentsTableRow key={component.id} component={component} />
-                                    ))}
+                                    {components.length > 0 ? (
+                                        components
+                                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                            .map((data) => (
+                                                <ComponentsTableRow key={data.id} component={data} />
+                                            ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan={5}>No components found.</td>
+                                        </tr>
+                                    )}
                                 </>
                             </TableBody>
                         </Table>
