@@ -1,13 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid2';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Stack, Typography } from '@mui/material';
 import ComponentsTableRow from './ComponentsTableRow';
+import DataManipulationBar from '../dataManipulationBar/DataManipulationBar.jsx';
 import useComponentsStore from "../../stores/useComponentsStore.js";
 
 const ComponentsTable = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [filteredComponents, setFilteredComponents] = useState([]);
     const components = useComponentsStore((state) => state.components);
+
+    useEffect(() => {
+        // Initialize filteredComponents with the original components
+        setFilteredComponents(components);
+    }, [components]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -28,7 +35,20 @@ const ComponentsTable = () => {
                 width: '100%',
             }}
         >
-            {components.length > 0 ? (
+            {/* Data Controls Bar */}
+            <DataManipulationBar
+                data={components}
+                onUpdate={setFilteredComponents}
+                filterOptions={[
+                    { key: 'type', label: 'Type' },
+                    { key: 'quantity', label: 'Quantity' },
+                ]}
+                sortOptions={[
+                    { key: 'name', label: 'Name' },
+                    { key: 'price', label: 'Price' },
+                ]}
+            />
+            {filteredComponents.length > 0 ? (
                 <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                     <TableContainer sx={{ maxHeight: 440 }}>
                         <Table sx={{ minWidth: 650 }} stickyHeader aria-label="components table">
@@ -42,11 +62,11 @@ const ComponentsTable = () => {
                             </TableHead>
                             <TableBody>
                                 <>
-                                {components
-                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    .map((data) => (
-                                        <ComponentsTableRow key={data.id} component={data} />
-                                    ))}
+                                    {filteredComponents
+                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        .map((data) => (
+                                            <ComponentsTableRow key={data.id} component={data} />
+                                        ))}
                                 </>
                             </TableBody>
                         </Table>
@@ -54,7 +74,7 @@ const ComponentsTable = () => {
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 15]}
                         component="div"
-                        count={components.length}
+                        count={filteredComponents.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}
