@@ -44,13 +44,12 @@ const ComponentsCreateModal = ({ open, onClose }) => {
 
         if (result) {
             alert('Component created successfully!');
-            onClose(); // Close the modal
-            window.location.reload(); // Reload the page to show the new component
+            onClose();
+            window.location.reload();
         } else {
             alert('Failed to create component. Please try again.');
         }
     };
-
 
     return (
         <Modal open={open} onClose={onClose}>
