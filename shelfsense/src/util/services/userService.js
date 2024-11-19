@@ -2,6 +2,7 @@ import { getRequest } from './getRequestService.js';
 import useProductsStore from '../../stores/useProductsStore.js';
 import useComponentsStore from '../../stores/useComponentsStore';
 import useSalesOrdersStore from '../../stores/useSalesOrdersStore';
+import useSessionStore from "../../stores/useSessionStore.js";
 
 export const login = async (name, password) => {
 
@@ -26,8 +27,9 @@ export const login = async (name, password) => {
     }
 };
 
-export const fetchData = async () => {
-    const userData = await getRequest(`users`)
+export const fetchAllData = async () => {
+    const userId = useSessionStore.getState().user.id;
+    const userData = await getRequest(`users/${userId}`)
     const products = userData.productList ? JSON.parse(JSON.stringify(userData.productList)) : [];
     const components = userData.componentList ? JSON.parse(JSON.stringify(userData.componentList)) : [];
     const salesOrders = userData.salesOrderList ? JSON.parse(JSON.stringify(userData.salesOrderList)) : [];
