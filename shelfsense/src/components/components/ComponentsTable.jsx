@@ -10,11 +10,11 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
 import ComponentsTableRow from './ComponentsTableRow';
-// import useComponentsStore from "../../stores/useComponentsStore.js";
+import useComponentsStore from "../../stores/useComponentsStore.js";
 import {Typography} from "@mui/material";
 
 const ComponentsTable = () => {
-    const components = []  // useComponentsStore((state) => state.components);
+    const components = useComponentsStore((state) => state.components);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
