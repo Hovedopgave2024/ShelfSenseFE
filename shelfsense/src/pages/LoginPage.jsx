@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Box, Button, Card, CardContent, TextField, Typography, CircularProgress } from '@mui/material';
-import { login } from '../util/services/userService.js';
+import { fetchAllData, login } from '../util/services/userService.js';
 import { useNavigate } from 'react-router-dom';
 import useSessionStore from '../stores/useSessionStore.js';
 
@@ -29,6 +29,7 @@ const LoginPage = () => {
             return;
         }
         setGlobalUser(response);
+        await fetchAllData();
         setLoading(false);
         handleNavigation();
     };
