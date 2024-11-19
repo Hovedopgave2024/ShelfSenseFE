@@ -48,8 +48,7 @@ const ComponentsTable = () => {
                 data={components}
                 onUpdate={setFilteredComponents}
                 filterOptions={[
-                    { key: 'type', label: 'Type' },
-                    { key: 'quantity', label: 'Quantity' },
+                    { key: 'type', label: 'Type', values: ['Resistor', 'Capacitor', 'Transistor'] },
                 ]}
                 sortOptions={[
                     { key: 'name', label: 'Name' },
