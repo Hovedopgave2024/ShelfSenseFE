@@ -12,27 +12,31 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Box from '@mui/material/Box';
 
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
 import ComponentOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
+
+import { useNavigate } from 'react-router-dom';
 
 export const drawerWidth = 180;
 export const collapsedWidth = 60;
 
 export const Sidebar = ({ open, toggleDrawer }) => {
+    const navigate = useNavigate();
 
     const mainMenuItems = [
-        { text: 'Dashboard', icon: <DashboardOutlinedIcon /> },
-        { text: 'Products', icon: <InventoryOutlinedIcon /> },
-        { text: 'Components', icon: <ComponentOutlinedIcon /> },
-        { text: 'Statistics', icon: <BarChartOutlinedIcon /> },
+        { text: 'Dashboard', icon: <BarChartOutlinedIcon />, path: '/dashboard' },
+        { text: 'Products', icon: <InventoryOutlinedIcon />, path: '/products' },
+        { text: 'Components', icon: <ComponentOutlinedIcon />, path: '/components' },
     ];
 
     const subMenuItems = [
-        { text: 'About', icon: <InfoOutlinedIcon /> }
-    ]
+        { text: 'About', icon: <InfoOutlinedIcon />, path: '/about' }
+    ];
 
+    const handleNavigation = (path) => {
+        navigate(path);
+    };
 
 
     return (
@@ -62,6 +66,7 @@ export const Sidebar = ({ open, toggleDrawer }) => {
                     {mainMenuItems.map((item) => (
                         <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
                             <ListItemButton
+                                onClick={() => handleNavigation(item.path)}
                                 sx={{
                                     minHeight: 48,
                                     justifyContent: open ? 'initial' : 'center',
@@ -84,12 +89,12 @@ export const Sidebar = ({ open, toggleDrawer }) => {
                 </>
             </List>
             <Divider />
-
             <List>
                 <>
                     {subMenuItems.map((item) => (
                         <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
                             <ListItemButton
+                                onClick={() => handleNavigation(item.path)}
                                 sx={{
                                     minHeight: 48,
                                     justifyContent: open ? 'initial' : 'center',
