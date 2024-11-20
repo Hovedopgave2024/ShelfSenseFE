@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Modal, Box, Typography, Button, TextField, Grid } from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import { Modal, Box, Typography, Button, Grid, TextField } from '@mui/material/';
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import {createComponent} from "../../util/services/componentService.js";
 
 const ComponentsCreateModal = ({ open, onClose }) => {
-    const [formData, setFormData] = useState({
+    const initialFormData = {
         name: '',
         type: '',
         footprint: '',
@@ -19,8 +19,9 @@ const ComponentsCreateModal = ({ open, onClose }) => {
         designator: '',
         manufacturer: '',
         supplierPart: '',
-    });
+    };
 
+    const [formData, setFormData] = useState(initialFormData);
     const addComponent = useComponentsStore((state) => state.addComponent);
 
     const handleChange = (e) => {
@@ -36,11 +37,19 @@ const ComponentsCreateModal = ({ open, onClose }) => {
 
         if (result) {
             addComponent(result); // Update the store with the new component
-            onClose();
+            onClose(); // Close the modal
+            setFormData(initialFormData); // Reset the form
         } else {
             alert('Failed to create component. Please try again.');
         }
     };
+
+    // Reset form data when the modal opens
+    useEffect(() => {
+        if (open) {
+            setFormData(initialFormData);
+        }
+    }, [open]);
 
     return (
         <Modal open={open} onClose={onClose}>
@@ -54,30 +63,35 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                     boxShadow: 24,
                     p: 4,
                     borderRadius: 2,
-                    width: 600,
+                    width: '100%',
+                    maxWidth: 600,
+                    maxHeight: '90vh',
+                    overflowY: 'auto',
                 }}
             >
                 <Typography variant="h6" component="h2" mb={2}>
                     Create a New Component
                 </Typography>
                 <Grid container spacing={2}>
-                    {Object.keys(formData).map((field) => (
-                        <Grid item xs={12} sm={6} key={field}>
-                            <TextField
-                                label={field}
-                                name={field}
-                                variant="outlined"
-                                fullWidth
-                                value={formData[field]}
-                                onChange={handleChange}
-                                type={
-                                    ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplierStock', 'supplierSafetyStock', 'supplierSafetyStockRop'].includes(field)
-                                        ? 'number'
-                                        : 'text'
-                                }
-                            />
-                        </Grid>
-                    ))}
+                    <>
+                        {Object.keys(formData).map((field) => (
+                            <Grid item xs={12} sm={6} key={field}>
+                                <TextField
+                                    label={field}
+                                    name={field}
+                                    variant="outlined"
+                                    fullWidth
+                                    value={formData[field]}
+                                    onChange={handleChange}
+                                    type={
+                                        ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplierStock', 'supplierSafetyStock', 'supplierSafetyStockRop'].includes(field)
+                                            ? 'number'
+                                            : 'text'
+                                    }
+                                />
+                            </Grid>
+                        ))}
+                    </>
                 </Grid>
                 <Button
                     variant="contained"
