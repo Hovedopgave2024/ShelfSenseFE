@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import { Modal, Box, Typography, Button, Grid, TextField } from '@mui/material/';
+import {useEffect, useState} from 'react';
+import { Modal, Box, Typography, Button, TextField } from '@mui/material/';
+import Grid from '@mui/material/Grid2';
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import {createComponent} from "../../util/services/componentService.js";
 
@@ -56,48 +57,54 @@ const ComponentsCreateModal = ({ open, onClose }) => {
             <Box
                 sx={{
                     position: 'absolute',
+                    maxHeight: '80vh',
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                     bgcolor: 'background.paper',
+                    borderRadius: 2,
                     boxShadow: 24,
                     p: 4,
-                    borderRadius: 2,
-                    width: '100%',
-                    maxWidth: 600,
-                    maxHeight: '90vh',
-                    overflowY: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column',
                 }}
             >
                 <Typography variant="h6" component="h2" mb={2}>
                     Create a New Component
                 </Typography>
-                <Grid container spacing={2}>
-                    <>
-                        {Object.keys(formData).map((field) => (
-                            <Grid item xs={12} sm={6} key={field}>
-                                <TextField
-                                    label={field}
-                                    name={field}
-                                    variant="outlined"
-                                    fullWidth
-                                    value={formData[field]}
-                                    onChange={handleChange}
-                                    type={
-                                        ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplierStock', 'supplierSafetyStock', 'supplierSafetyStockRop'].includes(field)
-                                            ? 'number'
-                                            : 'text'
-                                    }
-                                />
-                            </Grid>
-                        ))}
-                    </>
-                </Grid>
+                <Box
+                    sx={{
+                        overflowY: 'auto',
+                        maxHeight: '60vh',
+                        mb: 3,
+                    }}
+                >
+                    <Grid container alignItems="center" justifyContent="center" spacing={2}>
+                        <>
+                            {Object.keys(formData).map((field) => (
+                                <Grid xs={12} lg={3} key={field}>
+                                    <TextField
+                                        label={field}
+                                        name={field}
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData[field]}
+                                        onChange={handleChange}
+                                        type={
+                                            ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplierStock', 'supplierSafetyStock', 'supplierSafetyStockRop'].includes(field)
+                                                ? 'number'
+                                                : 'text'
+                                        }
+                                    />
+                                </Grid>
+                            ))}
+                        </>
+                    </Grid>
+                </Box>
                 <Button
                     variant="contained"
                     color="primary"
-                    fullWidth
-                    sx={{ mt: 3 }}
+                    sx={{ mt: 'auto' }}
                     onClick={handleSubmit}
                 >
                     Save Component
