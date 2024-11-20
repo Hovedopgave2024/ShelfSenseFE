@@ -24,8 +24,8 @@ const ProductsList = () => {
                 ))
             ) : (
                 <Stack alignItems="center" justifyContent="center" spacing={2}>
-                    <Skeleton variant="rectangular" width={210} height={118} />
-                    <Skeleton variant="text" width={210} />
+                    <Skeleton animation="wave" variant="rectangular" width={210} height={118} />
+                    <Skeleton animation="wave" variant="text" width={210} />
                     <Typography>No products available</Typography>
                 </Stack>
             )}
