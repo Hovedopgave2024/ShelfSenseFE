@@ -3,17 +3,23 @@ import { useState } from 'react';
 import { Typography, Button, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ProductsList from '../components/products/ProductsList';
-import {Sidebar} from '../components/sidebar/sidebar.jsx';
+import { Sidebar } from '../components/sidebar/sidebar.jsx';
 import useSessionStore from "../stores/useSessionStore.js";
+import ProductCreateModal from '../components/products/ProductCreateModal.jsx'; // Import the modal
 
 const ProductsPage = () => {
-    const [open, setOpen] = useState(false);
+    const [openSideBar, setOpenSideBar] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
     const navigate = useNavigate();
     const user = useSessionStore((state) => state.user);
 
     const toggleDrawer = () => {
-        setOpen((prevOpen) => !prevOpen);
+        setOpenSideBar((prevOpen) => !prevOpen);
     };
+
+    const toggleModal = () => {
+        setOpenModal((prevOpen) => !prevOpen);
+    }
 
     const handleNavigation = () => {
         navigate('/components');
@@ -21,8 +27,7 @@ const ProductsPage = () => {
 
     return (
         <Box sx={{ display: 'flex' }}>
-            <Sidebar open={open} toggleDrawer={toggleDrawer} />
-            <Typography>Hello {user ? user.name : 'Guest'}</Typography>
+            <Sidebar open={openSideBar} toggleDrawer={toggleDrawer} />
             <Box
                 sx={{
                     flexGrow: 1,
@@ -34,7 +39,10 @@ const ProductsPage = () => {
                     p: 3,
                 }}
             >
-                <Typography variant="h4" component="h1" gutterBottom sx={{justifyContent: 'center'}}>
+                <Typography variant="h6" align="right" sx={{ width: '100%', mb: 2 }}>
+                    Hello {user ? user.name : 'Guest'}
+                </Typography>
+                <Typography variant="h4" component="h1" gutterBottom>
                     Our Products
                 </Typography>
                 <Button
@@ -45,7 +53,17 @@ const ProductsPage = () => {
                 >
                     Go to Components
                 </Button>
-                <ProductsList/>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={toggleModal}
+                    sx={{ mb: 3 }}
+                >
+                    Create Product
+                </Button>
+                <ProductsList />
+                {/* Render the modal here */}
+                <ProductCreateModal open={openModal} onClose={toggleModal} />
             </Box>
         </Box>
     );
