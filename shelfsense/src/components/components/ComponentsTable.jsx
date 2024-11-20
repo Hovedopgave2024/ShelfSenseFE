@@ -20,7 +20,6 @@ const ComponentsTable = () => {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [filteredComponents, setFilteredComponents] = useState([]);
 
-
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -38,11 +37,7 @@ const ComponentsTable = () => {
         <Grid
             container
             spacing={2}
-            sx={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
-            }}
+
         >
             <DataManipulationBar
                 data={components}
