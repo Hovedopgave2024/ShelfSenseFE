@@ -76,11 +76,11 @@ function CreateProductModal({ open, onClose }) {
             }));
 
             // Step d: Send ProductComponents to backend
-            const componentsResult = await createProductComponents(productComponentsData);
+            const productComponentsResult = await createProductComponents(productComponentsData);
 
-            if (componentsResult) {
+            if (productComponentsResult) {
                 // Optionally update your product store if needed
-                addProduct({ ...productResult, components: componentsResult });
+                addProduct({ ...productResult, components: productComponentsResult });
                 onClose();
             } else {
                 alert('Failed to associate components with the product. Please try again.');
