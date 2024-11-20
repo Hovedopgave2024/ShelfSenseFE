@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Modal, Box, Typography, Button, TextField, Grid } from '@mui/material';
+import { Modal, Box, Typography, Button, Grid, TextField } from '@mui/material/';
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import {createComponent} from "../../util/services/componentService.js";
 
@@ -63,30 +63,35 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                     boxShadow: 24,
                     p: 4,
                     borderRadius: 2,
-                    width: 600,
+                    width: '100%',
+                    maxWidth: 600,
+                    maxHeight: '90vh',
+                    overflowY: 'auto',
                 }}
             >
                 <Typography variant="h6" component="h2" mb={2}>
                     Create a New Component
                 </Typography>
                 <Grid container spacing={2}>
-                    {Object.keys(formData).map((field) => (
-                        <Grid item xs={12} sm={6} key={field}>
-                            <TextField
-                                label={field}
-                                name={field}
-                                variant="outlined"
-                                fullWidth
-                                value={formData[field]}
-                                onChange={handleChange}
-                                type={
-                                    ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplierStock', 'supplierSafetyStock', 'supplierSafetyStockRop'].includes(field)
-                                        ? 'number'
-                                        : 'text'
-                                }
-                            />
-                        </Grid>
-                    ))}
+                    <>
+                        {Object.keys(formData).map((field) => (
+                            <Grid item xs={12} sm={6} key={field}>
+                                <TextField
+                                    label={field}
+                                    name={field}
+                                    variant="outlined"
+                                    fullWidth
+                                    value={formData[field]}
+                                    onChange={handleChange}
+                                    type={
+                                        ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplierStock', 'supplierSafetyStock', 'supplierSafetyStockRop'].includes(field)
+                                            ? 'number'
+                                            : 'text'
+                                    }
+                                />
+                            </Grid>
+                        ))}
+                    </>
                 </Grid>
                 <Button
                     variant="contained"
