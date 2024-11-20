@@ -5,6 +5,7 @@ import useProductsStore from "../../stores/useProductsStore.js";
 
 const ProductsList = () => {
     const products = useProductsStore((state) => state.products);
+    console.log(products);
 
     return (
         <Grid
