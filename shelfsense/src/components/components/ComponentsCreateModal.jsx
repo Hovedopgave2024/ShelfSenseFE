@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Modal, Box, Typography, Button, TextField, Grid } from '@mui/material';
-import useSessionStore from "../../stores/useSessionStore.js";
+import useComponentsStore from "../../stores/useComponentsStore.js";
 import {createComponent} from "../../util/services/componentService.js";
 
 const ComponentsCreateModal = ({ open, onClose }) => {
-
     const [formData, setFormData] = useState({
         name: '',
         type: '',
@@ -22,7 +21,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
         supplierPart: '',
     });
 
-    const currentUser = useSessionStore((state) => state.user);
+    const addComponent = useComponentsStore((state) => state.addComponent);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -33,19 +32,11 @@ const ComponentsCreateModal = ({ open, onClose }) => {
     };
 
     const handleSubmit = async () => {
-        if (!currentUser) {
-            alert('User session not found!');
-            return;
-        }
-
-        const componentData = { ...formData };
-
-        const result = await createComponent(componentData);
+        const result = await createComponent(formData);
 
         if (result) {
-            alert('Component created successfully!');
-            onClose();
-            window.location.reload();
+            addComponent(result); // Update the store with the new component
+            onClose(); // Close the modal
         } else {
             alert('Failed to create component. Please try again.');
         }
