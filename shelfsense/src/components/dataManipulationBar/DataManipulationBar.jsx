@@ -32,7 +32,7 @@ const DataControls = ({ data, onUpdate, filterOptions, sortOptions }) => {
 
     useEffect(() => {
         if (!sortKey && sortOptions?.length > 0) {
-            setSortKey(sortOptions[0].key); // Default to the first option
+            setSortKey(sortOptions[0].key);
         }
     }, [sortOptions, sortKey]);
 
