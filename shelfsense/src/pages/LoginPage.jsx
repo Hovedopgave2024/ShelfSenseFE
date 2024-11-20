@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Box, Button, Card, CardContent, TextField, Typography, CircularProgress } from '@mui/material';
-import { login } from '../util/services/userService.js';
+import {fetchAllData, login} from '../util/services/userService.js';
 import { useNavigate } from 'react-router-dom';
 import useSessionStore from '../stores/useSessionStore.js';
 
@@ -9,6 +9,7 @@ const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const navigate = useNavigate();
     const setGlobalUser = useSessionStore((state) => state.setUser);
 
@@ -29,6 +30,8 @@ const LoginPage = () => {
             return;
         }
         setGlobalUser(response);
+        setSuccess("Login successful, fetching your data. \n Please wait...");
+        await fetchAllData()
         setLoading(false);
         handleNavigation();
     };
@@ -66,6 +69,12 @@ const LoginPage = () => {
                     {error && (
                         <Typography color="error" mt={2} align="center">
                             {error}
+                        </Typography>
+                    )}
+                    
+                    {success && (
+                        <Typography color="success" mt={2} align="center">
+                            {success}
                         </Typography>
                     )}
 
