@@ -19,6 +19,8 @@ const ComponentsTable = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [filteredComponents, setFilteredComponents] = useState([]);
+    const types = components.map(component => component.type);
+    const columnTitles = ["Name", "Price", "Type", "Quantity"]
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -43,22 +45,25 @@ const ComponentsTable = () => {
                 data={components}
                 onUpdate={setFilteredComponents}
                 filterOptions={[
-                    { key: 'type', label: 'Type', values: ['Resistor', 'Capacitor', 'Transistor'] },
+                    { key: 'type', label: 'Type', values: types },
                 ]}
-                sortOptions={[
-                    { key: 'name', label: 'Name' },
-                    { key: 'price', label: 'Price' },
-                ]}
+                sortOptions={columnTitles.map((title) => ({
+                    key: title.toLowerCase(),
+                    label: title,
+                }))}
             />
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <TableContainer sx={{ maxHeight: 440 }}>
                     <Table sx={{ minWidth: 650 }} stickyHeader aria-label="components table">
                         <TableHead>
                             <TableRow>
-                                <TableCell align="left">Name</TableCell>
-                                <TableCell align="left">Price</TableCell>
-                                <TableCell align="left">Type</TableCell>
-                                <TableCell align="left">Quantity</TableCell>
+                                <>
+                                    {columnTitles.map((title, index) => (
+                                        <TableCell align="left" key={index}>
+                                            {title}
+                                        </TableCell>
+                                    ))}
+                                </>
                             </TableRow>
                         </TableHead>
                         <TableBody>
