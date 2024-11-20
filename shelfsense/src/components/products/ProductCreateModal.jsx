@@ -80,7 +80,7 @@ function CreateProductModal({ open, onClose }) {
 
             if (productComponentsResult) {
                 // Optionally update your product store if needed
-                addProduct({ ...productResult, components: productComponentsResult });
+                addProduct({ ...productResult, productComponentsResult });
                 onClose();
             } else {
                 alert('Failed to associate components with the product. Please try again.');
