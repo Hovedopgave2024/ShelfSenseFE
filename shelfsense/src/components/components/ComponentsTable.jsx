@@ -19,6 +19,7 @@ const ComponentsTable = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [filteredComponents, setFilteredComponents] = useState([]);
+    const types = components.map(component => component.type);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -43,7 +44,7 @@ const ComponentsTable = () => {
                 data={components}
                 onUpdate={setFilteredComponents}
                 filterOptions={[
-                    { key: 'type', label: 'Type', values: ['Resistor', 'Capacitor', 'Transistor'] },
+                    { key: 'type', label: 'Type', values: types },
                 ]}
                 sortOptions={[
                     { key: 'name', label: 'Name' },
