@@ -36,7 +36,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
 
         if (result) {
             addComponent(result); // Update the store with the new component
-            onClose(); // Close the modal
+            onClose();
         } else {
             alert('Failed to create component. Please try again.');
         }

@@ -10,9 +10,7 @@ export const createComponent = async (componentData) => {
     try {
         const response = await fetch(BASE_URL, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: {"Content-Type": "application/json",},
             credentials: "include",
             body: JSON.stringify(componentData),
         });
