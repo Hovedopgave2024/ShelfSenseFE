@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Modal, Box, Typography, Button, TextField, Grid } from '@mui/material';
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import {createComponent} from "../../util/services/componentService.js";
 
 const ComponentsCreateModal = ({ open, onClose }) => {
-    const [formData, setFormData] = useState({
+    const initialFormData = {
         name: '',
         type: '',
         footprint: '',
@@ -19,8 +19,9 @@ const ComponentsCreateModal = ({ open, onClose }) => {
         designator: '',
         manufacturer: '',
         supplierPart: '',
-    });
+    };
 
+    const [formData, setFormData] = useState(initialFormData);
     const addComponent = useComponentsStore((state) => state.addComponent);
 
     const handleChange = (e) => {
@@ -36,11 +37,19 @@ const ComponentsCreateModal = ({ open, onClose }) => {
 
         if (result) {
             addComponent(result); // Update the store with the new component
-            onClose();
+            onClose(); // Close the modal
+            setFormData(initialFormData); // Reset the form
         } else {
             alert('Failed to create component. Please try again.');
         }
     };
+
+    // Reset form data when the modal opens
+    useEffect(() => {
+        if (open) {
+            setFormData(initialFormData);
+        }
+    }, [open]);
 
     return (
         <Modal open={open} onClose={onClose}>
