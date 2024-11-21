@@ -45,7 +45,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
 
         requiredFields.forEach((field) => {
             if (!formData[field] || formData[field].toString().trim() === '') {
-                newErrors[field] = 'This field is required';
+                newErrors[field] = 'Required';
             }
         });
 
@@ -101,7 +101,9 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                     <Grid container alignItems="center" justifyContent="center" spacing={2}>
                         <>
                             {formData &&
-                                Object.keys(formData).map((field) => (
+                                Object.keys(formData)
+                                    .filter((field) => field !== 'id') // Exclude 'id' from being rendered
+                                    .map((field) => (
                                         <Grid xs={12} lg={3} key={field}>
                                             <TextField
                                                 label={field}

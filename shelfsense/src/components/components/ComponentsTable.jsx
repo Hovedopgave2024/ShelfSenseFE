@@ -17,7 +17,7 @@ import DataManipulationBar from '../dataManipulationBar/DataManipulationBar.jsx'
 const ComponentsTable = ({ onEdit }) => {
     const components = useComponentsStore((state) => state.components);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [filteredComponents, setFilteredComponents] = useState([]);
     const types = components.map(component => component.type);
     const columnTitles = ["Name", "Manufacturer Part", "Price", "Type", "Quantity", "Actions"]
@@ -53,7 +53,7 @@ const ComponentsTable = ({ onEdit }) => {
                 }))}
             />
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <TableContainer sx={{ maxHeight: 440 }}>
+                <TableContainer sx={{ maxHeight: 700 }}>
                     <Table sx={{ minWidth: 650 }} stickyHeader aria-label="components table">
                         <TableHead>
                             <TableRow>

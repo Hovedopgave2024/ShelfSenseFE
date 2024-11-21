@@ -60,7 +60,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
         const newErrors = {};
         requiredFields.forEach((field) => {
             if (!formData[field]) {
-                newErrors[field] = `${field} is required`; // Error message for empty fields
+                newErrors[field] = `Required`; // Error message for empty fields
             }
         });
         setErrors(newErrors);
