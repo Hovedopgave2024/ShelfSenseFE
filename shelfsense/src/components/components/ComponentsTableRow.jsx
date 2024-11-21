@@ -1,4 +1,4 @@
-import { TableRow, TableCell } from '@mui/material';
+import { TableRow, TableCell, Button } from '@mui/material';
 
 const ComponentsTableRow = ({ component }) => (
     <TableRow hover key={component.id}>
@@ -7,6 +7,15 @@ const ComponentsTableRow = ({ component }) => (
         <TableCell align="left">{component.price}</TableCell>
         <TableCell align="left">{component.type}</TableCell>
         <TableCell align="left">{component.quantity}</TableCell>
+            <TableCell align="left">
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={() => onEdit(component)} // Callback for editing
+                    >
+                            Edit
+                    </Button>
+            </TableCell>
     </TableRow>
 );
 
