@@ -23,7 +23,20 @@ const ComponentsCreateModal = ({ open, onClose }) => {
         supplierPart: '',
     };
 
+    const requiredFields = [
+        'name',
+        'type',
+        'footprint',
+        'manufacturerPart',
+        'price',
+        'supplier',
+        'stock',
+        'safetyStock',
+        'safetyStockRop',
+    ]; // Fields that cannot be empty
+
     const [formData, setFormData] = useState(initialFormData); // State to hold form data
+    const [errors, setErrors] = useState({}); // State to hold validation errors
     const addComponent = useComponentsStore((state) => state.addComponent); // Zustand method to update the components store
 
     // Handle changes in form input fields
@@ -33,25 +46,48 @@ const ComponentsCreateModal = ({ open, onClose }) => {
             ...prevData,
             [name]: value,
         }));
+        // Clear the error when the user starts typing
+        if (errors[name]) {
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                [name]: null,
+            }));
+        }
+    };
+
+    // Validate form data
+    const validateForm = () => {
+        const newErrors = {};
+        requiredFields.forEach((field) => {
+            if (!formData[field]) {
+                newErrors[field] = `${field} is required`; // Error message for empty fields
+            }
+        });
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0; // Return true if no errors
     };
 
     // Handle form submission
     const handleSubmit = async () => {
+        if (!validateForm()) return; // Prevent submission if validation fails
+
         const result = await createComponent(formData); // Send form data to backend to create a component
 
         if (result) {
             addComponent(result); // Update the store with the new component
             onClose(); // Close the modal
             setFormData(initialFormData); // Reset the form
+            setErrors({}); // Clear errors
         } else {
             alert('Failed to create component. Please try again.');
         }
     };
 
-    // Reset form data when the modal opens
+    // Reset form data and errors when the modal opens
     useEffect(() => {
         if (open) {
             setFormData(initialFormData);
+            setErrors({});
         }
     }, [open]);
 
@@ -93,6 +129,8 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                                         fullWidth
                                         value={formData[field]}
                                         onChange={handleChange}
+                                        error={!!errors[field]} // Adds red border if there’s an error
+                                        helperText={errors[field] || ''} // Displays error message below the field
                                         type={
                                             ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplierStock', 'supplierSafetyStock', 'supplierSafetyStockRop'].includes(field)
                                                 ? 'number'

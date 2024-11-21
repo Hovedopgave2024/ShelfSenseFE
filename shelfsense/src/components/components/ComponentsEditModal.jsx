@@ -6,11 +6,13 @@ import { updateComponent } from "../../util/services/componentService.js";
 
 const ComponentsEditModal = ({ open, onClose, component}) => {
     const [formData, setFormData] = useState(null);
+    const [errors, setErrors] = useState({}); // To track validation errors
     const updateComponentInStore = useComponentsStore((state) => state.updateComponent);
 
     useEffect(() => {
         if (component) {
             setFormData(component);
+            setErrors({}); // Reset errors when a new component is loaded
         }
     }, [component]);
 
@@ -20,9 +22,45 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
             ...prevData,
             [name]: value,
         }));
+        // Clear errors for the specific field as the user types
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: '',
+        }));
+    };
+
+    const validateFields = () => {
+        const requiredFields = [
+            'name',
+            'type',
+            'footprint',
+            'manufacturerPart',
+            'price',
+            'supplier',
+            'stock',
+            'safetyStock',
+            'safetyStockRop',
+        ];
+        const newErrors = {};
+
+        requiredFields.forEach((field) => {
+            if (!formData[field] || formData[field].toString().trim() === '') {
+                newErrors[field] = 'This field is required';
+            }
+        });
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0; // Returns `true` if no errors
     };
 
     const handleSubmit = async () => {
+        if (!formData) return;
+
+        if (!validateFields()) {
+            // Stop submission if validation fails
+            return;
+        }
+
         const result = await updateComponent(formData.id, formData); // Update the component in the backend
 
         if (result) {
@@ -64,7 +102,6 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                         <>
                             {formData &&
                                 Object.keys(formData).map((field) => (
-                                    field !== 'id' && ( // Exclude the 'id' field from being editable
                                         <Grid xs={12} lg={3} key={field}>
                                             <TextField
                                                 label={field}
@@ -78,10 +115,12 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                                                         ? 'number'
                                                         : 'text'
                                                 }
+                                                error={!!errors[field]} // Highlight field in red if there's an error
+                                                helperText={errors[field] || ''} // Display validation error message
                                             />
                                         </Grid>
                                     )
-                                ))}
+                                )}
                         </>
                     </Grid>
                 </Box>
