@@ -14,7 +14,7 @@ import useComponentsStore from "../../stores/useComponentsStore.js";
 import {Typography} from "@mui/material";
 import DataManipulationBar from '../dataManipulationBar/DataManipulationBar.jsx';
 
-const ComponentsTable = () => {
+const ComponentsTable = ({ onEdit }) => {
     const components = useComponentsStore((state) => state.components);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -71,7 +71,7 @@ const ComponentsTable = () => {
                                 filteredComponents
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((data) => (
-                                        <ComponentsTableRow key={data.id} component={data} />
+                                        <ComponentsTableRow key={data.id} component={data} onEdit={onEdit} />
                                     ))
                             ) : (
                                 <TableRow>

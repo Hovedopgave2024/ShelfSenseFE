@@ -1,6 +1,6 @@
 import { TableRow, TableCell, Button } from '@mui/material';
 
-const ComponentsTableRow = ({ component }) => (
+const ComponentsTableRow = ({ component, onEdit }) => (
     <TableRow hover key={component.id}>
         <TableCell align="left">{component.name}</TableCell>
         <TableCell align="left">{component.manufacturerPart}</TableCell>
