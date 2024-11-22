@@ -13,6 +13,7 @@ const ProductsPage = () => {
     const navigate = useNavigate();
     const user = useSessionStore((state) => state.user);
 
+
     const toggleDrawer = () => {
         setOpenSideBar((prevOpen) => !prevOpen);
     };

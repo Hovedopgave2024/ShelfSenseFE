@@ -3,18 +3,7 @@ import useProductStore from '../../stores/useProductsStore.js';
 import useComponentsStore from '../../stores/useComponentsStore.js';
 import { createProduct } from '../../util/services/productService.jsx';
 import { createProductComponents } from '../../util/services/productService.jsx';
-import {
-    Box,
-    Button,
-    Modal,
-    TextField,
-    Typography,
-    Select,
-    MenuItem,
-    InputLabel,
-    FormControl,
-    IconButton,
-} from '@mui/material';
+import {Box, Button, Modal, TextField, Typography, Select, MenuItem, InputLabel, FormControl, IconButton,} from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { Add, Remove } from '@mui/icons-material';
 

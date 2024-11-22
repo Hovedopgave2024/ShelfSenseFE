@@ -1,13 +1,18 @@
 import { Card, CardContent, Chip, Avatar, Stack, Typography, Button } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import { chipConfig } from '../../util/services/productService.jsx';
+import {useState} from "react";
+import ProductModal from "./ProductModal.jsx";
 
 const ProductsCard = ({ product }) => {
-    const navigate = useNavigate();
+    const [openModal, setOpenModal] = useState(false);
 
-    const handleNavigation = () => {
-        navigate('/components');
-    };
+    console.log('Console log in card', product);
+
+
+    const toggleModal = () => {
+        setOpenModal((prevOpen) => !prevOpen);
+    }
 
     const stock1 = 80;
     const stock2 = 40;
@@ -16,6 +21,7 @@ const ProductsCard = ({ product }) => {
 
     const chip1Config = chipConfig(stock1, safetyStock, safetyMultiplier);
     const chip2Config = chipConfig(stock2, safetyStock, safetyMultiplier);
+
 
     return (
         <Card
@@ -101,10 +107,17 @@ const ProductsCard = ({ product }) => {
                         boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.3)',
                     },
                 }}
-                onClick={handleNavigation}
+            onClick={() => {
+                    console.log('Opening Modal with Product:', product);
+
+                    toggleModal();
+                }}
             >
                 Open Product
             </Button>
+
+            {/* Render the ProductModal outside the Button */}
+            {openModal && <ProductModal open={openModal} onClose={toggleModal} product={product} />}
         </Card>
     );
 };
