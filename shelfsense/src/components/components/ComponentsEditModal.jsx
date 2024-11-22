@@ -93,7 +93,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                 </Typography>
                 <Box
                     sx={{
-                        overflowY: 'auto',
+                        overflow: 'visible',
                         maxHeight: '60vh',
                         mb: 3,
                     }}
