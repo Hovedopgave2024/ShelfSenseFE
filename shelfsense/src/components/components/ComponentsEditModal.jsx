@@ -102,7 +102,16 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                         <>
                             {formData &&
                                 Object.keys(formData)
-                                    .filter((field) => field !== 'id') // Exclude 'id' from being rendered
+                                    .filter(
+                                        (field) =>
+                                            ![
+                                                'id',
+                                                'userId',
+                                                'supplierStock',
+                                                'supplierIncomingStock',
+                                                'supplierIncomingDate',
+                                            ].includes(field)
+                                    ) // Exclude non-editable fields
                                     .map((field) => (
                                         <Grid xs={12} lg={3} key={field}>
                                             <TextField
@@ -113,16 +122,15 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                                                 value={formData[field] || ''}
                                                 onChange={handleChange}
                                                 type={
-                                                    ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplierStock', 'supplierSafetyStock', 'supplierSafetyStockRop'].includes(field)
+                                                    ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplierSafetyStock', 'supplierSafetyStockRop'].includes(field)
                                                         ? 'number'
                                                         : 'text'
                                                 }
-                                                error={!!errors[field]} // Highlight field in red if there's an error
-                                                helperText={errors[field] || ''} // Display validation error message
+                                                error={!!errors[field]}
+                                                helperText={errors[field] || ''}
                                             />
                                         </Grid>
-                                    )
-                                )}
+                                    ))}
                         </>
                     </Grid>
                 </Box>

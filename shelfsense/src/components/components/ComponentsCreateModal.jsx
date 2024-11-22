@@ -132,7 +132,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                                         error={!!errors[field]} // Adds red border if there’s an error
                                         helperText={errors[field] || ''} // Displays error message below the field
                                         type={
-                                            ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplierStock', 'supplierSafetyStock', 'supplierSafetyStockRop'].includes(field)
+                                            ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplierSafetyStock', 'supplierSafetyStockRop'].includes(field)
                                                 ? 'number'
                                                 : 'text'
                                         }
