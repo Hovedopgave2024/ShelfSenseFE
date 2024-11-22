@@ -54,7 +54,7 @@ const ProductsPage = () => {
                     Go to Components
                 </Button>
                 <Button
-                    variant="contained"
+                    variant="outlined"
                     color="primary"
                     onClick={toggleModal}
                     sx={{ mb: 3 }}

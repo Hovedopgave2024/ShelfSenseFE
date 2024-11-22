@@ -1,4 +1,4 @@
-import { getRequest } from './getRequestService.js';
+import { getRequest } from './getRequestService.jsx';
 import useProductsStore from '../../stores/useProductsStore.js';
 import useComponentsStore from '../../stores/useComponentsStore';
 import useSalesOrdersStore from '../../stores/useSalesOrdersStore';
