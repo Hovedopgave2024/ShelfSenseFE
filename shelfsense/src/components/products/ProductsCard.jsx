@@ -7,9 +7,6 @@ import ProductModal from "./ProductModal.jsx";
 const ProductsCard = ({ product }) => {
     const [openModal, setOpenModal] = useState(false);
 
-    console.log('Console log in card', product);
-
-
     const toggleModal = () => {
         setOpenModal((prevOpen) => !prevOpen);
     }
@@ -107,17 +104,13 @@ const ProductsCard = ({ product }) => {
                         boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.3)',
                     },
                 }}
-            onClick={() => {
-                    console.log('Opening Modal with Product:', product);
-
-                    toggleModal();
-                }}
+            onClick={() => {toggleModal();}}
             >
                 Open Product
             </Button>
 
             {/* Render the ProductModal outside the Button */}
-            {openModal && <ProductModal open={openModal} onClose={toggleModal} product={product} />}
+            {openModal && <ProductModal open={openModal} onClose={toggleModal} product={{product}} />}
         </Card>
     );
 };

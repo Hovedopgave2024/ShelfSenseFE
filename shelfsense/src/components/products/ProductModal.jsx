@@ -1,14 +1,19 @@
 import React from 'react';
 import {Box, Button, Modal, Typography, List, ListItem, ListItemText,} from '@mui/material';
-import useProductsStore from "../../stores/useProductsStore.js";
+import useComponentsStore from "../../stores/useComponentsStore.js";
+
 
 
 function ProductModal({ open, onClose, product }) {
-    if (!product) {
+    const actualProduct = product?.product; // Extract the product object from the nested structure
+
+    const components = useComponentsStore((state) => state.components);
+
+    if (!actualProduct) {
         return null; // Handle case where product is undefined
     }
 
-    console.log('Product in Modal:', product);
+    console.log('Actual Product in Modal:', actualProduct);
 
     return (
         <Modal open={open} onClose={onClose}>
@@ -31,12 +36,12 @@ function ProductModal({ open, onClose, product }) {
 
                 {/* Product Name */}
                 <Typography variant="subtitle1" component="p">
-                    <strong>Name:</strong> {product.name}
+                    <strong>Name:</strong> {actualProduct.name}
                 </Typography>
 
                 {/* Product Price */}
                 <Typography variant="subtitle1" component="p" mb={2}>
-                    <strong>Price:</strong> ${product.price}
+                    <strong>Price:</strong> ${actualProduct.price}
                 </Typography>
 
                 {/* Components List */}
@@ -44,20 +49,19 @@ function ProductModal({ open, onClose, product }) {
                     Components:
                 </Typography>
                 <List>
-                    {product && product.productComponentList && product.productComponentList.length > 0 ? (
-                        product.productComponentList.map((comp, index) => (
-                            <ListItem key={index}>
+                    {actualProduct.productComponentList.map((productComponent) => {
+                        const component = components.find(
+                            (c) => c.id === productComponent.componentId
+                        );
+
+                        return (
+                            <ListItem key={productComponent.id}>
                                 <ListItemText
-                                    primary={comp.component.name}
-                                    secondary={`Quantity: ${comp.quantity}`}
+                                    primary={component ? component.name : 'Unknown Component'}
                                 />
                             </ListItem>
-                        ))
-                    ) : (
-                        <Typography variant="body2" color="textSecondary">
-                            No components associated with this product.
-                        </Typography>
-                    )}
+                        );
+                    })}
                 </List>
 
                 {/* Close Button */}
