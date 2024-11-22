@@ -20,7 +20,7 @@ const ComponentsTable = () => {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [filteredComponents, setFilteredComponents] = useState([]);
     const types = components.map(component => component.type);
-    const columnTitles = ["Name", "Price", "Type", "Quantity"]
+    const columnTitles = ["Name", "Manufacturer Part", "Price", "Type", "Quantity", "Actions"]
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);

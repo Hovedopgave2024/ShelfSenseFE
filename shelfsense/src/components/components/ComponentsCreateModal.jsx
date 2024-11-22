@@ -5,6 +5,7 @@ import useComponentsStore from "../../stores/useComponentsStore.js";
 import {createComponent} from "../../util/services/componentService.jsx";
 
 const ComponentsCreateModal = ({ open, onClose }) => {
+    // Initial empty form data for creating a component
     const initialFormData = {
         name: '',
         type: '',
@@ -22,9 +23,10 @@ const ComponentsCreateModal = ({ open, onClose }) => {
         supplierPart: '',
     };
 
-    const [formData, setFormData] = useState(initialFormData);
-    const addComponent = useComponentsStore((state) => state.addComponent);
+    const [formData, setFormData] = useState(initialFormData); // State to hold form data
+    const addComponent = useComponentsStore((state) => state.addComponent); // Zustand method to update the components store
 
+    // Handle changes in form input fields
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -33,8 +35,9 @@ const ComponentsCreateModal = ({ open, onClose }) => {
         }));
     };
 
+    // Handle form submission
     const handleSubmit = async () => {
-        const result = await createComponent(formData);
+        const result = await createComponent(formData); // Send form data to backend to create a component
 
         if (result) {
             addComponent(result); // Update the store with the new component
