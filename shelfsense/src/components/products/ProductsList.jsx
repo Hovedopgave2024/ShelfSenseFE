@@ -2,10 +2,17 @@ import {Skeleton, Stack, Typography} from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import ProductsCard from "./ProductsCard";
 import useProductsStore from "../../stores/useProductsStore.js";
+import DataManipulationBar from "../dataManipulationBar/DataManipulationBar.jsx";
+import {useEffect, useState} from "react";
 
 const ProductsList = () => {
     const products = useProductsStore((state) => state.products);
-    console.log(products);
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const productSortParameters = ["Name", "Price"]
+
+    useEffect(() => {
+        setFilteredProducts(products);
+    }, [products]);
 
     return (
         <Grid
@@ -17,10 +24,21 @@ const ProductsList = () => {
                 width: '100%',
             }}
         >
-            {products && products.length > 0 ? (
-                products.map((product) => (
-                    <Grid xs={12} sm={6} md={4} lg={3} key={product.id} sx={{mg: '10'}}>
-                        <ProductsCard product={product} />
+            <DataManipulationBar
+                data={products}
+                onUpdate={setFilteredProducts}
+                filterOptions={[
+                    { key: 'name', label: 'Name', values: "Hello World" },
+                ]}
+                sortOptions={productSortParameters.map((title) => ({
+                    key: title.toLowerCase(),
+                    label: title,
+                }))}
+            />
+            {filteredProducts && filteredProducts.length > 0 ? (
+                filteredProducts.map((filteredProduct) => (
+                    <Grid xs={12} sm={6} md={4} lg={3} key={filteredProduct.id} sx={{mg: '10'}}>
+                        <ProductsCard product={filteredProduct} />
                     </Grid>
                 ))
             ) : (

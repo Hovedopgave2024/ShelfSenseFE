@@ -1,4 +1,4 @@
-import { getRequest } from './getRequestService.js';
+import { getRequest } from './getRequestService.jsx';
 
 export const fetchComponents = async () => {
     return await getRequest(`components`);
