@@ -1,6 +1,6 @@
 import { Card, CardContent, Chip, Avatar, Stack, Typography, Button } from '@mui/material';
 import { useNavigate } from "react-router-dom";
-import { chipConfig } from '../../util/services/productService.jsx';
+import { chipConfig } from '../../util/services/ProductService.jsx';
 
 const ProductsCard = ({ product }) => {
     const navigate = useNavigate();

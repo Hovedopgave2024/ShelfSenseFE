@@ -1,17 +1,22 @@
 // ProductsPage.js
 import { useState } from 'react';
-import { Typography, Button, Box } from '@mui/material';
+import {Typography, Button, Box, CircularProgress} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ProductsList from '../components/products/ProductsList';
 import { Sidebar } from '../components/sidebar/sidebar.jsx';
 import useSessionStore from "../stores/useSessionStore.js";
-import ProductCreateModal from '../components/products/ProductCreateModal.jsx'; // Import the modal
+import ProductCreateModal from '../components/products/ProductCreateModal.jsx';
+import {createApiRequest} from "../util/services/ComponentService.jsx";
+import useComponentsStore from "../stores/useComponentsStore.js"; // Import the modal
 
 const ProductsPage = () => {
     const [openSideBar, setOpenSideBar] = useState(false);
     const [openModal, setOpenModal] = useState(false);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const user = useSessionStore((state) => state.user);
+    const components = useComponentsStore((state) => state.components);
+    const updateComponent = useComponentsStore((state) => state.updateComponent);
 
     const toggleDrawer = () => {
         setOpenSideBar((prevOpen) => !prevOpen);
@@ -20,6 +25,40 @@ const ProductsPage = () => {
     const toggleModal = () => {
         setOpenModal((prevOpen) => !prevOpen);
     }
+
+    const updateSupplierInfo = async () => {
+        setLoading(true);
+
+        try {
+            const apiInfo = await createApiRequest();
+
+            console.log("Fetched API info:", apiInfo);
+
+            apiInfo.forEach((apiComponent) => {
+                const componentInStore = components.find(
+                    (comp) => comp.id === apiComponent.id
+                );
+
+                if (componentInStore) {
+                    updateComponent({
+                        id: apiComponent.id,
+                        supplierStock: apiComponent.supplierStock,
+                        manufacturer: apiComponent.manufacturer,
+                        manufacturerPart: apiComponent.manufacturerPart,
+                        supplierIncomingStock: apiComponent.supplierIncomingStock,
+                        supplierIncomingDate: apiComponent.supplierIncomingDate,
+                    });
+                    console.log("Updated component via the API:", apiComponent);
+                } else {
+                    console.log("Component didn't update via the API");
+                }
+            });
+        } catch (err) {
+            console.error("API call to update components failed", err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleNavigation = () => {
         navigate('/components');
@@ -61,6 +100,18 @@ const ProductsPage = () => {
                 >
                     Create Product
                 </Button>
+                {loading ? (
+                    <CircularProgress />
+                ) : (
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={updateSupplierInfo} // Directly call the function
+                        sx={{ mb: 3 }}
+                    >
+                        Update Components
+                    </Button>
+                )}
                 <ProductsList />
                 {/* Render the modal here */}
                 <ProductCreateModal open={openModal} onClose={toggleModal} />
