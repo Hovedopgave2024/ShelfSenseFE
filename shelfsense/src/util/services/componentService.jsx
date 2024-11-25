@@ -33,12 +33,12 @@ export const createComponent = async (componentData) => {
     }
 };
 
-export const stockCalculator = (stock, safetyStock, safetyStockROP) => {
+export const stockCalculator = (stock, safetyStock, safetyStockRop) => {
     const stockPercentage = (stock / safetyStock) * 100 - 100;
     const extraStock = stock - safetyStock;
-    const criticalROP = safetyStockROP * 0.75;
+    const criticalROP = safetyStockRop * 0.75;
 
-    if (stock > safetyStockROP) {
+    if (stock > safetyStockRop) {
         // Stock is above the reorder point (safe condition)
         return {
             color: 'success',

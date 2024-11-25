@@ -49,9 +49,12 @@ function ProductModal({ open, onClose, product }) {
                 <Typography variant="subtitle1" component="p" mb={1}>
                     Components:
                 </Typography>
+
                 <List>
+
                     {actualProduct.productComponentList.map((productComponent) => {
                         const component = components.find(
+
                             (c) => c.id === productComponent.componentId
                         );
 
@@ -63,22 +66,27 @@ function ProductModal({ open, onClose, product }) {
                             );
                         }
 
+
                         const { label, color } = stockCalculator(
                             component.stock,
                             component.safetyStock,
-                            component.safetyStockROP
+                            component.safetyStockRop
                         );
+
+                        // Skip rendering if the status is 'success'
+                        if (color === 'success') {
+                            return null;
+                        }
+
 
                         // Mapping for background and text colors
                         const backgroundColors = {
-                            success: 'green',
                             warning: 'yellow',
                             error: 'black',
                             low: 'red',
                         };
 
                         const textColors = {
-                            success: 'white',
                             warning: 'black',
                             error: 'white',
                             low: 'white',
