@@ -1,6 +1,6 @@
 import { Card, CardContent, Chip, Avatar, Stack, Typography, Button } from '@mui/material';
 import { useNavigate } from "react-router-dom";
-import { chipConfig } from '../../util/services/productService.jsx';
+import { stockCalculator } from '../../util/services/componentService.jsx';
 import {useState} from "react";
 import ProductModal from "./ProductModal.jsx";
 
@@ -14,10 +14,10 @@ const ProductsCard = ({ product }) => {
     const stock1 = 80;
     const stock2 = 40;
     const safetyStock = 60;
-    const safetyMultiplier = 1.25;
+    const safetyStockROP = 1.25;
 
-    const chip1Config = chipConfig(stock1, safetyStock, safetyMultiplier);
-    const chip2Config = chipConfig(stock2, safetyStock, safetyMultiplier);
+    const stockCalculator1 = stockCalculator(stock1, safetyStock, safetyStockROP);
+    const stockCalculator2 = stockCalculator(stock2, safetyStock, safetyStockROP);
 
 
     return (
@@ -61,9 +61,9 @@ const ProductsCard = ({ product }) => {
                                     justifyContent: 'flex-start',
                                     cursor: 'default',
                                 }}
-                                color={chip1Config.color}
-                                avatar={<Avatar>{chip1Config.icon}</Avatar>}
-                                label={chip1Config.label}
+                                color={stockCalculator1.color}
+                                avatar={<Avatar>{stockCalculator1.icon}</Avatar>}
+                                label={stockCalculator1.label}
                             />
                         </Stack>
                     </Card>
@@ -83,9 +83,9 @@ const ProductsCard = ({ product }) => {
                                     fontSize: '0.6rem',
                                     justifyContent: 'flex-end',
                                 }}
-                                color={chip2Config.color}
-                                label={chip2Config.label}
-                                avatar={<Avatar>{chip2Config.icon}</Avatar>}
+                                color={stockCalculator2.color}
+                                label={stockCalculator2.label}
+                                avatar={<Avatar>{stockCalculator2.icon}</Avatar>}
                             />
                         </Stack>
                     </Card>

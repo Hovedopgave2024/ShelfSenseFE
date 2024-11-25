@@ -66,36 +66,6 @@ export const createProductComponents = async (productComponentsData) => {
     }
 };
 
-export const chipConfig = (stock, safetyStock, safetyMultiplier) => {
-    const stockPercentage = (stock / safetyStock) * 100 - 100;
-    const extraStock = stock - safetyStock;
-
-    if (stock >= safetyStock * safetyMultiplier) {
-        return {
-            color: 'success',
-            label: 'In stock',
-            icon: <CheckCircleOutlined fontSize="small" />,
-            percentage: stockPercentage,
-            extraStock,
-        };
-    } else if (stock >= safetyStock) {
-        return {
-            color: 'warning',
-            label: 'Low on stock',
-            icon: <WarningOutlined fontSize="small" />,
-            percentage: stockPercentage,
-            extraStock,
-        };
-    } else {
-        return {
-            color: 'error',
-            label: 'Under safety stock',
-            icon: <ErrorOutlined fontSize="small" />,
-            percentage: stockPercentage,
-            extraStock,
-        };
-    }
-};
 
 
 

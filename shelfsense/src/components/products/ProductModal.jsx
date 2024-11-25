@@ -1,6 +1,7 @@
 import React from 'react';
 import {Box, Button, Modal, Typography, List, ListItem, ListItemText,} from '@mui/material';
 import useComponentsStore from "../../stores/useComponentsStore.js";
+import { stockCalculator } from '../../util/services/componentService.jsx';
 
 
 
@@ -54,10 +55,57 @@ function ProductModal({ open, onClose, product }) {
                             (c) => c.id === productComponent.componentId
                         );
 
+                        if (!component) {
+                            return (
+                                <ListItem key={productComponent.id}>
+                                    <ListItemText primary="Unknown Component" />
+                                </ListItem>
+                            );
+                        }
+
+                        const { label, color } = stockCalculator(
+                            component.stock,
+                            component.safetyStock,
+                            component.safetyStockROP
+                        );
+
+                        // Mapping for background and text colors
+                        const backgroundColors = {
+                            success: 'green',
+                            warning: 'yellow',
+                            error: 'black',
+                            low: 'red',
+                        };
+
+                        const textColors = {
+                            success: 'white',
+                            warning: 'black',
+                            error: 'white',
+                            low: 'white',
+                        };
+
+                        const bgColor = backgroundColors[color] || 'grey';
+                        const textColor = textColors[color] || 'white';
+
                         return (
                             <ListItem key={productComponent.id}>
                                 <ListItemText
-                                    primary={component ? component.name : 'Unknown Component'}
+                                    primary={component.name}
+                                    secondary={
+                                        <Box
+                                            sx={{
+                                                display: 'inline-block',
+                                                px: 1.5,
+                                                py: 0.5,
+                                                borderRadius: 1,
+                                                backgroundColor: bgColor,
+                                                color: textColor,
+                                                fontWeight: 'bold',
+                                            }}
+                                        >
+                                            {label}
+                                        </Box>
+                                    }
                                 />
                             </ListItem>
                         );
