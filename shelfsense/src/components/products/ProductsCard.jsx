@@ -21,26 +21,29 @@ const ProductsCard = ({ product }) => {
 
         if (component) {
             // Calculate stock status using stockCalculator
-            const { remaining } = stockCalculator(
+            const status = stockCalculator(
                 component.stock,
                 component.safetyStock,
                 component.safetyStockRop
             );
 
             return {
-                componentId: component.id,
-                remaining,
+                label: status.label,
+                icon: status.icon,
+                color: status.color,
+                remaining: status.remaining,
             };
-
         }
         return null; // Handle case when component is not found
     })
         .filter((status) => status !== null) // Filter out null values
         .reduce((lowest, current) =>
-                current.remaining < lowest.remaining ? current : lowest
-            , { remaining: Infinity }); // Start with a high initial value
+            current.remaining < lowest.remaining ? current : lowest,
+            { label: "No Data", icon: null, color: "gray", remaining: Infinity } // Default value
+        );
 
-
+    // Now you can destructure the result to get label, icon, and color
+    const { label, icon, color } = lowestStatus;
 
     const stock1 = 80;
     const stock2 = 40;
@@ -92,9 +95,9 @@ const ProductsCard = ({ product }) => {
                                     justifyContent: 'flex-start',
                                     cursor: 'default',
                                 }}
-                                color={stockCalculator1.color}
-                                avatar={<Avatar>{stockCalculator1.icon}</Avatar>}
-                                label={stockCalculator1.label}
+                                color={lowestStatus.color}
+                                avatar={<Avatar>{lowestStatus.icon}</Avatar>}
+                                label={lowestStatus.label}
                             />
                         </Stack>
                     </Card>

@@ -50,7 +50,7 @@ export const stockCalculator = (stock, safetyStock, safetyStockRop) => {
     } else if (stock <= safetyStock) {
         // Stock is at or below the safety stock level
         return {
-            color: 'error',
+            color: 'black',
             label: 'Critical Stock Level',
             icon: <ErrorOutlined fontSize="small" />,
             percentage: stockPercentage,
@@ -68,7 +68,7 @@ export const stockCalculator = (stock, safetyStock, safetyStockRop) => {
     } else {
         // Stock is below critical ROP
         return {
-            color: 'low',
+            color: 'error',
             label: 'Close to stock out',
             icon: <ErrorOutlined fontSize="small" />,
             percentage: stockPercentage,

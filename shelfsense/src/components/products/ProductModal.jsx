@@ -79,22 +79,6 @@ function ProductModal({ open, onClose, product }) {
                         }
 
 
-                        // Mapping for background and text colors
-                        const backgroundColors = {
-                            warning: 'yellow',
-                            error: 'black',
-                            low: 'red',
-                        };
-
-                        const textColors = {
-                            warning: 'black',
-                            error: 'white',
-                            low: 'white',
-                        };
-
-                        const bgColor = backgroundColors[color] || 'grey';
-                        const textColor = textColors[color] || 'white';
-
                         return (
                             <ListItem key={productComponent.id}>
                                 <ListItemText
@@ -106,8 +90,8 @@ function ProductModal({ open, onClose, product }) {
                                                 px: 1.5,
                                                 py: 0.5,
                                                 borderRadius: 1,
-                                                backgroundColor: bgColor,
-                                                color: textColor,
+                                                backgroundColor: bgColor, // Use mapped color
+                                                color: stockCalculator.color, // Adjust text color for better contrast if needed
                                                 fontWeight: 'bold',
                                             }}
                                         >
