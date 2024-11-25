@@ -53,6 +53,8 @@ const ProductsCard = ({ product }) => {
     const stockCalculator1 = stockCalculator(stock1, safetyStock, safetyStockROP);
     const stockCalculator2 = stockCalculator(stock2, safetyStock, safetyStockROP);
 
+    // Helper function to determine if a label is 'Critical Stock Level'
+    const isCritical = (label) => label === 'Critical Stock Level';
 
     return (
         <Card
@@ -95,9 +97,19 @@ const ProductsCard = ({ product }) => {
                                     justifyContent: 'flex-start',
                                     cursor: 'default',
                                 }}
-                                color={lowestStatus.color}
-                                avatar={<Avatar>{lowestStatus.icon}</Avatar>}
-                                label={lowestStatus.label}
+                                color={isCritical(label) ? 'default' : color}
+                                avatar={<Avatar>{icon}</Avatar>}
+                                label={label}
+                                variant="filled"
+                                // Apply conditional styling for 'Critical Stock Level'
+                                sx={{
+                                    borderRadius: '0 16px 16px 0',
+                                    fontSize: '0.6rem',
+                                    justifyContent: 'flex-start',
+                                    cursor: 'default',
+                                    backgroundColor: isCritical(label) ? 'black' : undefined,
+                                    color: isCritical(label) ? 'white' : undefined,
+                                }}
                             />
                         </Stack>
                     </Card>

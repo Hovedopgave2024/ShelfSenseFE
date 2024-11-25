@@ -1,20 +1,16 @@
 import React from 'react';
-import {Box, Button, Modal, Typography, List, ListItem, ListItemText,} from '@mui/material';
+import { Box, Button, Modal, Typography, List, ListItem, ListItemText, Chip } from '@mui/material';
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import { stockCalculator } from '../../util/services/componentService.jsx';
 
-
-
 function ProductModal({ open, onClose, product }) {
-    const actualProduct = product.product; // Extract the product object from the nested structure
+    const actualProduct = product.product; // Extract the product object
 
     const components = useComponentsStore((state) => state.components);
 
     if (!actualProduct) {
         return null; // Handle case where product is undefined
     }
-
-    console.log('Actual Product in Modal:', actualProduct);
 
     return (
         <Modal open={open} onClose={onClose}>
@@ -51,10 +47,8 @@ function ProductModal({ open, onClose, product }) {
                 </Typography>
 
                 <List>
-
                     {actualProduct.productComponentList.map((productComponent) => {
                         const component = components.find(
-
                             (c) => c.id === productComponent.componentId
                         );
 
@@ -65,7 +59,6 @@ function ProductModal({ open, onClose, product }) {
                                 </ListItem>
                             );
                         }
-
 
                         const { label, color } = stockCalculator(
                             component.stock,
@@ -78,25 +71,25 @@ function ProductModal({ open, onClose, product }) {
                             return null;
                         }
 
+                        // Determine if the label is 'Critical Stock Level'
+                        const isCritical = label === 'Critical Stock Level';
 
                         return (
                             <ListItem key={productComponent.id}>
                                 <ListItemText
                                     primary={component.name}
                                     secondary={
-                                        <Box
+                                        <Chip
+                                            label={label}
                                             sx={{
-                                                display: 'inline-block',
-                                                px: 1.5,
-                                                py: 0.5,
+                                                fontSize: '0.8rem',
                                                 borderRadius: 1,
-                                                backgroundColor: bgColor, // Use mapped color
-                                                color: stockCalculator.color, // Adjust text color for better contrast if needed
-                                                fontWeight: 'bold',
+                                                backgroundColor: isCritical ? 'black' : undefined,
+                                                color: isCritical ? 'white' : undefined,
                                             }}
-                                        >
-                                            {label}
-                                        </Box>
+                                            color={isCritical ? 'default' : color}
+                                            variant="filled"
+                                        />
                                     }
                                 />
                             </ListItem>
