@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { stockCalculator } from '../../util/services/componentService.jsx';
 import {useState} from "react";
 import ProductModal from "./ProductModal.jsx";
+import useComponentsStore from "../../stores/useComponentsStore.js";
 
 const ProductsCard = ({ product }) => {
     const [openModal, setOpenModal] = useState(false);
@@ -10,6 +11,36 @@ const ProductsCard = ({ product }) => {
     const toggleModal = () => {
         setOpenModal((prevOpen) => !prevOpen);
     }
+
+    const components = useComponentsStore((state) => state.components);
+
+    const lowestStatus = product.productComponentList.map((productComponent) => {
+        const component = components.find(
+            (c) => c.id === productComponent.componentId
+        );
+
+        if (component) {
+            // Calculate stock status using stockCalculator
+            const { remaining } = stockCalculator(
+                component.stock,
+                component.safetyStock,
+                component.safetyStockRop
+            );
+
+            return {
+                componentId: component.id,
+                remaining,
+            };
+
+        }
+        return null; // Handle case when component is not found
+    })
+        .filter((status) => status !== null) // Filter out null values
+        .reduce((lowest, current) =>
+                current.remaining < lowest.remaining ? current : lowest
+            , { remaining: Infinity }); // Start with a high initial value
+
+
 
     const stock1 = 80;
     const stock2 = 40;

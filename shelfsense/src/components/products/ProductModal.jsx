@@ -6,7 +6,7 @@ import { stockCalculator } from '../../util/services/componentService.jsx';
 
 
 function ProductModal({ open, onClose, product }) {
-    const actualProduct = product?.product; // Extract the product object from the nested structure
+    const actualProduct = product.product; // Extract the product object from the nested structure
 
     const components = useComponentsStore((state) => state.components);
 

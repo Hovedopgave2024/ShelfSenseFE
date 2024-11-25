@@ -45,7 +45,7 @@ export const stockCalculator = (stock, safetyStock, safetyStockRop) => {
             label: 'In stock',
             icon: <CheckCircleOutlined fontSize="small" />,
             percentage: stockPercentage,
-            extraStock,
+            remaining: extraStock,
         };
     } else if (stock <= safetyStock) {
         // Stock is at or below the safety stock level
@@ -54,7 +54,7 @@ export const stockCalculator = (stock, safetyStock, safetyStockRop) => {
             label: 'Critical Stock Level',
             icon: <ErrorOutlined fontSize="small" />,
             percentage: stockPercentage,
-            extraStock,
+            remaining: extraStock,
         };
     } else if (stock > criticalROP) {
         // Stock is below reorder point but above critical ROP
@@ -63,7 +63,7 @@ export const stockCalculator = (stock, safetyStock, safetyStockRop) => {
             label: 'Low on stock',
             icon: <WarningOutlined fontSize="small" />,
             percentage: stockPercentage,
-            extraStock,
+            remaining: extraStock,
         };
     } else {
         // Stock is below critical ROP
@@ -72,7 +72,7 @@ export const stockCalculator = (stock, safetyStock, safetyStockRop) => {
             label: 'Close to stock out',
             icon: <ErrorOutlined fontSize="small" />,
             percentage: stockPercentage,
-            extraStock,
+            remaining: extraStock,
         };
     }
 };
