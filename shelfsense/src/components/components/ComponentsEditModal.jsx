@@ -2,12 +2,19 @@ import { useState, useEffect } from 'react';
 import { Modal, Box, Typography, Button, TextField } from '@mui/material/';
 import Grid from '@mui/material/Grid2';
 import useComponentsStore from "../../stores/useComponentsStore.js";
-import { updateComponent } from "../../util/services/componentService.js";
+import useProductsStore from "../../stores/useProductsStore.js";
+import {updateComponent, deleteComponent} from "../../util/services/componentService.jsx";
 
 const ComponentsEditModal = ({ open, onClose, component}) => {
     const [formData, setFormData] = useState(null);
     const [errors, setErrors] = useState({}); // To track validation errors
     const updateComponentInStore = useComponentsStore((state) => state.updateComponent);
+    const deleteComponentInStore = useComponentsStore((state) => state.deleteComponent); // Zustand delete function
+    const products = useProductsStore((state) => state.products); // Access products from store
+
+    // State to track if the component is associated with any product
+    const [isLinkedToProduct, setIsLinkedToProduct] = useState(false);
+
 
     useEffect(() => {
         if (component) {
@@ -68,6 +75,19 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
             onClose(); // Close the modal
         } else {
             alert('Failed to update component. Please try again.');
+        }
+    };
+
+    const handleDelete = async () => {
+        const confirm = window.confirm(`Are you sure you want to delete this component?`);
+        if (!confirm) return; // Exit if the user cancels
+
+        const result = await deleteComponent(component.id); // Call the delete service
+        if (result) {
+            deleteComponentInStore(component.id); // Remove the component from Zustand store
+            onClose(); // Close the modal
+        } else {
+            alert('Failed to delete the component. Please try again.');
         }
     };
 
@@ -141,6 +161,14 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                     onClick={handleSubmit}
                 >
                     Update Component
+                </Button>
+                <Button
+                    variant="contained"
+                    color="error"
+                    sx={{ mt: 1 }}
+                    onClick={handleDelete} // Trigger the delete function
+                >
+                    Delete Component
                 </Button>
             </Box>
         </Modal>

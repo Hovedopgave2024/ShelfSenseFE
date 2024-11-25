@@ -49,3 +49,24 @@ export const updateComponent = async (id, updatedData) => {
     }
 };
 
+export const deleteComponent = async (id) => {
+    const BASE_URL = `${import.meta.env.VITE_API_URL}/components/${id}`;
+
+    try {
+        const response = await fetch(BASE_URL, {
+            method: "DELETE",
+            credentials: "include",
+        });
+
+        if (!response.ok) {
+            console.error('Failed to delete component:', response.status);
+            return false;
+        }
+
+        return true; // Return true if deletion was successful
+    } catch (error) {
+        console.error('Error occurred while deleting component:', error);
+        return false;
+    }
+};
+
