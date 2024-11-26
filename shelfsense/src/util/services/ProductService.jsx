@@ -1,4 +1,4 @@
-import { getRequest } from './getRequestService.jsx';
+import { getRequest } from './GetRequestService.jsx';
 import { CheckCircleOutlined, WarningOutlined, ErrorOutlined } from '@mui/icons-material';
 
 export const fetchComponents = async () => {
