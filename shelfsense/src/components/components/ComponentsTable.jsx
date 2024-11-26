@@ -20,7 +20,7 @@ const ComponentsTable = ({ onEdit }) => {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [filteredComponents, setFilteredComponents] = useState([]);
     const types = components.map(component => component.type);
-    const columnTitles = ["Name", "Manufacturer Part", "Price", "Type", "Quantity", "Actions"]
+    const columnTitles = ["Name", "Manufacturer", "Manufacturer Part", "Type", "Supplier", "Footprint", "Stock", "Safety Stock", "Safe Stock ROP", "Supplier Stock", "Supplier Incoming Stock", "Supplier Incoming Date", "Actions"]
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
