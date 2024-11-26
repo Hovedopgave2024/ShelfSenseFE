@@ -82,7 +82,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
             deleteComponentInStore(component.id); // Remove the component from Zustand store
             onClose(); // Close the modal
         } else {
-            alert('Failed to delete the component. Please try again.');
+            alert('Cannot delete component as it is associated with a product.');
         }
     };
 

@@ -69,4 +69,3 @@ export const deleteComponent = async (id) => {
         return false;
     }
 };
-
