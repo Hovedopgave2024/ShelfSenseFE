@@ -6,7 +6,7 @@ const ComponentsTableRow = ({ component, onEdit }) => (
         <TableCell align="left">{component.manufacturerPart}</TableCell>
         <TableCell align="left">{component.price}</TableCell>
         <TableCell align="left">{component.type}</TableCell>
-        <TableCell align="left">{component.quantity}</TableCell>
+        <TableCell align="left">{component.stock}</TableCell>
             <TableCell align="left">
                     <Button
                         variant="outlined"

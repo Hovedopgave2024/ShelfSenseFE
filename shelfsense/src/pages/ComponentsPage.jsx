@@ -29,7 +29,7 @@ const ComponentsPage = () => {
     return (
         <Box sx={{ display: 'flex' }}>
             <Sidebar open={open} toggleDrawer={toggleDrawer} />
-            <Container sx={{ py: 4 }}>
+            <Container sx={{ py: 4, overflow: "auto" }}>
                 <Typography variant="h4" component="h1" gutterBottom>
                     Our Components
                 </Typography>
@@ -43,13 +43,15 @@ const ComponentsPage = () => {
                 </Button>
                 <ComponentTable onEdit={handleEdit} /> {/* Pass onEdit to the table */}
                 <ComponentsCreateModal open={openModal} onClose={toggleModal} />
-                {componentToEdit && (
-                    <ComponentsEditModal
-                        open={openEditModal}
-                        onClose={() => setOpenEditModal(false)}
-                        component={componentToEdit} // Pass the selected component
-                    />
-                )}
+                <>
+                    {componentToEdit && (
+                        <ComponentsEditModal
+                            open={openEditModal}
+                            onClose={() => setOpenEditModal(false)}
+                            component={componentToEdit} // Pass the selected component
+                        />
+                    )}
+                </>
             </Container>
         </Box>
     );

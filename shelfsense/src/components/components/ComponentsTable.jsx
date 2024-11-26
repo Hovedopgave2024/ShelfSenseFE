@@ -53,8 +53,8 @@ const ComponentsTable = ({ onEdit }) => {
                 }))}
             />
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <TableContainer sx={{ maxHeight: 700 }}>
-                    <Table sx={{ minWidth: 650 }} stickyHeader aria-label="components table">
+                <TableContainer>
+                    <Table stickyHeader aria-label="components table">
                         <TableHead>
                             <TableRow>
                                 <>
