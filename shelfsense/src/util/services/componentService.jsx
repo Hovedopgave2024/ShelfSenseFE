@@ -59,7 +59,7 @@ export const deleteComponent = async (id) => {
         });
 
         if (!response.ok) {
-            console.error('Failed to delete component:', response.status);
+            console.log('Cannot delete component as it is associated with a product.');
             return false;
         }
 
