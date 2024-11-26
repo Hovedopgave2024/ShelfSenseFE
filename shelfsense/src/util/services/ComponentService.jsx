@@ -1,6 +1,6 @@
 import { getRequest } from './GetRequestService.jsx';
 import useSessionStore from "../../stores/useSessionStore.js";
-import useComponentsStore from "../../stores/useComponentsStore.js";
+import useApiUpdateStore from "../../stores/useApiUpdateStore.js";
 
 const BASE_URL = `${import.meta.env.VITE_API_URL}/components`;
 
@@ -64,6 +64,17 @@ export const createApiRequest = async () => {
             return null;
         }
 
+        const getLocalDateTime = () => {
+            const now = new Date();
+            return now.toISOString();
+        };
+
+        useApiUpdateStore.getState().setApiUpdate({ lastUpdated: getLocalDateTime() });
+
+        console.log(getLocalDateTime());
+
+        console.log("Last Updated: ", useApiUpdateStore.getState().apiUpdate);
+        console.log("Time now: ", getLocalDateTime());
         return await response.json();
     } catch (error) {
         console.error('Error occurred while creating component:', error);
