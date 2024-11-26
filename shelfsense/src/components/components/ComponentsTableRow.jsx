@@ -10,7 +10,6 @@ const ComponentsTableRow = ({ component, onEdit }) => (
         <TableCell aglign="left">{component.footprint}</TableCell>
         <TableCell align="left">{component.stock}</TableCell>
         <TableCell align="left">{component.safetyStock}</TableCell>
-        <TableCell align="left">{component.safetyStockRop}</TableCell>
         <TableCell align="left">{component.supplierStock}</TableCell>
         <TableCell align="left">{component.supplierIncomingStock}</TableCell>
         <TableCell align="left">{component.supplierIncomingDate}</TableCell>
