@@ -10,11 +10,6 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
     const [errors, setErrors] = useState({}); // To track validation errors
     const updateComponentInStore = useComponentsStore((state) => state.updateComponent);
     const deleteComponentInStore = useComponentsStore((state) => state.deleteComponent); // Zustand delete function
-    const products = useProductsStore((state) => state.products); // Access products from store
-
-    // State to track if the component is associated with any product
-    const [isLinkedToProduct, setIsLinkedToProduct] = useState(false);
-
 
     useEffect(() => {
         if (component) {
