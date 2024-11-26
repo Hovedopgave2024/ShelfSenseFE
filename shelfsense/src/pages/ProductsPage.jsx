@@ -25,9 +25,6 @@ const ProductsPage = () => {
         setOpenSideBar((prevOpen) => !prevOpen);
     };
 
-
-    console.log("Time from product page: ", calculateApiFetchTimeDif(apiUpdate.lastUpdated));
-
     const toggleModal = () => {
         setOpenModal((prevOpen) => !prevOpen);
     }
