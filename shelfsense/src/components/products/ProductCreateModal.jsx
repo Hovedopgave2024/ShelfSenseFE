@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import useProductStore from '../../stores/useProductsStore.js';
 import useComponentsStore from '../../stores/useComponentsStore.js';
-import { createProduct } from '../../util/services/productService.jsx';
-import { createProductComponents } from '../../util/services/productService.jsx';
+import { createProduct } from '../../util/services/ProductService.jsx';
+import { createProductComponents } from '../../util/services/ProductService.jsx';
 import {
     Box,
     Button,

@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import { Modal, Box, Typography, Button, TextField } from '@mui/material/';
 import Grid from '@mui/material/Grid2';
 import useComponentsStore from "../../stores/useComponentsStore.js";
-import {createComponent} from "../../util/services/componentService.jsx";
+import {createComponent} from "../../util/services/ComponentService.jsx";
 
 const ComponentsCreateModal = ({ open, onClose }) => {
     // Initial empty form data for creating a component

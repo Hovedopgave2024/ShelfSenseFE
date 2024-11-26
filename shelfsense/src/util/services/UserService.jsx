@@ -1,8 +1,9 @@
-import { getRequest } from './getRequestService.jsx';
+import { getRequest } from './GetRequestService.jsx';
 import useProductsStore from '../../stores/useProductsStore.js';
 import useComponentsStore from '../../stores/useComponentsStore';
 import useSalesOrdersStore from '../../stores/useSalesOrdersStore';
 import useSessionStore from "../../stores/useSessionStore.js";
+import useApiUpdateStore from '../../stores/useApiUpdateStore.js';
 
 export const login = async (name, password) => {
 
@@ -33,10 +34,12 @@ export const fetchAllData = async () => {
     const products = userData.productList ? JSON.parse(JSON.stringify(userData.productList)) : [];
     const components = userData.componentList ? JSON.parse(JSON.stringify(userData.componentList)) : [];
     const salesOrders = userData.salesOrderList ? JSON.parse(JSON.stringify(userData.salesOrderList)) : [];
+    const apiUpdate = userData.apiUpdate ? JSON.parse(JSON.stringify(userData.apiUpdate)) : null;
 
     useProductsStore.getState().setProducts(products);
     useComponentsStore.getState().setComponents(components);
     useSalesOrdersStore.getState().setSalesOrders(salesOrders);
+    useApiUpdateStore.getState().setApiUpdate(apiUpdate);
 }
 
 export const validateSession = async () => {
