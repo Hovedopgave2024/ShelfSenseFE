@@ -113,7 +113,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                 </Typography>
                 <Box
                     sx={{
-                        overflow: 'auto',
+                        overflow: 'visible',
                         maxHeight: '60vh',
                         mb: 3,
                     }}
