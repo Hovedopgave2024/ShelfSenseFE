@@ -73,18 +73,31 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
         }
     };
 
-    const handleDelete = async () => {
-        const confirm = window.confirm(`Are you sure you want to delete this component?`);
-        if (!confirm) return; // Exit if the user cancels
+    const isComponentLinked = (componentId) => {
+        const products = useProductsStore.getState().products; // Get products from the store
+        return products.some((product) =>
+            product.productComponentList.some((productComponent) => productComponent.componentId === componentId)
+        );
+    };
 
-        const result = await deleteComponent(component.id); // Call the delete service
+    const handleDelete = async () => {
+        if (isComponentLinked(component.id)) {
+            alert('This component is linked to a product and cannot be deleted.');
+            return;
+        }
+
+        const confirm = window.confirm(`Are you sure you want to delete this component?`);
+        if (!confirm) return;
+
+        const result = await deleteComponent(component.id);
         if (result) {
-            deleteComponentInStore(component.id); // Remove the component from Zustand store
-            onClose(); // Close the modal
+            deleteComponentInStore(component.id);
+            onClose();
         } else {
-            alert('Cannot delete component as it is associated with a product.');
+            alert('Failed to delete the component. Please try again.');
         }
     };
+
 
     return (
         <Modal open={open} onClose={onClose}>
