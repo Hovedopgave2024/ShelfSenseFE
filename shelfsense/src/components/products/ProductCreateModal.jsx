@@ -222,7 +222,7 @@ function CreateProductModal({ open, onClose }) {
                     variant="outlined"
                     startIcon={<Add />}
                     onClick={handleAddComponent}
-                    sx={{mt: 1, ml: 5, px: 3}}
+                    sx={{mt: 1, ml: 5, px: 4}}
                 >
                     Add Component
                 </Button>
