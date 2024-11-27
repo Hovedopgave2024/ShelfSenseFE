@@ -20,6 +20,8 @@ const ComponentsTable = ({ onEdit }) => {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [filteredComponents, setFilteredComponents] = useState([]);
     const types = [...new Set(components.map(component => component.type))];
+    const manufacturers = [...new Set(components.map(component => component.manufacturer))];
+    const suppliers = [...new Set(components.map(component => component.supplier))];
     const columnTitles = ["Name", "Manufacturer", "Manufacturer Part", "Type", "Supplier", "Footprint", "Stock", "Safety Stock", "Supplier Stock", "Supplier Incoming Stock", "Supplier Incoming Date", "Actions"];
 
     const handleChangePage = (event, newPage) => {
@@ -46,6 +48,9 @@ const ComponentsTable = ({ onEdit }) => {
                 onUpdate={setFilteredComponents}
                 filterOptions={[
                     { key: 'type', label: 'Type', values: types },
+                    { key: 'manufacturer', label: 'Manufacturer', values: manufacturers},
+                    { key: 'supplier', label: 'Supplier', values: suppliers},
+
                 ]}
                 sortOptions={columnTitles.map((title) => ({
                     key: title.toLowerCase(),

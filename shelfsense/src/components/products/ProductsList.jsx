@@ -22,13 +22,14 @@ const ProductsList = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: '100%',
+                maxHeight: '80vh',
             }}
         >
             <DataManipulationBar
                 data={products}
                 onUpdate={setFilteredProducts}
                 filterOptions={[
-                    { key: 'name', label: 'Name', values: "Hello World" },
+                    { key: 'name', label: 'Name', values: ["Hello World"]    },
                 ]}
                 sortOptions={productSortParameters.map((title) => ({
                     key: title.toLowerCase(),
