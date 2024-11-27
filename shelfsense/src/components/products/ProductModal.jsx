@@ -1,16 +1,14 @@
 import React from 'react';
-import { Box, Button, Modal, Typography, List, ListItem, ListItemText, Chip } from '@mui/material';
+import {Box, Button, Modal, Typography, List, ListItem, ListItemText, Chip, Stack,}
+from '@mui/material';
 import useComponentsStore from "../../stores/useComponentsStore.js";
-import { stockCalculator } from '../../util/services/componentService.jsx';
+import { statusLabel } from '../../util/services/componentService.jsx'; // Adjust the import path as needed
 
 function ProductModal({ open, onClose, product }) {
     const actualProduct = product.product; // Extract the product object
 
     const components = useComponentsStore((state) => state.components);
 
-    if (!actualProduct) {
-        return null; // Handle case where product is undefined
-    }
 
     return (
         <Modal open={open} onClose={onClose}>
@@ -25,6 +23,8 @@ function ProductModal({ open, onClose, product }) {
                     p: 4,
                     borderRadius: 2,
                     width: 600,
+                    maxHeight: '80vh',
+                    overflowY: 'auto',
                 }}
             >
                 <Typography variant="h6" component="h2" mb={2}>
@@ -60,36 +60,61 @@ function ProductModal({ open, onClose, product }) {
                             );
                         }
 
-                        const { label, color } = stockCalculator(
-                            component.stock,
-                            component.safetyStock,
-                            component.safetyStockRop
-                        );
+                        // Retrieve stockStatus and supplierStockStatus
+                        const stockStatusValue = component.stockStatus;
+                        const supplierStockStatusValue = component.supplierStockStatus;
 
-                        // Skip rendering if the status is 'success'
-                        if (color === 'success') {
-                            return null;
-                        }
-
-                        // Determine if the label is 'Critical Stock Level'
-                        const isCritical = label === 'Critical Stock Level';
+                        // Get status details using statusLabel
+                        const stockStatus = stockStatusValue
+                            ? statusLabel(stockStatusValue)
+                            : statusLabel(null);
+                        const supplierStockStatus = supplierStockStatusValue
+                            ? statusLabel(supplierStockStatusValue)
+                            : statusLabel(null);
 
                         return (
-                            <ListItem key={productComponent.id}>
+                            <ListItem key={productComponent.id} alignItems="flex-start">
                                 <ListItemText
                                     primary={component.name}
                                     secondary={
-                                        <Chip
-                                            label={label}
-                                            sx={{
-                                                fontSize: '0.8rem',
-                                                borderRadius: 1,
-                                                backgroundColor: isCritical ? 'black' : undefined,
-                                                color: isCritical ? 'white' : undefined,
-                                            }}
-                                            color={isCritical ? 'default' : color}
-                                            variant="filled"
-                                        />
+                                        <Stack direction="column" spacing={1} mt={1}>
+                                            {/* Component Stock Status */}
+                                            <Box>
+                                                <Typography variant="caption" component="span" mr={1}>
+                                                    Component Stock:
+                                                </Typography>
+                                                <Chip
+
+                                                    sx={{
+                                                        fontSize: '0.75rem',
+                                                        borderRadius: 1,
+                                                        backgroundColor: stockStatus.color,
+                                                        color: "white",
+                                                    }}
+                                                    color={stockStatus.color}
+                                                    label={stockStatus.label}
+                                                    avatar={stockStatus.icon}
+                                                />
+                                            </Box>
+
+                                            {/* Vendor Stock Status */}
+                                            <Box>
+                                                <Typography variant="caption" component="span" mr={1}>
+                                                    Vendor Stock:
+                                                </Typography>
+                                                <Chip
+                                                    sx={{
+                                                        fontSize: '0.75rem',
+                                                        borderRadius: 1,
+                                                        backgroundColor: supplierStockStatus.color,
+                                                        color: "white",
+                                                    }}
+                                                    color={supplierStockStatus.color}
+                                                    label={supplierStockStatus.label}
+                                                    avatar={supplierStockStatus.icon}
+                                                />
+                                            </Box>
+                                        </Stack>
                                     }
                                 />
                             </ListItem>

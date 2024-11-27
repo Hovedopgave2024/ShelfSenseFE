@@ -1,4 +1,4 @@
-import {CheckCircleOutlined, ErrorOutlined, WarningOutlined} from "@mui/icons-material";
+import {CheckCircleOutlined, Error, ErrorOutlined, WarningOutlined} from "@mui/icons-material";
 import { getRequest } from './GetRequestService.jsx';
 import useSessionStore from "../../stores/useSessionStore.js";
 import useApiUpdateStore from "../../stores/useApiUpdateStore.js";
@@ -37,47 +37,38 @@ export const createComponent = async (componentData) => {
 };
 
 
-export const stockCalculator = (stock, safetyStock, safetyStockRop) => {
-    const stockPercentage = (stock / safetyStock) * 100 - 100;
-    const extraStock = stock - safetyStock;
-    const criticalROP = safetyStockRop * 0.75;
+export const statusLabel = (status) => {
 
-    if (stock > safetyStockRop) {
-        // Stock is above the reorder point (safe condition)
+    if (status === 4) {
         return {
             color: 'success',
             label: 'In stock',
             icon: <CheckCircleOutlined fontSize="small" />,
-            percentage: stockPercentage,
-            remaining: extraStock,
         };
-    } else if (stock <= safetyStock) {
-        // Stock is at or below the safety stock level
-        return {
-            color: 'error',
-            label: 'Critical Stock Level',
-            icon: <ErrorOutlined fontSize="small" />,
-            percentage: stockPercentage,
-            remaining: extraStock,
-        };
-    } else if (stock > criticalROP) {
-        // Stock is below reorder point but above critical ROP
+    } else if (status === 3) {
         return {
             color: 'warning',
             label: 'Low on stock',
             icon: <WarningOutlined fontSize="small" />,
-            percentage: stockPercentage,
-            remaining: extraStock,
         };
-    } else {
-        // Stock is below critical ROP
+    } else if (status === 2) {
         return {
             color: 'error',
-            label: 'Close to stock out',
+            label: 'Critical Stock Level',
             icon: <ErrorOutlined fontSize="small" />,
-            percentage: stockPercentage,
-            remaining: extraStock,
         };
+    } else if (status === 1){
+        return {
+            color: "#000000",
+            label: 'Close to stock out',
+            icon: <Error fontSize="small" />,
+        };
+    } else {
+        return {
+            color: "gray",
+            label: "No Data",
+            icon: null,
+        }
     }
 };
 
