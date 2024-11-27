@@ -20,7 +20,7 @@ const ComponentsTable = ({ onEdit }) => {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [filteredComponents, setFilteredComponents] = useState([]);
     const types = components.map(component => component.type);
-    const columnTitles = ["Name", "Manufacturer Part", "Price", "Type", "Quantity", "Actions"]
+    const columnTitles = ["Name", "Manufacturer", "Manufacturer Part", "Type", "Supplier", "Footprint", "Stock", "Safety Stock", "Supplier Stock", "Supplier Incoming Stock", "Supplier Incoming Date", "Actions"]
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -53,8 +53,8 @@ const ComponentsTable = ({ onEdit }) => {
                 }))}
             />
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <TableContainer sx={{ maxHeight: 700 }}>
-                    <Table sx={{ minWidth: 650 }} stickyHeader aria-label="components table">
+                <TableContainer>
+                    <Table stickyHeader aria-label="components table">
                         <TableHead>
                             <TableRow>
                                 <>
