@@ -93,12 +93,20 @@ function CreateProductModal({ open, onClose }) {
                     p: 4,
                     borderRadius: 2,
                     width: 600,
+
                 }}
             >
-                <Typography variant="h6" component="h2" mb={2}>
+                <Typography
+                    variant="h6"
+                    component="h2" m={2}
+                >
                     Create a New Product
                 </Typography>
-                <Grid container spacing={2}>
+
+                <Grid
+                    container spacing={2}
+                    sx={{m:2}}
+                >
                     {/* Product Name */}
                     <Grid  xs={12}>
                         <TextField
@@ -131,8 +139,16 @@ function CreateProductModal({ open, onClose }) {
                         </Typography>
                     </Grid>
 
+                <Box
+                    sx={{
+                        overflowY: 'auto',
+                        maxHeight: '50vh',
+                        mb: 6,
+                    }}
+                >
+
                     {selectedComponents.map((comp, index) => (
-                        <Grid container spacing={2} key={index} alignItems="center">
+                        <Grid container spacing={2} key={index} alignItems="center" sx={{m:2}}>
                             {/* Component Selection */}
                             <Grid  sx={{minWidth: 195}}>
                                 <FormControl fullWidth>
@@ -189,7 +205,8 @@ function CreateProductModal({ open, onClose }) {
                             Add Component
                         </Button>
                     </Grid>
-                </Grid>
+                </Box>
+            </Grid>
 
                 {/* Submit Button */}
                 <Button
@@ -201,6 +218,7 @@ function CreateProductModal({ open, onClose }) {
                 >
                     Save Product
                 </Button>
+
             </Box>
         </Modal>
     );
