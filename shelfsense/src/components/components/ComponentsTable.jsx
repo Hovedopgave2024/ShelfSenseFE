@@ -14,13 +14,13 @@ import useComponentsStore from "../../stores/useComponentsStore.js";
 import {Typography} from "@mui/material";
 import DataManipulationBar from '../dataManipulationBar/DataManipulationBar.jsx';
 
-const ComponentsTable = () => {
+const ComponentsTable = ({ onEdit }) => {
     const components = useComponentsStore((state) => state.components);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [filteredComponents, setFilteredComponents] = useState([]);
     const types = components.map(component => component.type);
-    const columnTitles = ["Name", "Manufacturer Part", "Price", "Type", "Quantity", "Actions"]
+    const columnTitles = ["Name", "Manufacturer", "Manufacturer Part", "Type", "Supplier", "Footprint", "Stock", "Safety Stock", "Supplier Stock", "Supplier Incoming Stock", "Supplier Incoming Date", "Actions"]
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -53,8 +53,8 @@ const ComponentsTable = () => {
                 }))}
             />
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <TableContainer sx={{ maxHeight: 440 }}>
-                    <Table sx={{ minWidth: 650 }} stickyHeader aria-label="components table">
+                <TableContainer>
+                    <Table stickyHeader aria-label="components table">
                         <TableHead>
                             <TableRow>
                                 <>
@@ -71,7 +71,7 @@ const ComponentsTable = () => {
                                 filteredComponents
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((data) => (
-                                        <ComponentsTableRow key={data.id} component={data} />
+                                        <ComponentsTableRow key={data.id} component={data} onEdit={onEdit} />
                                     ))
                             ) : (
                                 <TableRow>

@@ -1,5 +1,4 @@
 import { Card, CardContent, Chip, Avatar, Stack, Typography, Button } from '@mui/material';
-import { useNavigate } from "react-router-dom";
 import { stockCalculator } from '../../util/services/componentService.jsx';
 import {useState} from "react";
 import ProductModal from "./ProductModal.jsx";
