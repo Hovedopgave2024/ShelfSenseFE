@@ -21,6 +21,7 @@ const ProductsPage = () => {
     const updateComponent = useComponentsStore((state) => state.updateComponent);
     const apiUpdate = useApiUpdateStore((state) => state.apiUpdate);
 
+
     const toggleDrawer = () => {
         setOpenSideBar((prevOpen) => !prevOpen);
     };

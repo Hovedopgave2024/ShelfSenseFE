@@ -1,21 +1,59 @@
 import { Card, CardContent, Chip, Avatar, Stack, Typography, Button } from '@mui/material';
-import { useNavigate } from "react-router-dom";
-import { chipConfig } from '../../util/services/ProductService.jsx';
+import { stockCalculator } from '../../util/services/componentService.jsx';
+import {useState} from "react";
+import ProductModal from "./ProductModal.jsx";
+import useComponentsStore from "../../stores/useComponentsStore.js";
 
 const ProductsCard = ({ product }) => {
-    const navigate = useNavigate();
+    const [openModal, setOpenModal] = useState(false);
 
-    const handleNavigation = () => {
-        navigate('/components');
-    };
+    const toggleModal = () => {
+        setOpenModal((prevOpen) => !prevOpen);
+    }
+
+    const components = useComponentsStore((state) => state.components);
+
+    const lowestStatus = product.productComponentList.map((productComponent) => {
+        const component = components.find(
+            (c) => c.id === productComponent.componentId
+        );
+
+        if (component) {
+            // Calculate stock status using stockCalculator
+            const status = stockCalculator(
+                component.stock,
+                component.safetyStock,
+                component.safetyStockRop
+            );
+
+            return {
+                label: status.label,
+                icon: status.icon,
+                color: status.color,
+                remaining: status.remaining,
+            };
+        }
+        return null; // Handle case when component is not found
+    })
+        .filter((status) => status !== null) // Filter out null values
+        .reduce((lowest, current) =>
+            current.remaining < lowest.remaining ? current : lowest,
+            { label: "No Data", icon: null, color: "gray", remaining: Infinity } // Default value
+        );
+
+    // Now you can destructure the result to get label, icon, and color
+    const { label, icon, color } = lowestStatus;
 
     const stock1 = 80;
     const stock2 = 40;
     const safetyStock = 60;
-    const safetyMultiplier = 1.25;
+    const safetyStockROP = 1.25;
 
-    const chip1Config = chipConfig(stock1, safetyStock, safetyMultiplier);
-    const chip2Config = chipConfig(stock2, safetyStock, safetyMultiplier);
+    const stockCalculator1 = stockCalculator(stock1, safetyStock, safetyStockROP);
+    const stockCalculator2 = stockCalculator(stock2, safetyStock, safetyStockROP);
+
+    // Helper function to determine if a label is 'Critical Stock Level'
+    const isCritical = (label) => label === 'Critical Stock Level';
 
     return (
         <Card
@@ -58,9 +96,19 @@ const ProductsCard = ({ product }) => {
                                     justifyContent: 'flex-start',
                                     cursor: 'default',
                                 }}
-                                color={chip1Config.color}
-                                avatar={<Avatar>{chip1Config.icon}</Avatar>}
-                                label={chip1Config.label}
+                                color={isCritical(label) ? 'default' : color}
+                                avatar={<Avatar>{icon}</Avatar>}
+                                label={label}
+                                variant="filled"
+                                // Apply conditional styling for 'Critical Stock Level'
+                                sx={{
+                                    borderRadius: '0 16px 16px 0',
+                                    fontSize: '0.6rem',
+                                    justifyContent: 'flex-start',
+                                    cursor: 'default',
+                                    backgroundColor: isCritical(label) ? 'black' : undefined,
+                                    color: isCritical(label) ? 'white' : undefined,
+                                }}
                             />
                         </Stack>
                     </Card>
@@ -80,9 +128,9 @@ const ProductsCard = ({ product }) => {
                                     fontSize: '0.6rem',
                                     justifyContent: 'flex-end',
                                 }}
-                                color={chip2Config.color}
-                                label={chip2Config.label}
-                                avatar={<Avatar>{chip2Config.icon}</Avatar>}
+                                color={stockCalculator2.color}
+                                label={stockCalculator2.label}
+                                avatar={<Avatar>{stockCalculator2.icon}</Avatar>}
                             />
                         </Stack>
                     </Card>
@@ -101,10 +149,13 @@ const ProductsCard = ({ product }) => {
                         boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.3)',
                     },
                 }}
-                onClick={handleNavigation}
+            onClick={() => {toggleModal();}}
             >
                 Open Product
             </Button>
+
+            {/* Render the ProductModal outside the Button */}
+            {openModal && <ProductModal open={openModal} onClose={toggleModal} product={{product}} />}
         </Card>
     );
 };
