@@ -8,8 +8,8 @@ import ComponentsEditModal from "../components/components/ComponentsEditModal.js
 const ComponentsPage = () => {
     const [open, setOpen] = useState(false);
     const [openModal, setOpenModal] = useState(false);
-    const [openEditModal, setOpenEditModal] = useState(false); // For edit modal
-    const [componentToEdit, setComponentToEdit] = useState(null); // Selected component for editing
+    const [openEditModal, setOpenEditModal] = useState(false);
+    const [componentToEdit, setComponentToEdit] = useState(null);
 
 
     const toggleDrawer = () => {
@@ -20,10 +20,9 @@ const ComponentsPage = () => {
         setOpenModal((prevOpen) => !prevOpen);
     };
 
-    // Function to handle the "Edit" button click
     const handleEdit = (component) => {
-        setComponentToEdit(component); // Set the selected component
-        setOpenEditModal(true); // Open the edit modal
+        setComponentToEdit(component);
+        setOpenEditModal(true);
     };
 
     return (
@@ -41,14 +40,14 @@ const ComponentsPage = () => {
                 >
                     Create Component
                 </Button>
-                <ComponentTable onEdit={handleEdit} /> {/* Pass onEdit to the table */}
+                <ComponentTable onEdit={handleEdit} />
                 <ComponentsCreateModal open={openModal} onClose={toggleModal} />
                 <>
                     {componentToEdit && (
                         <ComponentsEditModal
                             open={openEditModal}
                             onClose={() => setOpenEditModal(false)}
-                            component={componentToEdit} // Pass the selected component
+                            component={componentToEdit}
                         />
                     )}
                 </>
