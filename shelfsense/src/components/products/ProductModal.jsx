@@ -89,7 +89,7 @@ function ProductModal({ open, onClose, product }) {
                                                         fontSize: '0.75rem',
                                                         borderRadius: 1,
                                                         backgroundColor: stockStatus.color,
-                                                        color: stockStatus.color,
+                                                        color: "white",
                                                     }}
                                                     color={stockStatus.color}
                                                     label={stockStatus.label}
@@ -107,7 +107,7 @@ function ProductModal({ open, onClose, product }) {
                                                         fontSize: '0.75rem',
                                                         borderRadius: 1,
                                                         backgroundColor: supplierStockStatus.color,
-                                                        color: supplierStockStatus.color
+                                                        color: "white",
                                                     }}
                                                     color={supplierStockStatus.color}
                                                     label={supplierStockStatus.label}
