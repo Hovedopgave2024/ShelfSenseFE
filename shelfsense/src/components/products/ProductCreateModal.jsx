@@ -153,68 +153,64 @@ function CreateProductModal({ open, onClose }) {
                                 Add component(s)
                             </Typography>
                         </Grid>
-                        <>
-                            {selectedComponents.map((comp, index) => (
-                                <Grid
-                                    container
-                                    spacing={2}
-                                    key={index}
-                                    alignItems="center"
-                                    justifyContent="center"
-                                >
-                                    {/* Component Selection */}
-                                    <Grid item sx={{ minWidth: 210 }}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id={`component-select-label-${index}`}>
-                                                Component
-                                            </InputLabel>
-                                            <Select
-                                                variant="outlined"
-                                                labelId={`component-select-label-${index}`}
-                                                value={comp.component_id}
-                                                label="Component"
-                                                onChange={(e) =>
-                                                    handleComponentChange(index, 'component_id', e.target.value)
-                                                }
-                                            >
-                                                <>
-                                                    {componentsList.map((component) => (
-                                                        <MenuItem key={component.id} value={component.id}>
-                                                            {component.name}
-                                                        </MenuItem>
-                                                    ))}
-                                                </>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-
-                                    {/* Quantity Input */}
-                                    <Grid item xs={5}>
-                                        <TextField
-                                            label="Quantity"
-                                            name="quantity"
+                        {selectedComponents.map((comp, index) => (
+                            <Grid
+                                container
+                                spacing={2}
+                                key={index}
+                                alignItems="center"
+                                justifyContent="center"
+                            >
+                                {/* Component Selection */}
+                                <Grid item sx={{ minWidth: 210 }}>
+                                    <FormControl fullWidth>
+                                        <InputLabel id={`component-select-label-${index}`}>
+                                            Component
+                                        </InputLabel>
+                                        <Select
                                             variant="outlined"
-                                            fullWidth
-                                            value={comp.quantity}
+                                            labelId={`component-select-label-${index}`}
+                                            value={comp.component_id}
+                                            label="Component"
                                             onChange={(e) =>
-                                                handleComponentChange(index, 'quantity', e.target.value)
+                                                handleComponentChange(index, 'component_id', e.target.value)
                                             }
-                                            type="number"
-                                        />
-                                    </Grid>
-
-                                    {/* Remove Component Button */}
-                                    <Grid item xs={2}>
-                                        <IconButton
-                                            color="error"
-                                            onClick={() => handleRemoveComponent(index)}
                                         >
-                                            <Remove />
-                                        </IconButton>
-                                    </Grid>
+                                            {componentsList.map((component) => (
+                                                <MenuItem key={component.id} value={component.id}>
+                                                    {component.name}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
                                 </Grid>
-                            ))}
-                        </>
+
+                                {/* Quantity Input */}
+                                <Grid item xs={5}>
+                                    <TextField
+                                        label="Quantity"
+                                        name="quantity"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={comp.quantity}
+                                        onChange={(e) =>
+                                            handleComponentChange(index, 'quantity', e.target.value)
+                                        }
+                                        type="number"
+                                    />
+                                </Grid>
+
+                                {/* Remove Component Button */}
+                                <Grid item xs={2}>
+                                    <IconButton
+                                        color="error"
+                                        onClick={() => handleRemoveComponent(index)}
+                                    >
+                                        <Remove />
+                                    </IconButton>
+                                </Grid>
+                            </Grid>
+                        ))}
                     </Grid>
                 </Box>
                 {/* Add Button */}
