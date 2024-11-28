@@ -22,7 +22,7 @@ const ComponentsTable = ({ onEdit }) => {
     const types = [...new Set(components.map(component => component.type))];
     const manufacturers = [...new Set(components.map(component => component.manufacturer))];
     const suppliers = [...new Set(components.map(component => component.supplier))];
-    const columnTitles = ["Name", "Manufacturer", "Manufacturer Part", "Type", "Supplier", "Footprint", "Stock", "Safety Stock", "Supplier Stock", "Supplier Incoming Stock", "Supplier Incoming Date", "Actions"];
+    const columnTitles = ["Name", "Manufacturer Part", "Supplier", "Footprint", "Stock", "Stock Status", "Safety Stock", "Supplier Stock", "Supplier Stock Status", "Supplier Incoming Stock", "Supplier Incoming Date", "Actions"];
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
