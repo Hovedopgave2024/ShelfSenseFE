@@ -106,18 +106,8 @@ function UpdateProductModal({ open, onClose, product }) {
             }),
         };
 
-        try {
-            const response = await updateProduct(payload);
-            if (response) {
-                updateProductInStore(response);
-                onClose();
-            } else {
-                alert('Failed to update product. Please try again.');
-            }
-        } catch (error) {
-            console.error('Error updating product:', error);
-            alert('An error occurred while updating the product.');
-        }
+        await updateProduct(payload);
+        onClose();
     };
 
     return (

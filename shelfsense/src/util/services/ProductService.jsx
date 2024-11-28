@@ -78,13 +78,47 @@ export const updateProduct = async (product) => {
             body: JSON.stringify(product), // Convert the product object to JSON
         });
 
+        if (response.status === 401) {
+            console.error('Unauthorized request while updating product components.');
+            return null;
+        }
+
         if (!response.ok) {
-            throw new Error(`Failed to update product: ${response.statusText}`);
+            console.error('Failed to update product components:', response.status);
+            return null;
         }
 
         const updatedProduct = await response.json();
         useProductsStore.getState().updateProduct(updatedProduct);
         return updatedProduct;
+    } catch (error) {
+        console.error('Error in updateProduct:', error);
+        throw error;
+    }
+};
+
+export const deleteProduct = async (product) => {
+    const BASE_URL = `${import.meta.env.VITE_API_URL}/products`;
+    try {
+        const response = await fetch(BASE_URL, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(product), // Convert the product object to JSON
+        });
+
+        if (response.status === 401) {
+            console.error('Unauthorized request while removing product components.');
+            return null;
+        }
+
+        if (!response.ok) {
+            console.error('Failed to remove product components:', response.status);
+            return null;
+        }
+        useProductsStore.getState().deleteProduct(product.id);
+        return await response.json();
     } catch (error) {
         console.error('Error in updateProduct:', error);
         throw error;
