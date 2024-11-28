@@ -4,26 +4,32 @@ import {useState} from "react";
 import {Sidebar} from "../components/sidebar/sidebar.jsx";
 import ComponentsCreateModal from "../components/components/ComponentsCreateModal.jsx";
 import ComponentsEditModal from "../components/components/ComponentsEditModal.jsx";
+import ComponentsAddStockModal from "../components/components/ComponentsAddStockModal.jsx";
 
 const ComponentsPage = () => {
     const [open, setOpen] = useState(false);
-    const [openModal, setOpenModal] = useState(false);
-    const [openEditModal, setOpenEditModal] = useState(false); // For edit modal
-    const [componentToEdit, setComponentToEdit] = useState(null); // Selected component for editing
-
+    const [CreateModal, setCreateModal] = useState(false);
+    const [EditModal, setEditModal] = useState(false);
+    const [componentToEdit, setComponentToEdit] = useState(null);
+    const [addStockModal, setAddStockModal] = useState(false);
+    const [componentToAddStock, setComponentToAddStock] = useState(null);
 
     const toggleDrawer = () => {
         setOpen((prevOpen) => !prevOpen);
     };
 
-    const toggleModal = () => {
-        setOpenModal((prevOpen) => !prevOpen);
+    const toggleCreateModal = () => {
+        setCreateModal((prevOpen) => !prevOpen);
     };
 
-    // Function to handle the "Edit" button click
     const handleEdit = (component) => {
-        setComponentToEdit(component); // Set the selected component
-        setOpenEditModal(true); // Open the edit modal
+        setComponentToEdit(component);
+        setEditModal(true);
+    };
+
+    const handleAddStock = (component) => {
+        setComponentToAddStock(component); // Set the selected component
+        setAddStockModal(true); // Open the Add Stock Modal
     };
 
     return (
@@ -31,24 +37,33 @@ const ComponentsPage = () => {
             <Sidebar open={open} toggleDrawer={toggleDrawer} />
             <Container sx={{ py: 4, overflow: "auto" }}>
                 <Typography variant="h4" component="h1" gutterBottom>
-                    Our Components
+                    Components
                 </Typography>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    sx={{ mb: 3 }}
-                    onClick={toggleModal}
-                >
-                    Create Component
-                </Button>
-                <ComponentTable onEdit={handleEdit} /> {/* Pass onEdit to the table */}
-                <ComponentsCreateModal open={openModal} onClose={toggleModal} />
+                <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{ mb: 3 }}
+                        onClick={toggleCreateModal}
+                    >
+                        Create Component
+                    </Button>
+                </Box>
+                <ComponentTable onEdit={handleEdit} onAddStock={handleAddStock}/>
+                <ComponentsCreateModal open={CreateModal} onClose={toggleCreateModal} />
                 <>
                     {componentToEdit && (
                         <ComponentsEditModal
-                            open={openEditModal}
-                            onClose={() => setOpenEditModal(false)}
-                            component={componentToEdit} // Pass the selected component
+                            open={EditModal}
+                            onClose={() => setEditModal(false)}
+                            component={componentToEdit}
+                        />
+                    )}
+                    {componentToAddStock && (
+                        <ComponentsAddStockModal
+                            open={addStockModal}
+                            onClose={() => setAddStockModal(false)} // Close the modal
+                            component={componentToAddStock} // Pass the selected component
                         />
                     )}
                 </>
