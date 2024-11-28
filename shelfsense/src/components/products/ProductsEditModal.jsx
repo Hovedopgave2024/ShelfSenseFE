@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import useProductStore from '../../stores/useProductsStore.js';
 import useComponentsStore from '../../stores/useComponentsStore.js';
-import { updateProduct } from '../../util/services/ProductService.jsx';
+import {deleteProduct, updateProduct} from '../../util/services/ProductService.jsx';
 import {
     Box,
     Button,
@@ -15,7 +15,7 @@ import {
     IconButton,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { Add, Remove } from '@mui/icons-material';
+import {Add, Delete, Remove} from '@mui/icons-material';
 
 function UpdateProductModal({ open, onClose, product }) {
     const [formData, setFormData] = useState({
@@ -25,7 +25,6 @@ function UpdateProductModal({ open, onClose, product }) {
 
     const [selectedComponents, setSelectedComponents] = useState([]);
     const componentsList = useComponentsStore((state) => state.components);
-    const updateProductInStore = useProductStore((state) => state.updateProduct);
 
     // Preload product components when the modal opens
     useEffect(() => {
@@ -109,6 +108,15 @@ function UpdateProductModal({ open, onClose, product }) {
         await updateProduct(payload);
         onClose();
     };
+
+    const handleDeleteProduct = async () => {
+        const payload = {
+            id: product.id
+        }
+        console.log(payload);
+        await deleteProduct(payload);
+        onClose();
+    }
 
     return (
         <Modal open={open} onClose={onClose}>
@@ -242,6 +250,15 @@ function UpdateProductModal({ open, onClose, product }) {
                     sx={{ mt: 1, ml: 5, px: 4 }}
                 >
                     Add Component
+                </Button>
+
+                <Button
+                    variant="outlined"
+                    startIcon={<Delete />}
+                    onClick={handleDeleteProduct}
+                    sx={{ mt: 1, ml: 5, px: 4 }}
+                >
+                    Delete Product
                 </Button>
 
                 {/* Submit Button */}

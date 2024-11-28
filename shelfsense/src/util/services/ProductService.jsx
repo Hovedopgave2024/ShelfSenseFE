@@ -72,10 +72,9 @@ export const updateProduct = async (product) => {
     try {
         const response = await fetch(BASE_URL, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(product), // Convert the product object to JSON
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(product),
         });
 
         if (response.status === 401) {
@@ -102,10 +101,9 @@ export const deleteProduct = async (product) => {
     try {
         const response = await fetch(BASE_URL, {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(product), // Convert the product object to JSON
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(product),
         });
 
         if (response.status === 401) {
