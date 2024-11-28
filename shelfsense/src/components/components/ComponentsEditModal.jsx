@@ -7,14 +7,16 @@ import {updateComponent, deleteComponent} from "../../util/services/ComponentSer
 
 const ComponentsEditModal = ({ open, onClose, component}) => {
     const [formData, setFormData] = useState(null);
-    const [errors, setErrors] = useState({}); // To track validation errors
+    const [errors, setErrors] = useState({});
+    const [addStock, setAddStock] = useState(0);
     const updateComponentInStore = useComponentsStore((state) => state.updateComponent);
-    const deleteComponentInStore = useComponentsStore((state) => state.deleteComponent); // Zustand delete function
+    const deleteComponentInStore = useComponentsStore((state) => state.deleteComponent);
+
 
     useEffect(() => {
         if (component) {
             setFormData(component);
-            setErrors({}); // Reset errors when a new component is loaded
+            setErrors({});
         }
     }, [component]);
 
@@ -24,7 +26,6 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
             ...prevData,
             [name]: value,
         }));
-        // Clear errors for the specific field as the user types
         setErrors((prevErrors) => ({
             ...prevErrors,
             [name]: '',
@@ -52,22 +53,20 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
         });
 
         setErrors(newErrors);
-        return Object.keys(newErrors).length === 0; // Returns `true` if no errors
+        return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async () => {
         if (!formData) return;
 
         if (!validateFields()) {
-            // Stop submission if validation fails
             return;
         }
 
-        const result = await updateComponent(formData.id, formData); // Update the component in the backend
-
+        const result = await updateComponent(formData.id, formData);
         if (result) {
-            updateComponentInStore(result); // Update the store with the updated component
-            onClose(); // Close the modal
+            updateComponentInStore(result);
+            onClose();
         } else {
             alert('Failed to update component. Please try again.');
         }
@@ -117,48 +116,50 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                 }}
             >
                 <Typography variant="h6" component="h2" mb={2}>
-                    Edit Component
+                    {`${component.name} (${component.manufacturerPart})`}
                 </Typography>
                 <Box
                     sx={{
                         overflowY: 'auto',
                         maxHeight: '60vh',
                         mb: 3,
+                        p: 1,
                     }}
                 >
                     <Grid container alignItems="center" justifyContent="center" spacing={2}>
                         <>
-                            {formData &&
-                                Object.keys(formData)
-                                    .filter(
-                                        (field) =>
-                                            ![
-                                                'id',
-                                                'userId',
-                                                'supplierStock',
-                                                'supplierIncomingStock',
-                                                'supplierIncomingDate',
-                                            ].includes(field)
-                                    ) // Exclude non-editable fields
-                                    .map((field) => (
-                                        <Grid xs={12} lg={3} key={field}>
-                                            <TextField
-                                                label={field}
-                                                name={field}
-                                                variant="outlined"
-                                                fullWidth
-                                                value={formData[field] || ''}
-                                                onChange={handleChange}
-                                                type={
-                                                    ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplierSafetyStock', 'supplierSafetyStockRop'].includes(field)
-                                                        ? 'number'
-                                                        : 'text'
-                                                }
-                                                error={!!errors[field]}
-                                                helperText={errors[field] || ''}
-                                            />
-                                        </Grid>
-                                    ))}
+                        {formData &&
+                            Object.keys(formData)
+                                .filter(
+                                    (field) =>
+                                        ![
+                                            'id',
+                                            'userId',
+                                            'supplierStock',
+                                            'supplierIncomingStock',
+                                            'supplierIncomingDate',
+                                            'supplierStockStatus',
+                                        ].includes(field)
+                            ) // Exclude non-editable fields
+                            .map((field) => (
+                                <Grid xs={12} lg={3} key={field}>
+                                    <TextField
+                                        label={field}
+                                        name={field}
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData[field] || ''}
+                                        onChange={handleChange}
+                                        type={
+                                            ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplierSafetyStock', 'supplierSafetyStockRop'].includes(field)
+                                                ? 'number'
+                                                : 'text'
+                                        }
+                                        error={!!errors[field]}
+                                        helperText={errors[field] || ''}
+                                    />
+                                </Grid>
+                            ))}
                         </>
                     </Grid>
                 </Box>
@@ -174,7 +175,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                     variant="contained"
                     color="error"
                     sx={{ mt: 1 }}
-                    onClick={handleDelete} // Trigger the delete function
+                    onClick={handleDelete}
                 >
                     Delete Component
                 </Button>
