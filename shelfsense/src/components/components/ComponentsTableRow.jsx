@@ -18,6 +18,7 @@ const ComponentsTableRow = ({ component, onEdit }) => (
                         sx={{
                             fontSize: '0.75rem',
                             borderRadius: 1,
+                            width: 95,
                             backgroundColor: color,
                             color: "white",
                         }}
@@ -39,6 +40,7 @@ const ComponentsTableRow = ({ component, onEdit }) => (
                         sx={{
                             fontSize: '0.75rem',
                             borderRadius: 1,
+                            width: 95,
                             backgroundColor: color,
                             color: "white",
                         }}
