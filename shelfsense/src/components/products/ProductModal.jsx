@@ -2,7 +2,7 @@ import React from 'react';
 import {Box, Button, Modal, Typography, List, ListItem, ListItemText, Chip, Stack,}
 from '@mui/material';
 import useComponentsStore from "../../stores/useComponentsStore.js";
-import { statusLabel } from '../../util/services/componentService.jsx'; // Adjust the import path as needed
+import { statusLabel } from '../../util/services/ComponentService.jsx'; // Adjust the import path as needed
 
 function ProductModal({ open, onClose, product }) {
     const actualProduct = product.product; // Extract the product object

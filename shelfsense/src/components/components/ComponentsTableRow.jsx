@@ -1,5 +1,5 @@
 import {TableRow, TableCell, Button, Typography, Chip} from '@mui/material';
-import { statusLabel } from '../../util/services/componentService.jsx';
+import { statusLabel } from '../../util/services/ComponentService.jsx';
 import React from "react";
 
 const ComponentsTableRow = ({ component, onEdit }) => (
