@@ -30,11 +30,11 @@ function UpdateProductModal({ open, onClose, product }) {
     // Preload product components when the modal opens
     useEffect(() => {
         if (product?.productComponentList) {
-            const preloadedComponents = product.productComponentList.map((comp) => ({
-                id: comp.id, // Existing component ID
-                componentId: comp.componentId, // Associated component ID
-                quantity: comp.quantity,
-                productId: product.id,
+            const preloadedComponents = product.productComponentList.map((pc) => ({
+                id: pc.id, // Existing component ID
+                componentId: pc.componentId, // Associated component ID
+                quantity: pc.quantity,
+                productId: pc.productId,
             }));
             setSelectedComponents(preloadedComponents);
         }
@@ -69,9 +69,9 @@ function UpdateProductModal({ open, onClose, product }) {
     };
 
     const handleAddComponent = () => {
-        setSelectedComponents([
-            ...selectedComponents,
-            { componentId: '', quantity: '', productId: product.id }, // New component without ID
+        setSelectedComponents((prevComponents) => [
+            ...prevComponents,
+            { componentId: '', quantity: '', productId: product.id }, // New component
         ]);
     };
 
