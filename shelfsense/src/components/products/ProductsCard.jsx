@@ -2,11 +2,21 @@ import { Card, CardContent, Chip, Avatar, Stack, Typography, Button } from '@mui
 import { useState } from "react";
 import ProductModal from "./ProductModal.jsx";
 import useComponentsStore from "../../stores/useComponentsStore.js";
-import { statusLabel } from '../../util/services/ComponentService.jsx'; // Adjust the import path as needed
+import { statusLabel } from '../../util/services/ComponentService.jsx';
+import UpdateProductModal from "./ProductsEditModal.jsx";
 
 const ProductsCard = ({ product }) => {
 
     const [openModal, setOpenModal] = useState(false);
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+
+    const handleOpenUpdateModal = () => {
+        setIsUpdateModalOpen(true);
+    };
+
+    const handleCloseUpdateModal = () => {
+        setIsUpdateModalOpen(false);
+    };
 
     const toggleModal = () => {
         console.log('toggleModal');
@@ -41,7 +51,7 @@ const ProductsCard = ({ product }) => {
     const supplierStockStatus = lowestSupplierStockStatusValue !== Infinity ? statusLabel(lowestSupplierStockStatusValue) : statusLabel(null);
 
     // Helper function to determine if a label is 'Critical Stock Level'
-    const isCritical = (label) => label === 'Critical Stock Level';
+    // const isCritical = (label) => label === 'Critical Stock Level';
 
     return (
         <Card
@@ -141,7 +151,31 @@ const ProductsCard = ({ product }) => {
             >
                 Open Product
             </Button>
+            <Button
+                variant="contained"
+                sx={{
+                    margin: '15px',
+                    borderRadius: 3,
+                    backgroundColor: 'rgba(135, 206, 250)',
+                    color: '#000',
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                    '&:hover': {
+                        backgroundColor: 'rgba(173, 216, 230)',
+                        boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.3)',
+                    },
+                }}
+                onClick={handleOpenUpdateModal}
+            >
+                Edit Product
+            </Button>
             {openModal && <ProductModal open={openModal} onClose={toggleModal} product={{product}} />}
+            {isUpdateModalOpen && (
+                <UpdateProductModal
+                    open={isUpdateModalOpen}
+                    onClose={handleCloseUpdateModal}
+                    product={product}
+                />
+            )}
         </Card>
     );
 };

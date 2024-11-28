@@ -1,5 +1,6 @@
 import { getRequest } from './GetRequestService.jsx';
 import { CheckCircleOutlined, WarningOutlined, ErrorOutlined } from '@mui/icons-material';
+import useProductsStore from "../../stores/useProductsStore.js";
 
 export const fetchComponents = async () => {
     return await getRequest(`products`);
@@ -65,6 +66,31 @@ export const createProductComponents = async (productComponentsData) => {
         return null;
     }
 };
+
+export const updateProduct = async (product) => {
+    const BASE_URL = `${import.meta.env.VITE_API_URL}/products`;
+    try {
+        const response = await fetch(BASE_URL, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(product), // Convert the product object to JSON
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to update product: ${response.statusText}`);
+        }
+
+        const updatedProduct = await response.json();
+        useProductsStore.getState().updateProduct(updatedProduct);
+        return updatedProduct;
+    } catch (error) {
+        console.error('Error in updateProduct:', error);
+        throw error;
+    }
+};
+
 
 
 
