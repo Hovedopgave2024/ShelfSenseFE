@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import useProductStore from '../../stores/useProductsStore.js';
 import useComponentsStore from '../../stores/useComponentsStore.js';
 import { createProduct } from '../../util/services/ProductService.jsx';
@@ -104,120 +104,124 @@ function CreateProductModal({ open, onClose }) {
                     p: 4,
                     borderRadius: 2,
                     width: 600,
-
                 }}
             >
-                <Typography
-                    variant="h6"
-                    component="h2" m={2}
-                >
-                    Create a New Product
-                </Typography>
-
-                <Grid
-                    container spacing={2}
-                    sx={{m:2}}
-                >
-                    {/* Product Name */}
-                    <Grid  xs={12}>
-                        <TextField
-                            label="Name"
-                            name="name"
-                            variant="outlined"
-                            fullWidth
-                            value={formData.name}
-                            onChange={handleChange}
-                        />
-                    </Grid>
-
-                    {/* Product Price */}
-                    <Grid  xs={12}>
-                        <TextField
-                            label="Price"
-                            name="price"
-                            variant="outlined"
-                            fullWidth
-                            value={formData.price}
-                            onChange={handleChange}
-                            type="number"
-                        />
-                    </Grid>
-
-                    {/* Components Section */}
-                    <Grid  sx={{minWidth: 195}}>
-                        <Typography variant="subtitle1" component="p" >
-                            Add component(s)
-                        </Typography>
-                    </Grid>
-
                 <Box
                     sx={{
                         overflowY: 'auto',
                         maxHeight: '50vh',
-                        mb: 6,
                     }}
                 >
-
-                    {selectedComponents.map((comp, index) => (
-                        <Grid container spacing={2} key={index} alignItems="center" sx={{m:2}}>
-                            {/* Component Selection */}
-                            <Grid  sx={{minWidth: 195}}>
-                                <FormControl fullWidth>
-                                    <InputLabel id={`component-select-label-${index}`}>Component</InputLabel>
-                                    <Select
-                                        labelId={`component-select-label-${index}`}
-                                        value={comp.component_id}
-                                        label="Component"
-                                        onChange={(e) =>
-                                            handleComponentChange(index, 'component_id', e.target.value)
-                                        }
-                                    >
-                                        {componentsList.map((component) => (
-                                            <MenuItem key={component.id} value={component.id}>
-                                                {component.name}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-
-                            {/* Quantity Input */}
-                            <Grid  xs={5}>
-                                <TextField
-                                    label="Quantity"
-                                    name="quantity"
-                                    variant="outlined"
-                                    fullWidth
-                                    value={comp.quantity}
-                                    onChange={(e) =>
-                                        handleComponentChange(index, 'quantity', e.target.value)
-                                    }
-                                    type="number"
-                                />
-                            </Grid>
-
-                            {/* Remove Component Button */}
-                            <Grid xs={2}>
-                                <IconButton color="error" onClick={() => handleRemoveComponent(index)}>
-                                    <Remove />
-                                </IconButton>
-                            </Grid>
+                    <Typography variant="h6" component="h2" sx={{ ml: 5 }}>
+                        Create a New Product
+                    </Typography>
+                    <Grid
+                        container
+                        spacing={2}
+                        alignItems="flex-start"
+                        justifyContent="flex-start"
+                        sx={{ ml: 5 }}
+                    >
+                        {/* Product Name */}
+                        <Grid xs={12}>
+                            <TextField
+                                label="Name"
+                                name="name"
+                                variant="outlined"
+                                fullWidth
+                                value={formData.name}
+                                onChange={handleChange}
+                            />
                         </Grid>
-                    ))}
 
-                    {/* Add Component Button */}
-                    <Grid xs={12}>
-                        <Button
-                            variant="outlined"
-                            startIcon={<Add />}
-                            onClick={handleAddComponent}
-                            fullWidth
-                        >
-                            Add Component
-                        </Button>
+                        {/* Product Price */}
+                        <Grid xs={12}>
+                            <TextField
+                                label="Price"
+                                name="price"
+                                variant="outlined"
+                                fullWidth
+                                value={formData.price}
+                                onChange={handleChange}
+                                type="number"
+                            />
+                        </Grid>
+
+                        {/* Components Section */}
+                        <Grid item xs={12} container justifyContent="center" alignItems="center">
+                            <Typography variant="subtitle1" component="p">
+                                Add component(s)
+                            </Typography>
+                        </Grid>
+                        {selectedComponents.map((comp, index) => (
+                            <Grid
+                                container
+                                spacing={2}
+                                key={index}
+                                alignItems="center"
+                                justifyContent="center"
+                            >
+                                {/* Component Selection */}
+                                <Grid item sx={{ minWidth: 210 }}>
+                                    <FormControl fullWidth>
+                                        <InputLabel id={`component-select-label-${index}`}>
+                                            Component
+                                        </InputLabel>
+                                        <Select
+                                            variant="outlined"
+                                            labelId={`component-select-label-${index}`}
+                                            value={comp.component_id}
+                                            label="Component"
+                                            onChange={(e) =>
+                                                handleComponentChange(index, 'component_id', e.target.value)
+                                            }
+                                        >
+                                            {componentsList.map((component) => (
+                                                <MenuItem key={component.id} value={component.id}>
+                                                    {component.name}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+
+                                {/* Quantity Input */}
+                                <Grid item xs={5}>
+                                    <TextField
+                                        label="Quantity"
+                                        name="quantity"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={comp.quantity}
+                                        onChange={(e) =>
+                                            handleComponentChange(index, 'quantity', e.target.value)
+                                        }
+                                        type="number"
+                                    />
+                                </Grid>
+
+                                {/* Remove Component Button */}
+                                <Grid item xs={2}>
+                                    <IconButton
+                                        color="error"
+                                        onClick={() => handleRemoveComponent(index)}
+                                    >
+                                        <Remove />
+                                    </IconButton>
+                                </Grid>
+                            </Grid>
+                        ))}
                     </Grid>
                 </Box>
-            </Grid>
+                {/* Add Button */}
+                <Button
+                    variant="outlined"
+                    startIcon={<Add />}
+                    onClick={handleAddComponent}
+                    sx={{mt: 1, ml: 5, px: 4}}
+                >
+                    Add Component
+                </Button>
 
                 {/* Submit Button */}
                 <Button
@@ -229,7 +233,6 @@ function CreateProductModal({ open, onClose }) {
                 >
                     Save Product
                 </Button>
-
             </Box>
         </Modal>
     );

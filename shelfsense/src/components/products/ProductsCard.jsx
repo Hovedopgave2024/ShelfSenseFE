@@ -1,56 +1,44 @@
 import { Card, CardContent, Chip, Avatar, Stack, Typography, Button } from '@mui/material';
-import { stockCalculator } from '../../util/services/componentService.jsx';
-import {useState} from "react";
+import { useState } from "react";
 import ProductModal from "./ProductModal.jsx";
 import useComponentsStore from "../../stores/useComponentsStore.js";
+import { statusLabel } from '../../util/services/componentService.jsx'; // Adjust the import path as needed
 
 const ProductsCard = ({ product }) => {
+
     const [openModal, setOpenModal] = useState(false);
 
     const toggleModal = () => {
+        console.log('toggleModal');
         setOpenModal((prevOpen) => !prevOpen);
     }
 
     const components = useComponentsStore((state) => state.components);
 
-    const lowestStatus = product.productComponentList.map((productComponent) => {
-        const component = components.find(
-            (c) => c.id === productComponent.componentId
-        );
+    // Function to find the lowest status from a list of statuses
+    const findLowestStatus = (statuses) => {
+        return statuses.reduce((lowest, current) => current < lowest ? current : lowest, Infinity);
+    }
 
-        if (component) {
-            // Calculate stock status using stockCalculator
-            const status = stockCalculator(
-                component.stock,
-                component.safetyStock,
-                component.safetyStockRop
-            );
+    // Extract all stockStatus values from the product's components
+    const stockStatuses = product.productComponentList.map((productComponent) => {
+        const component = components.find(c => c.id === productComponent.componentId);
+        return component ? component.stockStatus : null;
+    }).filter(status => status !== null);
 
-            return {
-                label: status.label,
-                icon: status.icon,
-                color: status.color,
-                remaining: status.remaining,
-            };
-        }
-        return null; // Handle case when component is not found
-    })
-        .filter((status) => status !== null) // Filter out null values
-        .reduce((lowest, current) =>
-            current.remaining < lowest.remaining ? current : lowest,
-            { label: "No Data", icon: null, color: "gray", remaining: Infinity } // Default value
-        );
+    // Extract all supplierStockStatus values from the product's components
+    const supplierStockStatuses = product.productComponentList.map((productComponent) => {
+        const component = components.find(c => c.id === productComponent.componentId);
+        return component ? component.supplierStockStatus : null;
+    }).filter(status => status !== null);
 
-    // Now you can destructure the result to get label, icon, and color
-    const { label, icon, color } = lowestStatus;
+    // Determine the lowest (most critical) stockStatus
+    const lowestStockStatusValue = findLowestStatus(stockStatuses);
+    const stockStatus = lowestStockStatusValue !== Infinity ? statusLabel(lowestStockStatusValue) : statusLabel(null);
 
-    const stock1 = 80;
-    const stock2 = 40;
-    const safetyStock = 60;
-    const safetyStockROP = 1.25;
-
-    const stockCalculator1 = stockCalculator(stock1, safetyStock, safetyStockROP);
-    const stockCalculator2 = stockCalculator(stock2, safetyStock, safetyStockROP);
+    // Determine the lowest (most critical) supplierStockStatus
+    const lowestSupplierStockStatusValue = findLowestStatus(supplierStockStatuses);
+    const supplierStockStatus = lowestSupplierStockStatusValue !== Infinity ? statusLabel(lowestSupplierStockStatusValue) : statusLabel(null);
 
     // Helper function to determine if a label is 'Critical Stock Level'
     const isCritical = (label) => label === 'Critical Stock Level';
@@ -78,6 +66,8 @@ const ProductsCard = ({ product }) => {
                     >
                         {product.name}
                     </Typography>
+
+                    {/* Component Stock Status */}
                     <Card sx={{ borderRadius: 3 }}>
                         <Stack direction="column" spacing={1} sx={{ p: 2, pt: 1 }}>
                             <Typography
@@ -87,7 +77,7 @@ const ProductsCard = ({ product }) => {
                                 component="div"
                                 sx={{ cursor: 'default' }}
                             >
-                                Component stock
+                                Component Stock
                             </Typography>
                             <Chip
                                 sx={{
@@ -95,23 +85,18 @@ const ProductsCard = ({ product }) => {
                                     fontSize: '0.6rem',
                                     justifyContent: 'flex-start',
                                     cursor: 'default',
+                                    backgroundColor: stockStatus.color,
+                                    color: 'white',
                                 }}
-                                color={isCritical(label) ? 'default' : color}
-                                avatar={<Avatar>{icon}</Avatar>}
-                                label={label}
+                                color={stockStatus.color}
+                                avatar={<Avatar>{stockStatus.icon}</Avatar>}
+                                label={stockStatus.label}
                                 variant="filled"
-                                // Apply conditional styling for 'Critical Stock Level'
-                                sx={{
-                                    borderRadius: '0 16px 16px 0',
-                                    fontSize: '0.6rem',
-                                    justifyContent: 'flex-start',
-                                    cursor: 'default',
-                                    backgroundColor: isCritical(label) ? 'black' : undefined,
-                                    color: isCritical(label) ? 'white' : undefined,
-                                }}
                             />
                         </Stack>
                     </Card>
+
+                    {/* Supplier Stock Status */}
                     <Card sx={{ borderRadius: 3 }}>
                         <Stack direction="column" spacing={1} sx={{ p: 2, pt: 1 }}>
                             <Typography
@@ -120,17 +105,20 @@ const ProductsCard = ({ product }) => {
                                 variant="caption"
                                 component="div"
                             >
-                                Vendor stock
+                                Vendor Stock
                             </Typography>
                             <Chip
                                 sx={{
-                                    borderRadius: '16px 0 0 16px',
+                                    borderRadius: '0 16px 16px 0',
                                     fontSize: '0.6rem',
-                                    justifyContent: 'flex-end',
+                                    justifyContent: 'flex-start',
+                                    cursor: 'default',
+                                    backgroundColor: supplierStockStatus.color,
+                                    color: 'white',
                                 }}
-                                color={stockCalculator2.color}
-                                label={stockCalculator2.label}
-                                avatar={<Avatar>{stockCalculator2.icon}</Avatar>}
+                                color={supplierStockStatus.color}
+                                label={supplierStockStatus.label}
+                                avatar={<Avatar>{supplierStockStatus.icon}</Avatar>}
                             />
                         </Stack>
                     </Card>
@@ -149,12 +137,10 @@ const ProductsCard = ({ product }) => {
                         boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.3)',
                     },
                 }}
-            onClick={() => {toggleModal();}}
+                onClick={toggleModal}
             >
                 Open Product
             </Button>
-
-            {/* Render the ProductModal outside the Button */}
             {openModal && <ProductModal open={openModal} onClose={toggleModal} product={{product}} />}
         </Card>
     );
