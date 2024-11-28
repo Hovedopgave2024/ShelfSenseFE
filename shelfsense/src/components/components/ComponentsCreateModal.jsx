@@ -1,6 +1,8 @@
 import {useEffect, useState} from 'react';
-import { Modal, Box, Typography, Button, TextField } from '@mui/material/';
+import { Modal, Box, Typography, Button, TextField, Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material/';
 import Grid from '@mui/material/Grid2';
+import Autocomplete from '@mui/material/Autocomplete';
+
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import {createComponent} from "../../util/services/ComponentService.jsx";
 
@@ -35,9 +37,17 @@ const ComponentsCreateModal = ({ open, onClose }) => {
         'safetyStockRop',
     ]; // Fields that cannot be empty
 
-    const [formData, setFormData] = useState(initialFormData); // State to hold form data
-    const [errors, setErrors] = useState({}); // State to hold validation errors
-    const addComponent = useComponentsStore((state) => state.addComponent); // Zustand method to update the components store
+    const [formData, setFormData] = useState(initialFormData);
+    const [errors, setErrors] = useState({});
+    const [uniqueSuppliers, setUniqueSuppliers] = useState([]); // Store unique suppliers
+    const addComponent = useComponentsStore((state) => state.addComponent);
+    const components = useComponentsStore((state) => state.components); // Retrieve components from the store
+
+    // Extract unique suppliers from components
+    useEffect(() => {
+        const suppliers = [...new Set(components.map((comp) => comp.supplier))]; // Get unique supplier names
+        setUniqueSuppliers(['None', ...suppliers.filter(Boolean)]); // Add "None" as a hardcoded option and remove null/empty
+    }, [components]);
 
     // Handle changes in form input fields
     const handleChange = (e) => {
@@ -121,6 +131,57 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                     <Grid container alignItems="center" justifyContent="center" spacing={2}>
                         <>
                             {Object.keys(formData).map((field) => (
+                                field === 'supplier' ? (
+                                    <Grid xs={12} lg={3} key={field}>
+                                        <FormControl
+                                            fullWidth
+                                            sx={{ minWidth: 195 }}
+                                            error={!!errors[field]}
+                                        >
+                                            <Autocomplete
+                                                freeSolo
+                                                options={uniqueSuppliers}
+                                                value={formData.supplier || ''}
+                                                onChange={(e, newValue) => {
+                                                    setFormData((prevData) => ({
+                                                        ...prevData,
+                                                        supplier: newValue || '',
+                                                    }));
+                                                    // Clear the error when a new value is selected
+                                                    if (errors.supplier) {
+                                                        setErrors((prevErrors) => ({
+                                                            ...prevErrors,
+                                                            supplier: null,
+                                                        }));
+                                                    }
+                                                }}
+                                                onInputChange={(e, newInputValue) => {
+                                                    setFormData((prevData) => ({
+                                                        ...prevData,
+                                                        supplier: newInputValue || '',
+                                                    }));
+                                                    // Clear the error when the user starts typing
+                                                    if (errors.supplier) {
+                                                        setErrors((prevErrors) => ({
+                                                            ...prevErrors,
+                                                            supplier: null,
+                                                        }));
+                                                    }
+                                                }}
+                                                renderInput={(params) => (
+                                                    <TextField
+                                                        {...params}
+                                                        label="Supplier"
+                                                        name="supplier"
+                                                        variant="outlined"
+                                                        error={!!errors.supplier}
+                                                        helperText={errors.supplier || ''}
+                                                    />
+                                                )}
+                                            />
+                                        </FormControl>
+                                    </Grid>
+                                ) : (
                                 <Grid xs={12} lg={3} key={field}>
                                     <TextField
                                         label={field}
@@ -138,6 +199,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                                         }
                                     />
                                 </Grid>
+                                )
                             ))}
                         </>
                     </Grid>
