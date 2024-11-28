@@ -16,7 +16,6 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
     useEffect(() => {
         if (component) {
             setFormData(component);
-            setAddStock(0);
             setErrors({});
         }
     }, [component]);
@@ -31,10 +30,6 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
             ...prevErrors,
             [name]: '',
         }));
-    };
-
-    const handleQuantityChange = (e) => {
-        setAddStock(parseInt(e.target.value) || 0);
     };
 
     const validateFields = () => {
@@ -68,12 +63,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
             return;
         }
 
-        const updatedData = {
-            ...formData,
-            stock: formData.stock + addStock,
-        };
-
-        const result = await updateComponent(formData.id, updatedData);
+        const result = await updateComponent(formData.id, formData);
         if (result) {
             updateComponentInStore(result);
             onClose();
@@ -126,7 +116,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                 }}
             >
                 <Typography variant="h6" component="h2" mb={2}>
-                    Edit Component
+                    {`${component.name} (${component.manufacturerPart})`}
                 </Typography>
                 <Box
                     sx={{
@@ -138,49 +128,38 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                 >
                     <Grid container alignItems="center" justifyContent="center" spacing={2}>
                         <>
-                            {formData &&
-                                Object.keys(formData)
-                                    .filter(
-                                        (field) =>
-                                            ![
-                                                'id',
-                                                'userId',
-                                                'supplierStock',
-                                                'supplierIncomingStock',
-                                                'supplierIncomingDate',
-                                                'supplierStockStatus',
-                                            ].includes(field)
-                                    ) // Exclude non-editable fields
-                                    .map((field) => (
-                                        <Grid xs={12} lg={3} key={field}>
-                                            <TextField
-                                                label={field}
-                                                name={field}
-                                                variant="outlined"
-                                                fullWidth
-                                                value={formData[field] || ''}
-                                                onChange={handleChange}
-                                                type={
-                                                    ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplierSafetyStock', 'supplierSafetyStockRop'].includes(field)
-                                                        ? 'number'
-                                                        : 'text'
-                                                }
-                                                error={!!errors[field]}
-                                                helperText={errors[field] || ''}
-                                            />
-                                        </Grid>
-                                    ))}
-                            <Grid xs={12} lg={3}>
-                                <TextField
-                                    label="Add Stock"
-                                    name="Add Stock"
-                                    variant="outlined"
-                                    fullWidth
-                                    value={addStock || ''}
-                                    onChange={handleQuantityChange}
-                                    type="number"
-                                />
-                            </Grid>
+                        {formData &&
+                            Object.keys(formData)
+                                .filter(
+                                    (field) =>
+                                        ![
+                                            'id',
+                                            'userId',
+                                            'supplierStock',
+                                            'supplierIncomingStock',
+                                            'supplierIncomingDate',
+                                            'supplierStockStatus',
+                                        ].includes(field)
+                            ) // Exclude non-editable fields
+                            .map((field) => (
+                                <Grid xs={12} lg={3} key={field}>
+                                    <TextField
+                                        label={field}
+                                        name={field}
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData[field] || ''}
+                                        onChange={handleChange}
+                                        type={
+                                            ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplierSafetyStock', 'supplierSafetyStockRop'].includes(field)
+                                                ? 'number'
+                                                : 'text'
+                                        }
+                                        error={!!errors[field]}
+                                        helperText={errors[field] || ''}
+                                    />
+                                </Grid>
+                            ))}
                         </>
                     </Grid>
                 </Box>
@@ -196,7 +175,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                     variant="contained"
                     color="error"
                     sx={{ mt: 1 }}
-                    onClick={handleDelete} // Trigger the delete function
+                    onClick={handleDelete}
                 >
                     Delete Component
                 </Button>

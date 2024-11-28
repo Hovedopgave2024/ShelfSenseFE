@@ -9,11 +9,11 @@ const ComponentsAddStockModal = ({ open, onClose, component }) => {
 
     useEffect(() => {
         if (component) {
-            setAddStockValue(""); 
+            setAddStockValue("");
         }
     }, [component]);
 
-    const handleAddStock = async () => {
+    const handleUpdateStock = async () => {
         if (!component) return;
 
         const updatedComponent = {
@@ -52,7 +52,9 @@ const ComponentsAddStockModal = ({ open, onClose, component }) => {
                     gap: 2,
                 }}
             >
-                <Typography variant="h6">Add Stock</Typography>
+                <Typography variant="h6">
+                    {`${component.name} (${component.manufacturerPart})`}
+                </Typography>
                 <TextField
                     label="Stock to Add"
                     type="number"
@@ -60,7 +62,7 @@ const ComponentsAddStockModal = ({ open, onClose, component }) => {
                     value={addStockValue}
                     onChange={handleAddStockChange}
                 />
-                <Button variant="contained" color="primary" onClick={handleAddStock}>
+                <Button variant="contained" color="primary" onClick={handleUpdateStock}>
                     Update Stock
                 </Button>
             </Box>
