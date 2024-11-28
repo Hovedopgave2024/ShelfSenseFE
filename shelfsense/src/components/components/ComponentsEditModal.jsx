@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, Box, Typography, Button, TextField } from '@mui/material/';
+import { Modal, Box, Typography, Button, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material/';
 import Grid from '@mui/material/Grid2';
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import useProductsStore from "../../stores/useProductsStore.js";
@@ -143,6 +143,26 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                                         ].includes(field)
                             ) // Exclude non-editable fields
                             .map((field) => (
+                                field === 'supplier' ? (
+                                    <Grid xs={12} lg={3} key={field}>
+                                        <FormControl
+                                            fullWidth
+                                            sx={{ minWidth: 195 }}
+                                        >
+                                            <InputLabel>Supplier</InputLabel>
+                                            <Select
+                                                name={field}
+                                                value={formData[field] || ''}
+                                                onChange={(e) => handleChange(e)}
+                                                label="Supplier"
+                                                fullWidth
+                                            >
+                                                <MenuItem value="Mouser">Mouser</MenuItem>
+                                                <MenuItem value="None">None</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                ) : (
                                 <Grid xs={12} lg={3} key={field}>
                                     <TextField
                                         label={field}
@@ -160,6 +180,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                                         helperText={errors[field] || ''}
                                     />
                                 </Grid>
+                                )
                             ))}
                         </>
                     </Grid>

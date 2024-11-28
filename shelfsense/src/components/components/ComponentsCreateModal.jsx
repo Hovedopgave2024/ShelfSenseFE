@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import { Modal, Box, Typography, Button, TextField } from '@mui/material/';
+import { Modal, Box, Typography, Button, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material/';
 import Grid from '@mui/material/Grid2';
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import {createComponent} from "../../util/services/ComponentService.jsx";
@@ -35,9 +35,9 @@ const ComponentsCreateModal = ({ open, onClose }) => {
         'safetyStockRop',
     ]; // Fields that cannot be empty
 
-    const [formData, setFormData] = useState(initialFormData); // State to hold form data
-    const [errors, setErrors] = useState({}); // State to hold validation errors
-    const addComponent = useComponentsStore((state) => state.addComponent); // Zustand method to update the components store
+    const [formData, setFormData] = useState(initialFormData);
+    const [errors, setErrors] = useState({});
+    const addComponent = useComponentsStore((state) => state.addComponent);
 
     // Handle changes in form input fields
     const handleChange = (e) => {
@@ -121,6 +121,23 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                     <Grid container alignItems="center" justifyContent="center" spacing={2}>
                         <>
                             {Object.keys(formData).map((field) => (
+                                field === 'supplier' ? (
+                                    <Grid xs={12} lg={3} key={field}>
+                                        <FormControl fullWidth sx={{ minWidth: 195 }}>
+                                            <InputLabel>Supplier</InputLabel>
+                                            <Select
+                                                name={field}
+                                                value={formData[field] || ''}
+                                                onChange={handleChange}
+                                                label="Supplier"
+                                                fullWidth
+                                            >
+                                                <MenuItem value="Mouser">Mouser</MenuItem>
+                                                <MenuItem value="None">None</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                ) : (
                                 <Grid xs={12} lg={3} key={field}>
                                     <TextField
                                         label={field}
@@ -138,6 +155,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                                         }
                                     />
                                 </Grid>
+                                )
                             ))}
                         </>
                     </Grid>
