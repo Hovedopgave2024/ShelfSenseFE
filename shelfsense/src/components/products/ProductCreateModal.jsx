@@ -176,7 +176,9 @@ function CreateProductModal({ open, onClose }) {
                                                 handleComponentChange(index, 'component_id', e.target.value)
                                             }
                                         >
-                                            {componentsList.map((component) => (
+                                            {componentsList
+                                                .filter((component) => !selectedComponents.some((selected) => selected.component_id === component.id && selected.component_id !== comp.component_id))
+                                                .map((component) => (
                                                 <MenuItem key={component.id} value={component.id}>
                                                     {component.name}
                                                 </MenuItem>
