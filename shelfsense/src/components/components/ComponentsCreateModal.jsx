@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import { Modal, Box, Typography, Button, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material/';
+import { Modal, Box, Typography, Button, TextField, Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material/';
 import Grid from '@mui/material/Grid2';
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import {createComponent} from "../../util/services/ComponentService.jsx";
@@ -123,7 +123,11 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                             {Object.keys(formData).map((field) => (
                                 field === 'supplier' ? (
                                     <Grid xs={12} lg={3} key={field}>
-                                        <FormControl fullWidth sx={{ minWidth: 195 }}>
+                                        <FormControl
+                                            fullWidth
+                                            sx={{ minWidth: 195 }}
+                                            error={!!errors[field]}
+                                        >
                                             <InputLabel>Supplier</InputLabel>
                                             <Select
                                                 name={field}
@@ -135,6 +139,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                                                 <MenuItem value="Mouser">Mouser</MenuItem>
                                                 <MenuItem value="None">None</MenuItem>
                                             </Select>
+                                            {errors[field] && <FormHelperText>Required</FormHelperText>}
                                         </FormControl>
                                     </Grid>
                                 ) : (

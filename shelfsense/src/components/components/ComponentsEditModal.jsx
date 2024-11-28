@@ -14,11 +14,11 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
 
 
     useEffect(() => {
-        if (component) {
+        if (open && component) {
             setFormData(component);
             setErrors({});
         }
-    }, [component]);
+    }, [open, component]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
