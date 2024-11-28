@@ -4,16 +4,15 @@ import {useState} from "react";
 import {Sidebar} from "../components/sidebar/sidebar.jsx";
 import ComponentsCreateModal from "../components/components/ComponentsCreateModal.jsx";
 import ComponentsEditModal from "../components/components/ComponentsEditModal.jsx";
-import ComponentsUpdateStockModal from "../components/components/ComponentsUpdateStockModal.jsx";
-
+import ComponentsAddStockModal from "../components/components/ComponentsAddStockModal.jsx";
 
 const ComponentsPage = () => {
     const [open, setOpen] = useState(false);
     const [CreateModal, setCreateModal] = useState(false);
     const [EditModal, setEditModal] = useState(false);
-    const [UpdateStockModal, setUpdateStockModal] = useState(false);
     const [componentToEdit, setComponentToEdit] = useState(null);
-
+    const [addStockModal, setAddStockModal] = useState(false);
+    const [componentToAddStock, setComponentToAddStock] = useState(null);
 
     const toggleDrawer = () => {
         setOpen((prevOpen) => !prevOpen);
@@ -28,8 +27,9 @@ const ComponentsPage = () => {
         setEditModal(true);
     };
 
-    const toggleUpdateStockModal = () => {
-        setUpdateStockModal((prevOpen) => !prevOpen);
+    const handleAddStock = (component) => {
+        setComponentToAddStock(component); // Set the selected component
+        setAddStockModal(true); // Open the Add Stock Modal
     };
 
     return (
@@ -48,16 +48,8 @@ const ComponentsPage = () => {
                     >
                         Create Component
                     </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{ mb: 3 }}
-                        onClick={toggleUpdateStockModal}
-                    >
-                        Update Stock
-                    </Button>
                 </Box>
-                <ComponentTable onEdit={handleEdit} />
+                <ComponentTable onEdit={handleEdit} onAddStock={handleAddStock}/>
                 <ComponentsCreateModal open={CreateModal} onClose={toggleCreateModal} />
                 <>
                     {componentToEdit && (
@@ -67,11 +59,14 @@ const ComponentsPage = () => {
                             component={componentToEdit}
                         />
                     )}
+                    {componentToAddStock && (
+                        <ComponentsAddStockModal
+                            open={addStockModal}
+                            onClose={() => setAddStockModal(false)} // Close the modal
+                            component={componentToAddStock} // Pass the selected component
+                        />
+                    )}
                 </>
-                <ComponentsUpdateStockModal
-                    open={UpdateStockModal}
-                    onClose={toggleUpdateStockModal}
-                />
             </Container>
         </Box>
     );

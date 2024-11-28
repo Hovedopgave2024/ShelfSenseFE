@@ -1,8 +1,8 @@
-import {TableRow, TableCell, Button, Typography, Chip} from '@mui/material';
+import {TableRow, TableCell, Button, Typography, Chip, Box} from '@mui/material';
 import { statusLabel } from '../../util/services/ComponentService.jsx';
 import React from "react";
 
-const ComponentsTableRow = ({ component, onEdit }) => (
+const ComponentsTableRow = ({ component, onEdit, onAddStock }) => (
     <TableRow hover key={component.id}>
         <TableCell align="left">{component.name}</TableCell>
         <TableCell align="left">{component.manufacturerPart}</TableCell>
@@ -54,13 +54,22 @@ const ComponentsTableRow = ({ component, onEdit }) => (
         <TableCell align="left">{component.supplierIncomingStock}</TableCell>
         <TableCell align="left">{component.supplierIncomingDate}</TableCell>
         <TableCell align="left">
-            <Button
-                variant="outlined"
-                size="small"
-                onClick={() => onEdit(component)} // Callback for editing
-            >
-                Edit
-            </Button>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => onAddStock(component)} // Callback for adding stock
+                >
+                    Add Stock
+                </Button>
+                <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => onEdit(component)} // Callback for editing
+                >
+                    Edit
+                </Button>
+            </Box>
         </TableCell>
     </TableRow>
 );

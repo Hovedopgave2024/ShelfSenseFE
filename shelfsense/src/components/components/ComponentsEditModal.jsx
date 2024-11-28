@@ -7,14 +7,17 @@ import {updateComponent, deleteComponent} from "../../util/services/ComponentSer
 
 const ComponentsEditModal = ({ open, onClose, component}) => {
     const [formData, setFormData] = useState(null);
-    const [errors, setErrors] = useState({}); // To track validation errors
+    const [errors, setErrors] = useState({});
+    const [addStock, setAddStock] = useState(0);
     const updateComponentInStore = useComponentsStore((state) => state.updateComponent);
-    const deleteComponentInStore = useComponentsStore((state) => state.deleteComponent); // Zustand delete function
+    const deleteComponentInStore = useComponentsStore((state) => state.deleteComponent);
+
 
     useEffect(() => {
         if (component) {
             setFormData(component);
-            setErrors({}); // Reset errors when a new component is loaded
+            setAddStock(0);
+            setErrors({});
         }
     }, [component]);
 
@@ -24,11 +27,14 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
             ...prevData,
             [name]: value,
         }));
-        // Clear errors for the specific field as the user types
         setErrors((prevErrors) => ({
             ...prevErrors,
             [name]: '',
         }));
+    };
+
+    const handleQuantityChange = (e) => {
+        setAddStock(parseInt(e.target.value) || 0);
     };
 
     const validateFields = () => {
@@ -52,22 +58,25 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
         });
 
         setErrors(newErrors);
-        return Object.keys(newErrors).length === 0; // Returns `true` if no errors
+        return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async () => {
         if (!formData) return;
 
         if (!validateFields()) {
-            // Stop submission if validation fails
             return;
         }
 
-        const result = await updateComponent(formData.id, formData); // Update the component in the backend
+        const updatedData = {
+            ...formData,
+            stock: formData.stock + addStock,
+        };
 
+        const result = await updateComponent(formData.id, updatedData);
         if (result) {
-            updateComponentInStore(result); // Update the store with the updated component
-            onClose(); // Close the modal
+            updateComponentInStore(result);
+            onClose();
         } else {
             alert('Failed to update component. Please try again.');
         }
@@ -139,6 +148,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                                                 'supplierStock',
                                                 'supplierIncomingStock',
                                                 'supplierIncomingDate',
+                                                'supplierStockStatus',
                                             ].includes(field)
                                     ) // Exclude non-editable fields
                                     .map((field) => (
@@ -160,6 +170,17 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                                             />
                                         </Grid>
                                     ))}
+                            <Grid xs={12} lg={3}>
+                                <TextField
+                                    label="Add Stock"
+                                    name="Add Stock"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={addStock || ''}
+                                    onChange={handleQuantityChange}
+                                    type="number"
+                                />
+                            </Grid>
                         </>
                     </Grid>
                 </Box>
