@@ -124,6 +124,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                         overflowY: 'auto',
                         maxHeight: '60vh',
                         mb: 3,
+                        p: 1,
                     }}
                 >
                     <Grid container alignItems="center" justifyContent="center" spacing={2}>
