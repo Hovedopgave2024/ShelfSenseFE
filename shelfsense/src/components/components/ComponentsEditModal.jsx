@@ -139,6 +139,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                                             'supplierIncomingStock',
                                             'supplierIncomingDate',
                                             'supplierStockStatus',
+                                            'stockStatus',
                                         ].includes(field)
                             ) // Exclude non-editable fields
                             .map((field) => (
