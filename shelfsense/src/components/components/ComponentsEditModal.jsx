@@ -8,10 +8,11 @@ import {updateComponent, deleteComponent} from "../../util/services/ComponentSer
 const ComponentsEditModal = ({ open, onClose, component}) => {
     const [formData, setFormData] = useState(null);
     const [errors, setErrors] = useState({});
-    const [addStock, setAddStock] = useState(0);
+    const [uniqueSuppliers, setUniqueSuppliers] = useState([]); // Store unique suppliers
+
     const updateComponentInStore = useComponentsStore((state) => state.updateComponent);
     const deleteComponentInStore = useComponentsStore((state) => state.deleteComponent);
-
+    const components = useComponentsStore((state) => state.components); // Retrieve components from the store
 
     useEffect(() => {
         if (open && component) {
@@ -19,6 +20,11 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
             setErrors({});
         }
     }, [open, component]);
+
+    useEffect(() => {
+        const suppliers = [...new Set(components.map((comp) => comp.supplier))]; // Get unique supplier names
+        setUniqueSuppliers(['None', ...suppliers.filter(Boolean)]); // Add "None" as a hardcoded option and remove null/empty
+    }, [components]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -157,8 +163,11 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                                                 label="Supplier"
                                                 fullWidth
                                             >
-                                                <MenuItem value="Mouser">Mouser</MenuItem>
-                                                <MenuItem value="None">None</MenuItem>
+                                                {uniqueSuppliers.map((supplier) => (
+                                                    <MenuItem key={supplier} value={supplier}>
+                                                        {supplier}
+                                                    </MenuItem>
+                                                ))}
                                             </Select>
                                         </FormControl>
                                     </Grid>

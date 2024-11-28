@@ -37,7 +37,15 @@ const ComponentsCreateModal = ({ open, onClose }) => {
 
     const [formData, setFormData] = useState(initialFormData);
     const [errors, setErrors] = useState({});
+    const [uniqueSuppliers, setUniqueSuppliers] = useState([]); // Store unique suppliers
     const addComponent = useComponentsStore((state) => state.addComponent);
+    const components = useComponentsStore((state) => state.components); // Retrieve components from the store
+
+    // Extract unique suppliers from components
+    useEffect(() => {
+        const suppliers = [...new Set(components.map((comp) => comp.supplier))]; // Get unique supplier names
+        setUniqueSuppliers(['None', ...suppliers.filter(Boolean)]); // Add "None" as a hardcoded option and remove null/empty
+    }, [components]);
 
     // Handle changes in form input fields
     const handleChange = (e) => {
@@ -136,8 +144,11 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                                                 label="Supplier"
                                                 fullWidth
                                             >
-                                                <MenuItem value="Mouser">Mouser</MenuItem>
-                                                <MenuItem value="None">None</MenuItem>
+                                                {uniqueSuppliers.map((supplier) => (
+                                                    <MenuItem key={supplier} value={supplier}>
+                                                        {supplier}
+                                                    </MenuItem>
+                                                ))}
                                             </Select>
                                             {errors[field] && <FormHelperText>Required</FormHelperText>}
                                         </FormControl>
