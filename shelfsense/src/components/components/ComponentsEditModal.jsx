@@ -3,7 +3,7 @@ import { Modal, Box, Typography, Button, TextField } from '@mui/material/';
 import Grid from '@mui/material/Grid2';
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import useProductsStore from "../../stores/useProductsStore.js";
-import {updateComponent, deleteComponent} from "../../util/services/componentService.jsx";
+import {updateComponent, deleteComponent} from "../../util/services/ComponentService.jsx";
 
 const ComponentsEditModal = ({ open, onClose, component}) => {
     const [formData, setFormData] = useState(null);

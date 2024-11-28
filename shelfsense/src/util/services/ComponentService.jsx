@@ -1,4 +1,4 @@
-import {CheckCircleOutlined, Error, ErrorOutlined, WarningOutlined} from "@mui/icons-material";
+import {CheckCircleOutlined, RemoveCircleOutline, ErrorOutline, WarningAmber} from "@mui/icons-material";
 import { getRequest } from './GetRequestService.jsx';
 import useSessionStore from "../../stores/useSessionStore.js";
 import useApiUpdateStore from "../../stores/useApiUpdateStore.js";
@@ -48,20 +48,20 @@ export const statusLabel = (status) => {
     } else if (status === 3) {
         return {
             color: 'warning',
-            label: 'Low on stock',
-            icon: <WarningOutlined fontSize="small" />,
+            label: 'Low',
+            icon: <WarningAmber fontSize="small" />,
         };
     } else if (status === 2) {
         return {
             color: 'error',
-            label: 'Critical Stock Level',
-            icon: <ErrorOutlined fontSize="small" />,
+            label: 'Warning',
+            icon: <ErrorOutline fontSize="small" />,
         };
     } else if (status === 1){
         return {
             color: "#000000",
-            label: 'Close to stock out',
-            icon: <Error fontSize="small" />,
+            label: 'Critical',
+            icon: <RemoveCircleOutline fontSize="small" />,
         };
     } else {
         return {
