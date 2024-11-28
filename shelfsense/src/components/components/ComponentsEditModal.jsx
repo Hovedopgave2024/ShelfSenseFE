@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, Box, Typography, Button, TextField } from '@mui/material/';
+import { Modal, Box, Typography, Button, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material/';
 import Grid from '@mui/material/Grid2';
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import useProductsStore from "../../stores/useProductsStore.js";
@@ -8,17 +8,23 @@ import {updateComponent, deleteComponent} from "../../util/services/ComponentSer
 const ComponentsEditModal = ({ open, onClose, component}) => {
     const [formData, setFormData] = useState(null);
     const [errors, setErrors] = useState({});
-    const [addStock, setAddStock] = useState(0);
+    const [uniqueSuppliers, setUniqueSuppliers] = useState([]); // Store unique suppliers
+
     const updateComponentInStore = useComponentsStore((state) => state.updateComponent);
     const deleteComponentInStore = useComponentsStore((state) => state.deleteComponent);
-
+    const components = useComponentsStore((state) => state.components); // Retrieve components from the store
 
     useEffect(() => {
-        if (component) {
+        if (open && component) {
             setFormData(component);
             setErrors({});
         }
-    }, [component]);
+    }, [open, component]);
+
+    useEffect(() => {
+        const suppliers = [...new Set(components.map((comp) => comp.supplier))]; // Get unique supplier names
+        setUniqueSuppliers(['None', ...suppliers.filter(Boolean)]); // Add "None" as a hardcoded option and remove null/empty
+    }, [components]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -139,9 +145,33 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                                             'supplierIncomingStock',
                                             'supplierIncomingDate',
                                             'supplierStockStatus',
+                                            'stockStatus',
                                         ].includes(field)
                             ) // Exclude non-editable fields
                             .map((field) => (
+                                field === 'supplier' ? (
+                                    <Grid xs={12} lg={3} key={field}>
+                                        <FormControl
+                                            fullWidth
+                                            sx={{ minWidth: 195 }}
+                                        >
+                                            <InputLabel>Supplier</InputLabel>
+                                            <Select
+                                                name={field}
+                                                value={formData[field] || ''}
+                                                onChange={(e) => handleChange(e)}
+                                                label="Supplier"
+                                                fullWidth
+                                            >
+                                                {uniqueSuppliers.map((supplier) => (
+                                                    <MenuItem key={supplier} value={supplier}>
+                                                        {supplier}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                ) : (
                                 <Grid xs={12} lg={3} key={field}>
                                     <TextField
                                         label={field}
@@ -159,6 +189,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                                         helperText={errors[field] || ''}
                                     />
                                 </Grid>
+                                )
                             ))}
                         </>
                     </Grid>
