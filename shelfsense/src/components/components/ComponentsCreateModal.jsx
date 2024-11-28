@@ -1,6 +1,8 @@
 import {useEffect, useState} from 'react';
 import { Modal, Box, Typography, Button, TextField, Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material/';
 import Grid from '@mui/material/Grid2';
+import Autocomplete from '@mui/material/Autocomplete';
+
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import {createComponent} from "../../util/services/ComponentService.jsx";
 
@@ -136,21 +138,47 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                                             sx={{ minWidth: 195 }}
                                             error={!!errors[field]}
                                         >
-                                            <InputLabel>Supplier</InputLabel>
-                                            <Select
-                                                name={field}
-                                                value={formData[field] || ''}
-                                                onChange={handleChange}
-                                                label="Supplier"
-                                                fullWidth
-                                            >
-                                                {uniqueSuppliers.map((supplier) => (
-                                                    <MenuItem key={supplier} value={supplier}>
-                                                        {supplier}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                            {errors[field] && <FormHelperText>Required</FormHelperText>}
+                                            <Autocomplete
+                                                freeSolo
+                                                options={uniqueSuppliers}
+                                                value={formData.supplier || ''}
+                                                onChange={(e, newValue) => {
+                                                    setFormData((prevData) => ({
+                                                        ...prevData,
+                                                        supplier: newValue || '',
+                                                    }));
+                                                    // Clear the error when a new value is selected
+                                                    if (errors.supplier) {
+                                                        setErrors((prevErrors) => ({
+                                                            ...prevErrors,
+                                                            supplier: null,
+                                                        }));
+                                                    }
+                                                }}
+                                                onInputChange={(e, newInputValue) => {
+                                                    setFormData((prevData) => ({
+                                                        ...prevData,
+                                                        supplier: newInputValue || '',
+                                                    }));
+                                                    // Clear the error when the user starts typing
+                                                    if (errors.supplier) {
+                                                        setErrors((prevErrors) => ({
+                                                            ...prevErrors,
+                                                            supplier: null,
+                                                        }));
+                                                    }
+                                                }}
+                                                renderInput={(params) => (
+                                                    <TextField
+                                                        {...params}
+                                                        label="Supplier"
+                                                        name="supplier"
+                                                        variant="outlined"
+                                                        error={!!errors.supplier}
+                                                        helperText={errors.supplier || ''}
+                                                    />
+                                                )}
+                                            />
                                         </FormControl>
                                     </Grid>
                                 ) : (
