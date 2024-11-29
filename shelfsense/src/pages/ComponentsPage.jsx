@@ -35,15 +35,18 @@ const ComponentsPage = () => {
     return (
         <Box sx={{ display: 'flex' }}>
             <Sidebar open={open} toggleDrawer={toggleDrawer} />
-            <Container sx={{ py: 4, overflow: "auto" }}>
-                <Typography variant="h4" component="h1" gutterBottom>
-                    Components
-                </Typography>
+            <Box overflow="auto"
+                sx={{
+                    flex: 1,
+                    pt: 4,
+                    px: { xs: 2, sm: 3, md: 4, lg: 5 },
+                    margin: "0 auto",
+                }}
+            >
                 <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
                     <Button
                         variant="contained"
                         color="primary"
-                        sx={{ mb: 3 }}
                         onClick={toggleCreateModal}
                     >
                         Create Component
@@ -67,7 +70,7 @@ const ComponentsPage = () => {
                         />
                     )}
                 </>
-            </Container>
+            </Box>
         </Box>
     );
 }

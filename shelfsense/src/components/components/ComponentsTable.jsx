@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import Grid from '@mui/material/Grid2';
+import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -38,37 +38,38 @@ const ComponentsTable = ({ onEdit, onAddStock }) => {
     }, [components]);
 
     return (
-        <Grid
-            container
-            spacing={2}
-
-        >
+        <Box>
             <DataManipulationBar
                 data={components}
                 onUpdate={setFilteredComponents}
                 filterOptions={[
                     { key: 'type', label: 'Type', values: types },
-                    { key: 'manufacturer', label: 'Manufacturer', values: manufacturers},
-                    { key: 'supplier', label: 'Supplier', values: suppliers},
-
+                    { key: 'manufacturer', label: 'Manufacturer', values: manufacturers },
+                    { key: 'supplier', label: 'Supplier', values: suppliers },
                 ]}
                 sortOptions={columnTitles.map((title) => ({
                     key: title.toLowerCase(),
                     label: title,
                 }))}
             />
-            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+            <Paper
+                sx={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    maxHeight: { xs: '35vh', sm: '45vh', md: '55vh', lg: '65vh', xl: '75vh' },
+                    overflow: 'auto',
+                }}
+            >
                 <TableContainer>
                     <Table stickyHeader aria-label="components table">
                         <TableHead>
                             <TableRow>
-                                <>
-                                    {columnTitles.map((title, index) => (
-                                        <TableCell align="left" key={index}>
-                                            {title}
-                                        </TableCell>
-                                    ))}
-                                </>
+                                {columnTitles.map((title, index) => (
+                                    <TableCell align="left" key={index}>
+                                        {title}
+                                    </TableCell>
+                                ))}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -85,21 +86,27 @@ const ComponentsTable = ({ onEdit, onAddStock }) => {
                                     ))
                             ) : (
                                 <TableRow>
-                                    <>
-                                        {[...Array(4)].map((_, index) => (
-                                            <TableCell key={index}>
-                                                <Skeleton animation="wave" variant="rectangular" height={25} />
-                                            </TableCell>
-                                        ))}
-                                    </>
+                                    {[...Array(4)].map((_, index) => (
+                                        <TableCell key={index}>
+                                            <Skeleton animation="wave" variant="rectangular" height={25} />
+                                        </TableCell>
+                                    ))}
                                 </TableRow>
                             )}
                         </TableBody>
                     </Table>
                 </TableContainer>
                 {(!filteredComponents || filteredComponents.length === 0) && (
-                    <Typography align="center"> No components available </Typography>
+                    <Typography align="center">No components available</Typography>
                 )}
+            </Paper>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end', // Align pagination to the right
+                    mt: 2, // Add spacing above pagination
+                }}
+            >
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 15]}
                     component="div"
@@ -109,8 +116,8 @@ const ComponentsTable = ({ onEdit, onAddStock }) => {
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
-            </Paper>
-        </Grid>
+            </Box>
+        </Box>
     );
 };
 
