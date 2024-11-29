@@ -1,8 +1,6 @@
-import { useState } from 'react';
-import useProductStore from '../../stores/useProductsStore.js';
+import { useState, useEffect } from 'react';
 import useComponentsStore from '../../stores/useComponentsStore.js';
-import { createProduct } from '../../util/services/ProductService.jsx';
-import { createProductComponents } from '../../util/services/ProductService.jsx';
+import {deleteProduct, updateProduct} from '../../util/services/ProductService.jsx';
 import {
     Box,
     Button,
@@ -16,17 +14,29 @@ import {
     IconButton,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { Add, Remove } from '@mui/icons-material';
+import {Add, Delete, Remove} from '@mui/icons-material';
 
-function CreateProductModal({ open, onClose }) {
+function UpdateProductModal({ open, onClose, product }) {
     const [formData, setFormData] = useState({
-        name: '',
-        price: '',
+        name: product?.name || '',
+        price: product?.price || '',
     });
-    const [selectedComponents, setSelectedComponents] = useState([]);
 
-    const addProduct = useProductStore((state) => state.addProduct);
+    const [selectedComponents, setSelectedComponents] = useState([]);
     const componentsList = useComponentsStore((state) => state.components);
+
+    // Preload product components when the modal opens
+    useEffect(() => {
+        if (product?.productComponentList) {
+            const preloadedComponents = product.productComponentList.map((pc) => ({
+                id: pc.id, // Existing component ID
+                componentId: pc.componentId, // Associated component ID
+                quantity: pc.quantity,
+                productId: pc.productId,
+            }));
+            setSelectedComponents(preloadedComponents);
+        }
+    }, [product]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -38,15 +48,29 @@ function CreateProductModal({ open, onClose }) {
 
     const handleComponentChange = (index, field, value) => {
         const updatedComponents = [...selectedComponents];
-        updatedComponents[index] = {
-            ...updatedComponents[index],
-            [field]: value,
-        };
+
+        if (field === 'componentId') {
+            const selectedComponent = componentsList.find((comp) => comp.id === value);
+            updatedComponents[index] = {
+                ...updatedComponents[index],
+                [field]: value,
+                name: selectedComponent?.name || '', // Update the name
+            };
+        } else {
+            updatedComponents[index] = {
+                ...updatedComponents[index],
+                [field]: value,
+            };
+        }
+
         setSelectedComponents(updatedComponents);
     };
 
     const handleAddComponent = () => {
-        setSelectedComponents([...selectedComponents, { component_id: '', quantity: '' }]);
+        setSelectedComponents((prevComponents) => [
+            ...prevComponents,
+            { componentId: '', quantity: '', productId: product.id }, // New component
+        ]);
     };
 
     const handleRemoveComponent = (index) => {
@@ -56,40 +80,42 @@ function CreateProductModal({ open, onClose }) {
     };
 
     const handleSubmit = async () => {
-        // Step a: Create the product
-        const productData = {
+        const payload = {
+            id: product.id,
             name: formData.name,
             price: formData.price,
+            productComponentList: selectedComponents.map((comp) => {
+                if (comp.id) {
+                    // Existing product component
+                    return {
+                        id: comp.id,
+                        quantity: comp.quantity,
+                        componentId: comp.componentId,
+                        productId: comp.productId,
+                    };
+                } else {
+                    // New product component
+                    return {
+                        quantity: comp.quantity,
+                        componentId: comp.componentId,
+                        productId: comp.productId,
+                    };
+                }
+            }),
         };
 
-        const productResult = await createProduct(productData);
-
-        if (productResult) {
-            // Step b: Receive the product ID
-            const productId = productResult.id;
-
-            // Step c: Create ProductComponents
-            const productComponentsData = selectedComponents.map((comp) => ({
-                product: { id: productId },
-                component: { id: comp.component_id },
-                quantity: comp.quantity,
-            }));
-
-            // Step d: Send ProductComponents to backend
-            const productComponentsResult = await createProductComponents(productComponentsData);
-
-            if (productComponentsResult) {
-                // Optionally update your product store if needed
-                addProduct({ ...productResult, productComponentList: productComponentsResult });
-                onClose();
-            } else {
-                alert('Failed to associate components with the product. Please try again.');
-            }
-        } else {
-            alert('Failed to create product. Please try again.');
-        }
+        await updateProduct(payload);
+        onClose();
     };
 
+    const handleDeleteProduct = async () => {
+        const payload = {
+            id: product.id
+        }
+        console.log(payload);
+        await deleteProduct(payload);
+        onClose();
+    }
 
     return (
         <Modal open={open} onClose={onClose}>
@@ -115,7 +141,7 @@ function CreateProductModal({ open, onClose }) {
                     }}
                 >
                     <Typography variant="h6" component="h2" sx={{ ml: 5, mb: 2 }}>
-                        Create a New Product
+                        Update Product
                     </Typography>
                     <Grid
                         container
@@ -139,7 +165,7 @@ function CreateProductModal({ open, onClose }) {
                         </Grid>
 
                         {/* Product Price */}
-                        <Grid xs={12} sm={6}>
+                        <Grid xs={12}>
                             <TextField
                                 label="Price"
                                 name="price"
@@ -153,9 +179,9 @@ function CreateProductModal({ open, onClose }) {
 
                         {/* Components Section */}
                         <Grid xs={12} sx={{ width: '100%' }}>
-                                <Typography variant="subtitle1" component="p" sx={{ width: '100%' }}>
-                                    Add component(s)
-                                </Typography>
+                            <Typography variant="subtitle1" component="p" sx={{ width: '100%' }}>
+                                Manage component(s)
+                            </Typography>
                         </Grid>
                         {selectedComponents.map((comp, index) => (
                             <Grid
@@ -175,21 +201,21 @@ function CreateProductModal({ open, onClose }) {
                                         <Select
                                             variant="outlined"
                                             labelId={`component-select-label-${index}`}
-                                            value={comp.component_id}
+                                            value={comp.componentId}
                                             label="Component"
                                             onChange={(e) =>
-                                                handleComponentChange(index, 'component_id', e.target.value)
+                                                handleComponentChange(index, 'componentId', e.target.value)
                                             }
                                         >
                                             {componentsList
-                                                .filter((component) => !selectedComponents.some((selected) => selected.component_id === component.id && selected.component_id !== comp.component_id))
+                                                .filter((component) => !selectedComponents.some((selected) => selected.componentId === component.id && selected.componentId !== comp.componentId))
                                                 .map((component) => (
                                                 <MenuItem key={component.id} value={component.id}>
                                                     <>
                                                         {component.name} <br /> ({component.manufacturerPart})
                                                     </>
                                                 </MenuItem>
-                                            ))}
+                                                ))}
                                         </Select>
                                     </FormControl>
                                 </Grid>
@@ -222,15 +248,36 @@ function CreateProductModal({ open, onClose }) {
                         ))}
                     </Grid>
                 </Box>
-                {/* Add Button */}
-                <Button
-                    variant="outlined"
-                    startIcon={<Add />}
-                    onClick={handleAddComponent}
-                    sx={{mt: 1, ml: 5, px: 4}}
+                <Grid
+                    container
+                    item
+                    xs={12}
+                    sm={6}
+                    alignItems="center"
+                    justifyContent="space-around"
+                    direction={{ xs: 'column', sm: 'row' }} // Stacks buttons on small screens
                 >
-                    Add Component
-                </Button>
+                    {/* Add Button */}
+                        <Button
+                            variant="outlined"
+                            color="secondary"
+                            startIcon={<Add />}
+                            onClick={handleAddComponent}
+                            sx={{ px: 4, mt: 2 }}
+                        >
+                            Add Component
+                        </Button>
+                    {/* Delete Button */}
+                        <Button
+                            variant="contained"
+                            color="error"
+                            startIcon={<Delete />}
+                            onClick={handleDeleteProduct}
+                            sx={{ px: 4, mt: 2 }}
+                        >
+                            Delete Product
+                        </Button>
+                </Grid>
 
                 {/* Submit Button */}
                 <Button
@@ -240,11 +287,11 @@ function CreateProductModal({ open, onClose }) {
                     sx={{ mt: 3 }}
                     onClick={handleSubmit}
                 >
-                    Save Product
+                    Update Product
                 </Button>
             </Box>
         </Modal>
     );
 }
 
-export default CreateProductModal;
+export default UpdateProductModal;
