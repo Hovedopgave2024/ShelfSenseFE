@@ -185,7 +185,9 @@ function CreateProductModal({ open, onClose }) {
                                                 .filter((component) => !selectedComponents.some((selected) => selected.component_id === component.id && selected.component_id !== comp.component_id))
                                                 .map((component) => (
                                                 <MenuItem key={component.id} value={component.id}>
-                                                    {component.name}
+                                                    <>
+                                                        {component.name} <br /> ({component.manufacturerPart})
+                                                    </>
                                                 </MenuItem>
                                             ))}
                                         </Select>
