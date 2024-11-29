@@ -277,7 +277,6 @@ function UpdateProductModal({ open, onClose, product }) {
                         </Button>
                 </Grid>
 
-
                 {/* Submit Button */}
                 <Button
                     variant="contained"
