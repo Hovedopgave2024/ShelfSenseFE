@@ -251,36 +251,30 @@ function UpdateProductModal({ open, onClose, product }) {
                     item
                     xs={12}
                     sm={6}
-                    sx={{ mt: 3 }}
                     alignItems="center"
                     justifyContent="space-around"
                     direction={{ xs: 'column', sm: 'row' }} // Stacks buttons on small screens
                 >
                     {/* Add Button */}
-                    <Grid item>
                         <Button
                             variant="outlined"
                             color="secondary"
                             startIcon={<Add />}
                             onClick={handleAddComponent}
-                            sx={{ px: 4 }}
+                            sx={{ px: 4, mt: 2 }}
                         >
                             Add Component
                         </Button>
-                    </Grid>
-
                     {/* Delete Button */}
-                    <Grid item>
                         <Button
                             variant="contained"
                             color="error"
                             startIcon={<Delete />}
                             onClick={handleDeleteProduct}
-                            sx={{ px: 4 }}
+                            sx={{ px: 4, mt: 2 }}
                         >
                             Delete Product
                         </Button>
-                    </Grid>
                 </Grid>
 
 
