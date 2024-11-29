@@ -211,7 +211,9 @@ function UpdateProductModal({ open, onClose, product }) {
                                                 .filter((component) => !selectedComponents.some((selected) => selected.componentId === component.id && selected.componentId !== comp.componentId))
                                                 .map((component) => (
                                                 <MenuItem key={component.id} value={component.id}>
-                                                    {component.name}
+                                                    <>
+                                                        {component.name} <br /> ({component.manufacturerPart})
+                                                    </>
                                                 </MenuItem>
                                                 ))}
                                         </Select>
