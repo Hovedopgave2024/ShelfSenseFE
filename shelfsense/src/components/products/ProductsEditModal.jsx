@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import useProductStore from '../../stores/useProductsStore.js';
 import useComponentsStore from '../../stores/useComponentsStore.js';
 import {deleteProduct, updateProduct} from '../../util/services/ProductService.jsx';
 import {
@@ -130,16 +129,18 @@ function UpdateProductModal({ open, onClose, product }) {
                     boxShadow: 24,
                     p: 4,
                     borderRadius: 2,
-                    width: 600,
+                    minWidth: 200,
+                    maxWidth: 600,
                 }}
             >
                 <Box
                     sx={{
                         overflowY: 'auto',
                         maxHeight: '50vh',
+                        mb: 1
                     }}
                 >
-                    <Typography variant="h6" component="h2" sx={{ ml: 5 }}>
+                    <Typography variant="h6" component="h2" sx={{ ml: 5, mb: 2 }}>
                         Update Product
                     </Typography>
                     <Grid
@@ -148,6 +149,7 @@ function UpdateProductModal({ open, onClose, product }) {
                         alignItems="flex-start"
                         justifyContent="flex-start"
                         sx={{ ml: 5 }}
+                        direction={{ xs: 'column', sm: 'row' }}
                     >
                         {/* Product Name */}
                         <Grid xs={12}>
@@ -158,6 +160,7 @@ function UpdateProductModal({ open, onClose, product }) {
                                 fullWidth
                                 value={formData.name}
                                 onChange={handleChange}
+                                xs={12} sm={6}
                             />
                         </Grid>
 
@@ -175,8 +178,8 @@ function UpdateProductModal({ open, onClose, product }) {
                         </Grid>
 
                         {/* Components Section */}
-                        <Grid item xs={12} container justifyContent="center" alignItems="center">
-                            <Typography variant="subtitle1" component="p">
+                        <Grid xs={12} sx={{ width: '100%' }}>
+                            <Typography variant="subtitle1" component="p" sx={{ width: '100%' }}>
                                 Manage component(s)
                             </Typography>
                         </Grid>
@@ -185,11 +188,12 @@ function UpdateProductModal({ open, onClose, product }) {
                                 container
                                 spacing={2}
                                 key={index}
-                                alignItems="center"
-                                justifyContent="center"
+                                alignItems="flex-start"
+                                justifyContent="flex-start"
+                                direction={{ xs: 'column', sm: 'row' }}
                             >
                                 {/* Component Selection */}
-                                <Grid item sx={{ minWidth: 210 }}>
+                                <Grid xs={12} sm={6} sx={{ minWidth: 210 }}>
                                     <FormControl fullWidth>
                                         <InputLabel id={`component-select-label-${index}`}>
                                             Component
@@ -215,7 +219,7 @@ function UpdateProductModal({ open, onClose, product }) {
                                 </Grid>
 
                                 {/* Quantity Input */}
-                                <Grid item xs={5}>
+                                <Grid xs={12} sm={6}>
                                     <TextField
                                         label="Quantity"
                                         name="quantity"
@@ -230,7 +234,7 @@ function UpdateProductModal({ open, onClose, product }) {
                                 </Grid>
 
                                 {/* Remove Component Button */}
-                                <Grid item xs={2}>
+                                <Grid xs={12} sm={6}>
                                     <IconButton
                                         color="error"
                                         onClick={() => handleRemoveComponent(index)}
@@ -242,24 +246,43 @@ function UpdateProductModal({ open, onClose, product }) {
                         ))}
                     </Grid>
                 </Box>
-                {/* Add Button */}
-                <Button
-                    variant="outlined"
-                    startIcon={<Add />}
-                    onClick={handleAddComponent}
-                    sx={{ mt: 1, ml: 5, px: 4 }}
+                <Grid
+                    container
+                    item
+                    xs={12}
+                    sm={6}
+                    sx={{ mt: 3 }}
+                    alignItems="center"
+                    justifyContent="space-around"
+                    direction={{ xs: 'column', sm: 'row' }} // Stacks buttons on small screens
                 >
-                    Add Component
-                </Button>
+                    {/* Add Button */}
+                    <Grid item>
+                        <Button
+                            variant="outlined"
+                            color="secondary"
+                            startIcon={<Add />}
+                            onClick={handleAddComponent}
+                            sx={{ px: 4 }}
+                        >
+                            Add Component
+                        </Button>
+                    </Grid>
 
-                <Button
-                    variant="outlined"
-                    startIcon={<Delete />}
-                    onClick={handleDeleteProduct}
-                    sx={{ mt: 1, ml: 5, px: 4 }}
-                >
-                    Delete Product
-                </Button>
+                    {/* Delete Button */}
+                    <Grid item>
+                        <Button
+                            variant="contained"
+                            color="error"
+                            startIcon={<Delete />}
+                            onClick={handleDeleteProduct}
+                            sx={{ px: 4 }}
+                        >
+                            Delete Product
+                        </Button>
+                    </Grid>
+                </Grid>
+
 
                 {/* Submit Button */}
                 <Button

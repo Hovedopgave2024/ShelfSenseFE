@@ -106,7 +106,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
 
     return (
         <Modal open={open} onClose={onClose}>
-            <Box
+            <Box alignItems="center" justifyContent="center"
                 sx={{
                     position: 'absolute',
                     maxHeight: '80vh',
@@ -152,8 +152,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                                 field === 'supplier' ? (
                                     <Grid xs={12} lg={3} key={field}>
                                         <FormControl
-                                            fullWidth
-                                            sx={{ minWidth: 195 }}
+                                            sx={{ width: 195 }}
                                         >
                                             <InputLabel>Supplier</InputLabel>
                                             <Select
@@ -175,9 +174,9 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                                 <Grid xs={12} lg={3} key={field}>
                                     <TextField
                                         label={field}
+                                        sx={{ width: 195 }}
                                         name={field}
                                         variant="outlined"
-                                        fullWidth
                                         value={formData[field] || ''}
                                         onChange={handleChange}
                                         type={
@@ -197,6 +196,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                 <Button
                     variant="contained"
                     color="primary"
+                    fullWidth
                     sx={{ mt: 'auto' }}
                     onClick={handleSubmit}
                 >
@@ -204,6 +204,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                 </Button>
                 <Button
                     variant="contained"
+                    fullWidth
                     color="error"
                     sx={{ mt: 1 }}
                     onClick={handleDelete}

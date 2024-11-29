@@ -103,16 +103,18 @@ function CreateProductModal({ open, onClose }) {
                     boxShadow: 24,
                     p: 4,
                     borderRadius: 2,
-                    width: 600,
+                    minWidth: 200,
+                    maxWidth: 600,
                 }}
             >
                 <Box
                     sx={{
                         overflowY: 'auto',
                         maxHeight: '50vh',
+                        mb: 1
                     }}
                 >
-                    <Typography variant="h6" component="h2" sx={{ ml: 5 }}>
+                    <Typography variant="h6" component="h2" sx={{ ml: 5, mb: 2 }}>
                         Create a New Product
                     </Typography>
                     <Grid
@@ -121,6 +123,7 @@ function CreateProductModal({ open, onClose }) {
                         alignItems="flex-start"
                         justifyContent="flex-start"
                         sx={{ ml: 5 }}
+                        direction={{ xs: 'column', sm: 'row' }}
                     >
                         {/* Product Name */}
                         <Grid xs={12}>
@@ -131,11 +134,12 @@ function CreateProductModal({ open, onClose }) {
                                 fullWidth
                                 value={formData.name}
                                 onChange={handleChange}
+                                xs={12} sm={6}
                             />
                         </Grid>
 
                         {/* Product Price */}
-                        <Grid xs={12}>
+                        <Grid xs={12} sm={6}>
                             <TextField
                                 label="Price"
                                 name="price"
@@ -148,21 +152,22 @@ function CreateProductModal({ open, onClose }) {
                         </Grid>
 
                         {/* Components Section */}
-                        <Grid item xs={12} container justifyContent="center" alignItems="center">
-                            <Typography variant="subtitle1" component="p">
-                                Add component(s)
-                            </Typography>
+                        <Grid xs={12} sx={{ width: '100%' }}>
+                                <Typography variant="subtitle1" component="p" sx={{ width: '100%' }}>
+                                    Add component(s)
+                                </Typography>
                         </Grid>
                         {selectedComponents.map((comp, index) => (
                             <Grid
                                 container
                                 spacing={2}
                                 key={index}
-                                alignItems="center"
-                                justifyContent="center"
+                                alignItems="flex-start"
+                                justifyContent="flex-start"
+                                direction={{ xs: 'column', sm: 'row' }}
                             >
                                 {/* Component Selection */}
-                                <Grid item sx={{ minWidth: 210 }}>
+                                <Grid xs={12} sm={6} sx={{ minWidth: 210 }}>
                                     <FormControl fullWidth>
                                         <InputLabel id={`component-select-label-${index}`}>
                                             Component
@@ -188,7 +193,7 @@ function CreateProductModal({ open, onClose }) {
                                 </Grid>
 
                                 {/* Quantity Input */}
-                                <Grid item xs={5}>
+                                <Grid xs={12} sm={6}>
                                     <TextField
                                         label="Quantity"
                                         name="quantity"
@@ -203,7 +208,7 @@ function CreateProductModal({ open, onClose }) {
                                 </Grid>
 
                                 {/* Remove Component Button */}
-                                <Grid item xs={2}>
+                                <Grid xs={12} sm={6}>
                                     <IconButton
                                         color="error"
                                         onClick={() => handleRemoveComponent(index)}

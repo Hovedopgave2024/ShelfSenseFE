@@ -103,7 +103,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
 
     return (
         <Modal open={open} onClose={onClose}>
-            <Box
+            <Box alignItems="center" justifyContent="center"
                 sx={{
                     position: 'absolute',
                     maxHeight: '80vh',
@@ -134,8 +134,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                                 field === 'supplier' ? (
                                     <Grid xs={12} lg={3} key={field}>
                                         <FormControl
-                                            fullWidth
-                                            sx={{ minWidth: 195 }}
+                                            sx={{ width: 195 }}
                                             error={!!errors[field]}
                                         >
                                             <Autocomplete
@@ -187,7 +186,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                                         label={field}
                                         name={field}
                                         variant="outlined"
-                                        fullWidth
+                                        sx={{ width: 195 }}
                                         value={formData[field]}
                                         onChange={handleChange}
                                         error={!!errors[field]} // Adds red border if there’s an error
@@ -207,6 +206,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                 <Button
                     variant="contained"
                     color="primary"
+                    fullWidth
                     sx={{ mt: 'auto' }}
                     onClick={handleSubmit}
                 >
