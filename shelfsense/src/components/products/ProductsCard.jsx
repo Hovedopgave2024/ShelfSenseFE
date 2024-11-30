@@ -60,8 +60,9 @@ const ProductsCard = ({ product }) => {
                 minWidth: 250,
                 display: 'flex',
                 flexDirection: 'column',
-                backgroundColor: 'rgba(75, 0, 130, 0.7)',
+                backgroundColor: 'rgba(227, 242, 253, 0.7)',
                 borderRadius: 3,
+                boxShadow: "10px 15px 25px rgba(0, 0, 0, 0.3)",
             }}
         >
             <CardContent sx={{ flexGrow: 1 }}>
@@ -71,7 +72,7 @@ const ProductsCard = ({ product }) => {
                         component="div"
                         display="flex"
                         justifyContent="center"
-                        color="white"
+                        color="black"
                         sx={{ cursor: 'default' }}
                     >
                         {product.name}

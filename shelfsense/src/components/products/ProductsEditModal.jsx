@@ -17,6 +17,7 @@ import {Add, Delete, Remove} from '@mui/icons-material';
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 import useProductsStore from "../../stores/useProductsStore.js";
 import {deleteProduct, updateProduct} from '../../util/services/ProductService.jsx';
+import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx"
 
 function UpdateProductModal({ open, onClose, product }) {
     const [formData, setFormData] = useState({
@@ -26,10 +27,13 @@ function UpdateProductModal({ open, onClose, product }) {
 
     const [selectedComponents, setSelectedComponents] = useState([]);
     const [errors, setErrors] = useState({});
+    const [dialogOpen, setDialogOpen] = useState(false);
     const componentsList = useComponentsStore((state) => state.components);
     const updateProductStore = useProductsStore((state) => state.updateProduct);
     const deleteProductStore = useProductsStore((state) => state.deleteProduct);
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
+
+    const handleCloseDialog = () => setDialogOpen(false);
 
     // Preload product components when the modal opens
     useEffect(() => {
@@ -158,16 +162,19 @@ function UpdateProductModal({ open, onClose, product }) {
     };
 
     const handleDeleteProduct = async () => {
+        setDialogOpen(true);
+    }
+
+    const confirmDeleteProduct = () => {
+        setDialogOpen(false);
         const payload = {
             id: product.id
         }
         const deleteProductResult = deleteProduct(payload);
-
         if (!deleteProductResult){
             showSnackbar('error', 'Error: Product was not deleted. Please try again or contact Support');
             return;
         }
-
         deleteProductStore(product.id)
         showSnackbar('success', 'Product deleted successfully.');
         onClose();
@@ -184,7 +191,7 @@ function UpdateProductModal({ open, onClose, product }) {
                     bgcolor: 'background.paper',
                     boxShadow: 24,
                     p: 4,
-                    borderRadius: 2,
+                    borderRadius: 3,
                     minWidth: 200,
                     maxWidth: 600,
                 }}
@@ -322,26 +329,36 @@ function UpdateProductModal({ open, onClose, product }) {
                     justifyContent="space-around"
                     direction={{ xs: 'column', sm: 'row' }} // Stacks buttons on small screens
                 >
-                    {/* Add Button */}
-                        <Button
-                            variant="outlined"
-                            color="secondary"
-                            startIcon={<Add />}
-                            onClick={handleAddComponent}
-                            sx={{ px: 4, mt: 2 }}
-                        >
-                            Add Component
-                        </Button>
-                    {/* Delete Button */}
-                        <Button
-                            variant="contained"
-                            color="error"
-                            startIcon={<Delete />}
-                            onClick={handleDeleteProduct}
-                            sx={{ px: 4, mt: 2 }}
-                        >
-                            Delete Product
-                        </Button>
+                {/* Add Button */}
+                    <Button
+                        variant="outlined"
+                        color="secondary"
+                        startIcon={<Add />}
+                        onClick={handleAddComponent}
+                        sx={{ px: 4, mt: 2 }}
+                    >
+                        Add Component
+                    </Button>
+                {/* Delete Button */}
+                    <Button
+                        variant="contained"
+                        color="error"
+                        startIcon={<Delete />}
+                        onClick={handleDeleteProduct}
+                        sx={{ px: 4, mt: 2 }}
+                    >
+                        Delete Product
+                    </Button>
+                    <ConfirmDialog
+                        open={dialogOpen}
+                        onClose={handleCloseDialog}
+                        headline="Confirm Deletion"
+                        text="Are you sure you want to delete this product? This action cannot be undone."
+                        onAccept={confirmDeleteProduct}
+                        onDecline={handleCloseDialog}
+                        acceptText="Delete"
+                        declineText="Cancel"
+                    />
                 </Grid>
 
                 {/* Submit Button */}
