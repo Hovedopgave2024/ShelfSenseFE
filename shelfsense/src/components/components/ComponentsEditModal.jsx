@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid2';
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import useProductsStore from "../../stores/useProductsStore.js";
 import {updateComponent, deleteComponent} from "../../util/services/ComponentService.jsx";
+import useSnackbarStore from "../../stores/useSnackbarStore.js";
 
 const ComponentsEditModal = ({ open, onClose, component}) => {
     const [formData, setFormData] = useState(null);
@@ -13,6 +14,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
     const updateComponentInStore = useComponentsStore((state) => state.updateComponent);
     const deleteComponentInStore = useComponentsStore((state) => state.deleteComponent);
     const components = useComponentsStore((state) => state.components); // Retrieve components from the store
+    const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
 
     useEffect(() => {
         if (open && component) {
@@ -57,8 +59,8 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                 newErrors[field] = 'Required';
             }
         });
-
         setErrors(newErrors);
+        showSnackbar('warning', 'Please fill out all required fields and try again.');
         return Object.keys(newErrors).length === 0;
     };
 
@@ -70,12 +72,14 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
         }
 
         const result = await updateComponent(formData.id, formData);
-        if (result) {
-            updateComponentInStore(result);
-            onClose();
-        } else {
-            alert('Failed to update component. Please try again.');
+
+        if (!result) {
+            showSnackbar('error', 'Error: Component was not updated. Please try again or contact Support.');
+            return;
         }
+        updateComponentInStore(result);
+        showSnackbar('success', 'Component updated successfully');
+        onClose();
     };
 
     const isComponentLinked = (componentId) => {
@@ -87,7 +91,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
 
     const handleDelete = async () => {
         if (isComponentLinked(component.id)) {
-            alert('This component is linked to a product and cannot be deleted.');
+            showSnackbar('error', 'Error: This component is linked to a product and cannot be deleted.');
             return;
         }
 
@@ -95,12 +99,13 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
         if (!confirm) return;
 
         const result = await deleteComponent(component.id);
-        if (result) {
-            deleteComponentInStore(component.id);
-            onClose();
-        } else {
-            alert('Failed to delete the component. Please try again.');
+
+        if (!result){
+            showSnackbar('error', 'Error: Failed to delete the component. Please try again or contact Support.');
         }
+        deleteComponentInStore(component.id);
+        showSnackbar('success', 'Component deleted successfully.');
+        onClose();
     };
 
 
