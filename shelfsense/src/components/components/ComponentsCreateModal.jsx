@@ -1,10 +1,11 @@
 import {useEffect, useState} from 'react';
-import { Modal, Box, Typography, Button, TextField, Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material/';
+import { Modal, Box, Typography, Button, TextField, FormControl } from '@mui/material/';
 import Grid from '@mui/material/Grid2';
 import Autocomplete from '@mui/material/Autocomplete';
 
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import {createComponent} from "../../util/services/ComponentService.jsx";
+import useSnackbarStore from "../../stores/useSnackbarStore.js";
 
 const ComponentsCreateModal = ({ open, onClose }) => {
     // Initial empty form data for creating a component
@@ -42,6 +43,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
     const [uniqueSuppliers, setUniqueSuppliers] = useState([]); // Store unique suppliers
     const addComponent = useComponentsStore((state) => state.addComponent);
     const components = useComponentsStore((state) => state.components); // Retrieve components from the store
+    const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
 
     // Extract unique suppliers from components
     useEffect(() => {
@@ -74,6 +76,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
             }
         });
         setErrors(newErrors);
+        showSnackbar('warning', 'Please fill out all required fields and try again');
         return Object.keys(newErrors).length === 0; // Return true if no errors
     };
 
@@ -83,14 +86,15 @@ const ComponentsCreateModal = ({ open, onClose }) => {
 
         const result = await createComponent(formData); // Send form data to backend to create a component
 
-        if (result) {
-            addComponent(result); // Update the store with the new component
-            onClose(); // Close the modal
-            setFormData(initialFormData); // Reset the form
-            setErrors({}); // Clear errors
-        } else {
-            alert('Failed to create component. Please try again.');
+        if (!result) {
+            showSnackbar('error', 'Error: Component was not created. Please try again or contact Support');
+            return;
         }
+        addComponent(result);
+        showSnackbar('success', 'Component created successfully');
+        onClose();
+        setFormData(initialFormData);
+        setErrors({});
     };
 
     // Reset form data and errors when the modal opens
@@ -183,7 +187,9 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                                 ) : (
                                 <Grid xs={12} lg={3} key={field}>
                                     <TextField
-                                        label={field}
+                                        label={requiredFields.includes(field)
+                                            ? `${field} *`
+                                            : field}
                                         name={field}
                                         variant="outlined"
                                         sx={{ width: 195 }}
