@@ -5,16 +5,20 @@ import useComponentsStore from "../../stores/useComponentsStore.js";
 import useProductsStore from "../../stores/useProductsStore.js";
 import {updateComponent, deleteComponent} from "../../util/services/ComponentService.jsx";
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
+import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx"
 
 const ComponentsEditModal = ({ open, onClose, component}) => {
     const [formData, setFormData] = useState(null);
     const [errors, setErrors] = useState({});
     const [uniqueSuppliers, setUniqueSuppliers] = useState([]); // Store unique suppliers
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     const updateComponentInStore = useComponentsStore((state) => state.updateComponent);
     const deleteComponentInStore = useComponentsStore((state) => state.deleteComponent);
     const components = useComponentsStore((state) => state.components); // Retrieve components from the store
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
+
+    const handleCloseDialog = () => setDialogOpen(false);
 
     useEffect(() => {
         if (open && component) {
@@ -89,19 +93,20 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
         );
     };
 
-    const handleDelete = async () => {
+    const handleDeleteComponent = async () => {
         if (isComponentLinked(component.id)) {
             showSnackbar('error', 'Error: This component is linked to a product and cannot be deleted.');
             return;
         }
+        setDialogOpen(true);
+    };
 
-        const confirm = window.confirm(`Are you sure you want to delete this component?`);
-        if (!confirm) return;
-
+    const confirmDeleteComponent = async () => {
+        setDialogOpen(false);
         const result = await deleteComponent(component.id);
-
         if (!result){
             showSnackbar('error', 'Error: Failed to delete the component. Please try again or contact Support.');
+            return;
         }
         deleteComponentInStore(component.id);
         showSnackbar('success', 'Component deleted successfully.');
@@ -161,6 +166,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                                         >
                                             <InputLabel>Supplier</InputLabel>
                                             <Select
+                                                variant="outlined"
                                                 name={field}
                                                 value={formData[field] || ''}
                                                 onChange={(e) => handleChange(e)}
@@ -212,10 +218,20 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                     fullWidth
                     color="error"
                     sx={{ mt: 1 }}
-                    onClick={handleDelete}
+                    onClick={handleDeleteComponent}
                 >
                     Delete Component
                 </Button>
+                <ConfirmDialog
+                    open={dialogOpen}
+                    onClose={handleCloseDialog}
+                    headline="Confirm Deletion"
+                    text="Are you sure you want to delete this component? This action cannot be undone."
+                    onAccept={confirmDeleteComponent}
+                    onDecline={handleCloseDialog}
+                    acceptText="Delete"
+                    declineText="Cancel"
+                />
             </Box>
         </Modal>
     );
