@@ -23,13 +23,13 @@ const LoginPage = () => {
         const response = await login(name, password);
 
         if (!response) {
-            showSnackbar('error', 'Username or password is wrong, please try again.');
+            showSnackbar('error', 'Username or password is wrong, please try again or contact Support.');
             setLoading(false);
             return;
         }
 
         setGlobalUser(response);
-        showSnackbar('success', 'Login successful, fetching your data. Please wait...');
+        showSnackbar('success', 'Login successful, fetching your data.');
         await fetchAllData();
         setLoading(false);
         handleNavigation();

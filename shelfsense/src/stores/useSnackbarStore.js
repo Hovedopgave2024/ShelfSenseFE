@@ -5,10 +5,11 @@ const useSnackbarStore = create((set) => ({
         open: false,
         severity: 'success',
         message: '',
+        duration: 5000,
     },
-    showSnackbar: (severity, message) =>
+    showSnackbar: (severity, message, duration = 5000) =>
         set(() => ({
-            snackbar: { open: true, severity, message },
+            snackbar: { open: true, severity, message, duration },
         })),
     hideSnackbar: () =>
         set((state) => ({
