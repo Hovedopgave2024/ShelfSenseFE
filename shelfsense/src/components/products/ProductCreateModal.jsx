@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { Add, Remove } from '@mui/icons-material';
+import useSnackbarStore from "../../stores/useSnackbarStore.js";
 
 function CreateProductModal({ open, onClose }) {
     const [formData, setFormData] = useState({
@@ -24,9 +25,10 @@ function CreateProductModal({ open, onClose }) {
         price: '',
     });
     const [selectedComponents, setSelectedComponents] = useState([]);
-
+    const [errors, setErrors] = useState({});
     const addProduct = useProductStore((state) => state.addProduct);
     const componentsList = useComponentsStore((state) => state.components);
+    const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -55,7 +57,45 @@ function CreateProductModal({ open, onClose }) {
         setSelectedComponents(updatedComponents);
     };
 
+    const validateFields = () => {
+        let hasError = false;
+        const fieldErrors = {};
+
+        // Validate product fields
+        if (!formData.name.trim()) {
+            fieldErrors.name = 'Name is required.';
+            hasError = true;
+        }
+        if (formData.price == null || formData.price === '' || isNaN(formData.price) || formData.price <= 0) {
+            fieldErrors.price = 'Valid price is required.';
+            hasError = true;
+        }
+
+        // Validate component fields
+        selectedComponents.forEach((component, index) => {
+            if (!component.component_id) {
+                fieldErrors[`component_id_${index}`] = 'Component is required.';
+                hasError = true;
+            }
+            if (!component.quantity || isNaN(component.quantity) || component.quantity <= 0) {
+                fieldErrors[`quantity_${index}`] = 'Valid quantity is required.';
+                hasError = true;
+            }
+        });
+
+        setErrors(fieldErrors);
+        return !hasError;
+    };
+
+
+
     const handleSubmit = async () => {
+
+        if (!validateFields()) {
+            showSnackbar('warning', 'Please fill out all required fields and try again');
+            return;
+        }
+
         // Step a: Create the product
         const productData = {
             name: formData.name,
@@ -64,32 +104,34 @@ function CreateProductModal({ open, onClose }) {
 
         const productResult = await createProduct(productData);
 
-        if (productResult) {
-            // Step b: Receive the product ID
-            const productId = productResult.id;
-
-            // Step c: Create ProductComponents
-            const productComponentsData = selectedComponents.map((comp) => ({
-                product: { id: productId },
-                component: { id: comp.component_id },
-                quantity: comp.quantity,
-            }));
-
-            // Step d: Send ProductComponents to backend
-            const productComponentsResult = await createProductComponents(productComponentsData);
-
-            if (productComponentsResult) {
-                // Optionally update your product store if needed
-                addProduct({ ...productResult, productComponentList: productComponentsResult });
-                onClose();
-            } else {
-                alert('Failed to associate components with the product. Please try again.');
-            }
-        } else {
-            alert('Failed to create product. Please try again.');
+        if (!productResult){
+            showSnackbar('error', 'Error: Product was not created. Please try again or contact Support');
+            return;
         }
-    };
 
+        const productId = productResult.id;
+
+        // Step c: Create ProductComponents
+        const productComponentsData = selectedComponents.map((comp) => ({
+            product: { id: productId },
+            component: { id: comp.component_id },
+            quantity: comp.quantity,
+        }));
+
+        // Step d: Send ProductComponents to backend
+        const productComponentsResult = await createProductComponents(productComponentsData);
+
+        if (!productComponentsResult){
+            showSnackbar('error', 'Error: Failed to associate components with the product. Please try again or contact Support');
+            return;
+        }
+        addProduct({ ...productResult, productComponentList: productComponentsResult });
+        showSnackbar('success', 'Product created successfully.');
+        setFormData({name: '', price: ''});
+        setSelectedComponents([]);
+        setErrors({});
+        onClose();
+    };
 
     return (
         <Modal open={open} onClose={onClose}>
@@ -135,6 +177,8 @@ function CreateProductModal({ open, onClose }) {
                                 value={formData.name}
                                 onChange={handleChange}
                                 xs={12} sm={6}
+                                error={!!errors.name}
+                                helperText={errors.name}
                             />
                         </Grid>
 
@@ -148,6 +192,8 @@ function CreateProductModal({ open, onClose }) {
                                 value={formData.price}
                                 onChange={handleChange}
                                 type="number"
+                                error={!!errors.name}
+                                helperText={errors.name}
                             />
                         </Grid>
 
@@ -191,6 +237,9 @@ function CreateProductModal({ open, onClose }) {
                                                 </MenuItem>
                                             ))}
                                         </Select>
+                                        <Typography color="error" variant="caption">
+                                            {errors[`component_id_${index}`]}
+                                        </Typography>
                                     </FormControl>
                                 </Grid>
 
@@ -206,6 +255,8 @@ function CreateProductModal({ open, onClose }) {
                                             handleComponentChange(index, 'quantity', e.target.value)
                                         }
                                         type="number"
+                                        error={!!errors[`quantity_${index}`]}
+                                        helperText={errors[`quantity_${index}`]}
                                     />
                                 </Grid>
 

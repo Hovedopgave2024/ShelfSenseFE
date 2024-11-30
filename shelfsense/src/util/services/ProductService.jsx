@@ -87,9 +87,7 @@ export const updateProduct = async (product) => {
             return null;
         }
 
-        const updatedProduct = await response.json();
-        useProductsStore.getState().updateProduct(updatedProduct);
-        return updatedProduct;
+        return await response.json();
     } catch (error) {
         console.error('Error in updateProduct:', error);
         throw error;
@@ -115,7 +113,6 @@ export const deleteProduct = async (product) => {
             console.error('Failed to remove product components:', response.status);
             return null;
         }
-        useProductsStore.getState().deleteProduct(product.id);
         return await response.json();
     } catch (error) {
         console.error('Error in updateProduct:', error);

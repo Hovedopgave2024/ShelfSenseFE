@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import useComponentsStore from '../../stores/useComponentsStore.js';
-import {deleteProduct, updateProduct} from '../../util/services/ProductService.jsx';
 import {
     Box,
     Button,
@@ -15,6 +14,9 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import {Add, Delete, Remove} from '@mui/icons-material';
+import useSnackbarStore from "../../stores/useSnackbarStore.js";
+import useProductsStore from "../../stores/useProductsStore.js";
+import {deleteProduct, updateProduct} from '../../util/services/ProductService.jsx';
 
 function UpdateProductModal({ open, onClose, product }) {
     const [formData, setFormData] = useState({
@@ -23,7 +25,11 @@ function UpdateProductModal({ open, onClose, product }) {
     });
 
     const [selectedComponents, setSelectedComponents] = useState([]);
+    const [errors, setErrors] = useState({});
     const componentsList = useComponentsStore((state) => state.components);
+    const updateProductStore = useProductsStore((state) => state.updateProduct);
+    const deleteProductStore = useProductsStore((state) => state.deleteProduct);
+    const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
 
     // Preload product components when the modal opens
     useEffect(() => {
@@ -79,7 +85,43 @@ function UpdateProductModal({ open, onClose, product }) {
         setSelectedComponents(updatedComponents);
     };
 
+    const validateFields = () => {
+        let hasError = false;
+        const fieldErrors = {};
+
+        // Validate product fields
+        if (!formData.name.trim()) {
+            fieldErrors.name = 'Name is required.';
+            hasError = true;
+        }
+        if (formData.price == null || formData.price === '' || isNaN(formData.price) || formData.price <= 0) {
+            fieldErrors.price = 'Valid price is required.';
+            hasError = true;
+        }
+
+        // Validate component fields
+        selectedComponents.forEach((component, index) => {
+            if (!component.componentId) {
+                fieldErrors[`componentId_${index}`] = 'Component is required.';
+                hasError = true;
+            }
+            if (!component.quantity || isNaN(component.quantity) || component.quantity <= 0) {
+                fieldErrors[`quantity_${index}`] = 'Valid quantity is required.';
+                hasError = true;
+            }
+        });
+
+        setErrors(fieldErrors);
+        return !hasError;
+    };
+
     const handleSubmit = async () => {
+
+        if (!validateFields()) {
+            showSnackbar('warning', 'Please fill out all required fields and try again');
+            return;
+        }
+
         const payload = {
             id: product.id,
             name: formData.name,
@@ -104,7 +146,14 @@ function UpdateProductModal({ open, onClose, product }) {
             }),
         };
 
-        await updateProduct(payload);
+        const updateProductResult = await updateProduct(payload);
+
+        if (!updateProductResult){
+            showSnackbar('error', 'Error: Product was not updated. Please try again or contact Support');
+            return;
+        }
+        updateProductStore(updateProductResult);
+        showSnackbar('success', 'Product updated successfully.');
         onClose();
     };
 
@@ -112,8 +161,15 @@ function UpdateProductModal({ open, onClose, product }) {
         const payload = {
             id: product.id
         }
-        console.log(payload);
-        await deleteProduct(payload);
+        const deleteProductResult = deleteProduct(payload);
+
+        if (!deleteProductResult){
+            showSnackbar('error', 'Error: Product was not deleted. Please try again or contact Support');
+            return;
+        }
+
+        deleteProductStore(product.id)
+        showSnackbar('success', 'Product deleted successfully.');
         onClose();
     }
 
@@ -161,6 +217,8 @@ function UpdateProductModal({ open, onClose, product }) {
                                 value={formData.name}
                                 onChange={handleChange}
                                 xs={12} sm={6}
+                                error={!!errors.name}
+                                helperText={errors.name}
                             />
                         </Grid>
 
@@ -174,6 +232,8 @@ function UpdateProductModal({ open, onClose, product }) {
                                 value={formData.price}
                                 onChange={handleChange}
                                 type="number"
+                                error={!!errors.price}
+                                helperText={errors.price}
                             />
                         </Grid>
 
@@ -217,6 +277,9 @@ function UpdateProductModal({ open, onClose, product }) {
                                                 </MenuItem>
                                                 ))}
                                         </Select>
+                                        <Typography color="error" variant="caption">
+                                            {errors[`componentId_${index}`]}
+                                        </Typography>
                                     </FormControl>
                                 </Grid>
 
@@ -232,6 +295,8 @@ function UpdateProductModal({ open, onClose, product }) {
                                             handleComponentChange(index, 'quantity', e.target.value)
                                         }
                                         type="number"
+                                        error={!!errors[`quantity_${index}`]}
+                                        helperText={errors[`quantity_${index}`]}
                                     />
                                 </Grid>
 
