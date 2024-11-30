@@ -1,7 +1,6 @@
 // ProductsPage.js
 import { useState } from 'react';
 import {Typography, Button, Box, CircularProgress, Tooltip} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import ProductsList from '../components/products/ProductsList';
 import { Sidebar } from '../components/sidebar/sidebar.jsx';
 import useSessionStore from "../stores/useSessionStore.js";
@@ -15,7 +14,6 @@ const ProductsPage = () => {
     const [openSideBar, setOpenSideBar] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
     const user = useSessionStore((state) => state.user);
     const components = useComponentsStore((state) => state.components);
     const updateComponent = useComponentsStore((state) => state.updateComponent);
@@ -64,76 +62,53 @@ const ProductsPage = () => {
         }
     };
 
-    const handleNavigation = () => {
-        navigate('/components');
-    };
-
     return (
         <Box sx={{ display: 'flex' }}>
             <Sidebar open={openSideBar} toggleDrawer={toggleDrawer} />
             <Box
                 sx={{
-                    flexGrow: 1,
+                    flex: 1,
                     transition: 'margin-left 0.3s',
-                    display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    p: 3,
+                    py: 4,
+                    px: { xs: 2, sm: 3, md: 4, lg: 5 },
+                    margin: "0 auto",
                 }}
             >
-                <Typography variant="h6" align="right" sx={{ width: '100%', mb: 2 }}>
-                    Hello {user ? user.name : 'Guest'}
-                </Typography>
-                <Typography variant="h4" component="h1" gutterBottom>
-                    Our Products
-                </Typography>
                 <Button
                     variant="contained"
-                    color="primary"
-                    onClick={handleNavigation}
-                    sx={{ mb: 3 }}
-                >
-                    Go to Components
-                </Button>
-                <Button
-                    variant="outlined"
                     color="primary"
                     onClick={toggleModal}
                     sx={{ mb: 3 }}
                 >
                     Create Product
                 </Button>
+                <>
+                    <Tooltip arrow title={"Fetch API to update info from your supplier"}>
+                        <span>
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                onClick={updateSupplierInfo}
+                                sx={{ mb: 3, ml: 3 }}
+                            >
+                                Fetch API
+                            </Button>
+                        </span>
+                    </Tooltip>
+                </>
                 {loading ? (
-                    <CircularProgress />
+                    <CircularProgress sx={{ ml: 2 }} />
                 ) : (
-                    <Box
-                        sx={{
-                            mb: 3,
-                        }}
-                    >
-                        <Tooltip arrow title={"Fetch API to update info from your supplier"}>
-                            <span>
-                                <Button
-                                    variant="outlined"
-                                    color="primary"
-                                    onClick={updateSupplierInfo}
-                                >
-                                    Fetch API
-                                </Button>
-                            </span>
-                        </Tooltip>
-                        <Tooltip arrow title={`API fetched ${calculateApiFetchTimeDif(apiUpdate?.lastUpdated)}`}>
-                            <span>
-                                <Button disabled>
-                                    {apiUpdate?.lastUpdated
-                                        ? calculateApiFetchTimeDif(apiUpdate.lastUpdated)
-                                        : 'API not fetched yet'}
-                                </Button>
-                            </span>
-                        </Tooltip>
-                    </Box>
-
+                    <Tooltip arrow title={`API fetched ${calculateApiFetchTimeDif(apiUpdate?.lastUpdated)}`}>
+                        <span>
+                            <Button sx={{ mb: 3 }} disabled>
+                                {apiUpdate?.lastUpdated
+                                    ? calculateApiFetchTimeDif(apiUpdate.lastUpdated)
+                                    : 'API not fetched yet'}
+                            </Button>
+                        </span>
+                    </Tooltip>
                 )}
                 <ProductsList />
                 {/* Render the modal here */}
