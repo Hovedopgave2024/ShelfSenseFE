@@ -1,6 +1,5 @@
-import {TableRow, TableCell, Button, Typography, Chip, Box} from '@mui/material';
+import {TableRow, TableCell, Button, Chip, Box} from '@mui/material';
 import { statusLabel } from '../../util/services/ComponentService.jsx';
-import React from "react";
 
 const ComponentsTableRow = ({ component, onEdit, onAddStock }) => (
     <TableRow hover key={component.id}>
