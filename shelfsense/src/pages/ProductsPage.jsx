@@ -114,11 +114,14 @@ const ProductsPage = () => {
                                 open={dialogOpen}
                                 onClose={handleCloseDialog}
                                 headline="Confirm Fetch API"
-                                text={`Are you sure you want to fetch API to update supplier info? ${
-                                    apiUpdate?.lastUpdated
-                                        ? `Last fetched ${calculateApiFetchTimeDif(apiUpdate.lastUpdated)}.`
-                                        : 'API not fetched yet.'
-                                }`}
+                                text={
+                                    <>
+                                        Are you sure you want to fetch API to update supplier info? <br />
+                                        {apiUpdate?.lastUpdated
+                                            ? `API last fetched ${calculateApiFetchTimeDif(apiUpdate.lastUpdated)}.`
+                                            : 'API not fetched yet.'}
+                                    </>
+                                }
                                 onAccept={handleUpdateSupplierInfo}
                                 onDecline={handleCloseDialog}
                                 acceptText="Fetch API"
