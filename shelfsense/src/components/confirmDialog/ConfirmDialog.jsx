@@ -9,19 +9,20 @@ import {
 import Divider from "@mui/material/Divider";
 
 const ConfirmDialog = ({
-                            open,
-                            onClose,
-                            headline,
-                            text,
-                            onAccept,
-                            onDecline,
-                            acceptText = "Accept",
-                            declineText = "Decline",
-                        }) => {
+                           open,
+                           onClose,
+                           headline,
+                           text,
+                           onAccept,
+                           onDecline,
+                           acceptText = "Accept",
+                           declineText = "Decline",
+                           color = "error",
+                       }) => {
     return (
         <Dialog open={open} onClose={onClose} aria-labelledby="dialog-title" PaperProps={{
             sx: {
-                borderRadius: 4, // Rounded corners
+                borderRadius: 4,
                 boxShadow: "10px 15px 25px rgba(0, 0, 0, 0.8)",
             },
         }}>
@@ -42,7 +43,7 @@ const ConfirmDialog = ({
 
                 {/* Buttons inside the content box */}
                 <DialogActions sx={{ gap: 2, mt: 2 }}>
-                    <Button onClick={onDecline} color="error" variant="outlined" sx={{
+                    <Button onClick={onDecline} color={color} variant="outlined" sx={{
                         borderRadius: 3,
                         px: 4,
                         py: 1,
@@ -50,7 +51,7 @@ const ConfirmDialog = ({
                     >
                         {declineText}
                     </Button>
-                    <Button onClick={onAccept} color="error" variant="contained" sx={{
+                    <Button onClick={onAccept} color={color} variant="contained" sx={{
                         borderRadius: 3,
                         px: 4,
                         py: 1,
