@@ -49,6 +49,8 @@ const ProductsPage = () => {
                 return;
             }
 
+            console.log(apiInfo);
+
             showSnackbar('success', 'API call to update supplier info was successful.');
 
             apiInfo.forEach((apiComponent) => {
@@ -60,12 +62,14 @@ const ProductsPage = () => {
                     updateComponent({
                         id: apiComponent.id,
                         supplierStock: apiComponent.supplierStock,
+                        supplierStockStatus: apiComponent.supplierStockStatus,
                         manufacturer: apiComponent.manufacturer,
                         manufacturerPart: apiComponent.manufacturerPart,
                         supplierIncomingStock: apiComponent.supplierIncomingStock,
                         supplierIncomingDate: apiComponent.supplierIncomingDate,
                     });
                     console.log("Updated component via the API:", apiComponent);
+                    console.log("Updated Zustand components state:", components);
                 } else {
                     console.log("Component didn't update via the API");
                 }
