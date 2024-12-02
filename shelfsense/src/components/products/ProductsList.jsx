@@ -1,63 +1,57 @@
-import {Skeleton, Stack} from '@mui/material';
+import {Skeleton, Stack, Typography, Box} from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { useEffect, useState } from 'react';
-import { fetchProducts } from '../../util/services/productService.js';
 import ProductsCard from "./ProductsCard";
+import useProductsStore from "../../stores/useProductsStore.js";
+import DataManipulationBar from "../dataManipulationBar/DataManipulationBar.jsx";
+import {useEffect, useState} from "react";
 
 const ProductsList = () => {
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const products = useProductsStore((state) => state.products);
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const productSortParameters = ["Name", "Price"]
 
-    const loadProducts = async () => {
-        setLoading(true);
-        try {
-            const productsData = await fetchProducts();
-            if (productsData) {
-                setProducts(productsData);
-            }
-        } catch (error) {
-            console.error("Failed to load products:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     useEffect(() => {
-        (async () => {
-            await loadProducts();
-        })();
-    }, []);
+        setFilteredProducts(products);
+    }, [products]);
 
     return (
-        <Grid
-            container
-            spacing={6}
-            sx={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
-            }}
-        >
-            <>
-                {loading ? (
-                    Array.from({ length: 10 }).map((_, index) => (
-                        <Grid xs={12} md={6} key={index.toString()}>
-                            <Stack spacing={1}>
-                                <Skeleton animation="wave" variant="rectangular" width={210} height={120} />
-                                <Skeleton variant="text" width={120} />
-                                <Skeleton variant="circular" width={30} height={30} />
-                            </Stack>
+        <Box>
+            <DataManipulationBar
+                data={products}
+                onUpdate={setFilteredProducts}
+                filterOptions={[
+                    { key: 'name', label: 'Name', values: ["Hello World"]    },
+                ]}
+                sortOptions={productSortParameters.map((title) => ({
+                    key: title.toLowerCase(),
+                    label: title,
+                }))}
+            />
+            <Grid container overflow="auto"
+                  spacing={6}
+                  sx={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: '100%',
+                      maxHeight: { xs: '35vh', sm: '45vh', md: '55vh', lg: '65vh', xl: '75vh' },
+                      mt: 5,
+                  }}>
+                {filteredProducts && filteredProducts.length > 0 ? (
+                    filteredProducts.map((filteredProduct) => (
+                        <Grid xs={12} sm={6} md={4} lg={3} key={filteredProduct.id} sx={{mg: '10', }}>
+                            <ProductsCard product={filteredProduct} />
                         </Grid>
                     ))
                 ) : (
-                    products.map((product) => (
-                        <Grid xs={12} sm={6} md={4} lg={3} key={product.id} sx={{mg: '10'}}>
-                            <ProductsCard product={product} />
-                        </Grid>
-                    ))
+                    <Stack alignItems="center" justifyContent="center" spacing={2}>
+                        <Skeleton animation="wave" variant="rectangular" width={210} height={118} />
+                        <Skeleton animation="wave" variant="text" width={210} />
+                        <Typography>No products available</Typography>
+                    </Stack>
                 )}
-            </>
-        </Grid>
+            </Grid>
+        </Box>
     );
 };
 
