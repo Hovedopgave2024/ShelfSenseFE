@@ -101,7 +101,11 @@ function ProductModal({ open, onClose, product }) {
                         return (
                             <Grid item xs={6} key={productComponent.id}>
                                 <Box
-                                    border={1} borderColor="divider" borderRadius={2} p={2}>
+                                    border={1} borderColor="divider" borderRadius={2} p={2}
+                                    sx={{
+                                        width: 250,
+                                }}
+                                >
                                     <Typography variant="body1" fontWeight="bold">
                                         {component.name} / {component.manufacturerPart}
                                     </Typography>
