@@ -50,8 +50,7 @@ const ProductsCard = ({ product }) => {
     const lowestSupplierStockStatusValue = findLowestStatus(supplierStockStatuses);
     const supplierStockStatus = lowestSupplierStockStatusValue !== Infinity ? statusLabel(lowestSupplierStockStatusValue) : statusLabel(null);
 
-    // Helper function to determine if a label is 'Critical Stock Level'
-    // const isCritical = (label) => label === 'Critical Stock Level';
+
 
     return (
         <Card
