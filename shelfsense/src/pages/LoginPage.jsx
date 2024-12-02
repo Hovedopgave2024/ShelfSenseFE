@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import { Box, Button, Card, CardContent, TextField, Typography, CircularProgress } from '@mui/material';
-import {fetchAllData, login} from '../util/services/UserService.jsx';
+import { fetchAllData, login } from '../util/services/UserService.jsx';
 import { useNavigate } from 'react-router-dom';
-import useSessionStore from '../stores/useSessionStore.js';
+import useSessionStore from '../stores/useSessionStore';
+import useSnackbarStore from '../stores/useSnackbarStore';
 
 const LoginPage = () => {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
     const navigate = useNavigate();
     const setGlobalUser = useSessionStore((state) => state.setUser);
+    const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
 
     const handleNavigation = () => {
         navigate('/products');
@@ -19,23 +19,21 @@ const LoginPage = () => {
 
     const handleLogin = async () => {
         setLoading(true);
-        setError('');
 
         const response = await login(name, password);
 
         if (!response) {
-            console.error("unauthorized")
-            setError("Username or password is wrong, please try again.")
+            showSnackbar('error', 'Username or password is wrong, please try again or contact Support.');
             setLoading(false);
             return;
         }
+
         setGlobalUser(response);
-        setSuccess("Login successful, fetching your data. \n Please wait...");
-        await fetchAllData()
+        showSnackbar('success', 'Login successful, fetching your data.');
+        await fetchAllData();
         setLoading(false);
         handleNavigation();
     };
-
 
     return (
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f0f2f5">
@@ -47,7 +45,7 @@ const LoginPage = () => {
 
                     <Box mt={2}>
                         <TextField
-                            label="name"
+                            label="Name"
                             variant="outlined"
                             fullWidth
                             value={name}
@@ -65,18 +63,6 @@ const LoginPage = () => {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </Box>
-
-                    {error && (
-                        <Typography color="error" mt={2} align="center">
-                            {error}
-                        </Typography>
-                    )}
-                    
-                    {success && (
-                        <Typography color="success" mt={2} align="center">
-                            {success}
-                        </Typography>
-                    )}
 
                     <Box mt={4} display="flex" justifyContent="center">
                         <Button

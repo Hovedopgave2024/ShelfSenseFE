@@ -1,24 +1,28 @@
 // ProductsPage.js
 import { useState } from 'react';
-import {Typography, Button, Box, CircularProgress, Tooltip} from '@mui/material';
+import {Button, Box, CircularProgress, Tooltip} from '@mui/material';
 import ProductsList from '../components/products/ProductsList';
 import { Sidebar } from '../components/sidebar/sidebar.jsx';
-import useSessionStore from "../stores/useSessionStore.js";
 import ProductCreateModal from '../components/products/ProductCreateModal.jsx';
 import {createApiRequest} from "../util/services/ComponentService.jsx";
 import useComponentsStore from "../stores/useComponentsStore.js";
 import useApiUpdateStore from "../stores/useApiUpdateStore.js"; // Import the modal
 import calculateApiFetchTimeDif from '../util/calculateApiFetchTimeDif.js';
+import ConfirmDialog from "../components/confirmDialog/ConfirmDialog.jsx"
+import useSnackbarStore from "../stores/useSnackbarStore.js";
+
 
 const ProductsPage = () => {
     const [openSideBar, setOpenSideBar] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [loading, setLoading] = useState(false);
-    const user = useSessionStore((state) => state.user);
     const components = useComponentsStore((state) => state.components);
     const updateComponent = useComponentsStore((state) => state.updateComponent);
     const apiUpdate = useApiUpdateStore((state) => state.apiUpdate);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
 
+    const handleCloseDialog = () => setDialogOpen(false);
 
     const toggleDrawer = () => {
         setOpenSideBar((prevOpen) => !prevOpen);
@@ -28,13 +32,26 @@ const ProductsPage = () => {
         setOpenModal((prevOpen) => !prevOpen);
     }
 
-    const updateSupplierInfo = async () => {
+    const toggleConfirmFetchApiDialog = async () => {
+        setDialogOpen(true);
+    }
+
+    const handleUpdateSupplierInfo = async () => {
+        setDialogOpen(false);
         setLoading(true);
 
         try {
             const apiInfo = await createApiRequest();
 
-            console.log("Fetched API info:", apiInfo);
+            if (!apiInfo) {
+                showSnackbar('error', 'API call to update supplier info failed, please try again or contact Support.');
+                setLoading(false);
+                return;
+            }
+
+            console.log(apiInfo);
+
+            showSnackbar('success', 'API call to update supplier info was successful.');
 
             apiInfo.forEach((apiComponent) => {
                 const componentInStore = components.find(
@@ -45,22 +62,25 @@ const ProductsPage = () => {
                     updateComponent({
                         id: apiComponent.id,
                         supplierStock: apiComponent.supplierStock,
+                        supplierStockStatus: apiComponent.supplierStockStatus,
                         manufacturer: apiComponent.manufacturer,
                         manufacturerPart: apiComponent.manufacturerPart,
                         supplierIncomingStock: apiComponent.supplierIncomingStock,
                         supplierIncomingDate: apiComponent.supplierIncomingDate,
                     });
                     console.log("Updated component via the API:", apiComponent);
+                    console.log("Updated Zustand components state:", components);
                 } else {
                     console.log("Component didn't update via the API");
                 }
             });
         } catch (err) {
             console.error("API call to update components failed", err);
+            showSnackbar('error', 'API call to update supplier info failed, please try again or contact Support.');
         } finally {
             setLoading(false);
         }
-    };
+    }
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -89,11 +109,29 @@ const ProductsPage = () => {
                             <Button
                                 variant="outlined"
                                 color="primary"
-                                onClick={updateSupplierInfo}
+                                onClick={toggleConfirmFetchApiDialog}
                                 sx={{ mb: 3, ml: 3 }}
                             >
                                 Fetch API
                             </Button>
+                            <ConfirmDialog
+                                open={dialogOpen}
+                                onClose={handleCloseDialog}
+                                headline="Confirm Fetch API"
+                                text={
+                                    <>
+                                        Are you sure you want to fetch API to update supplier info? <br />
+                                        {apiUpdate?.lastUpdated
+                                            ? `API last fetched ${calculateApiFetchTimeDif(apiUpdate.lastUpdated)}.`
+                                            : 'API not fetched yet.'}
+                                    </>
+                                }
+                                onAccept={handleUpdateSupplierInfo}
+                                onDecline={handleCloseDialog}
+                                acceptText="Fetch API"
+                                declineText="Cancel"
+                                color="info"
+                            />
                         </span>
                     </Tooltip>
                 </>

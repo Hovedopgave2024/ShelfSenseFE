@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { Modal, Box, Typography, Button, TextField } from '@mui/material';
 import useComponentsStore from "../../stores/useComponentsStore";
 import { updateComponent } from "../../util/services/ComponentService";
+import useSnackbarStore from "../../stores/useSnackbarStore.js";
 
 const ComponentsAddStockModal = ({ open, onClose, component }) => {
     const [addStockValue, setAddStockValue] = useState("");
     const updateComponentInStore = useComponentsStore((state) => state.updateComponent);
+    const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
 
     useEffect(() => {
         if (component) {
@@ -22,12 +24,15 @@ const ComponentsAddStockModal = ({ open, onClose, component }) => {
         };
 
         const result = await updateComponent(component.id, updatedComponent);
-        if (result) {
-            updateComponentInStore(result);
-            onClose();
-        } else {
-            alert('Failed to update stock. Please try again.');
+        if (!result)
+        {
+            showSnackbar('error', 'Failed to update stock. Please try again.');
+            return;
         }
+
+        updateComponentInStore(result);
+        showSnackbar('success', 'Stock updated successfully');
+        onClose();
     };
 
     const handleAddStockChange = (e) => {
