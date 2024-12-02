@@ -25,7 +25,7 @@ export const Sidebar = ({ open, toggleDrawer }) => {
     const navigate = useNavigate();
 
     const mainMenuItems = [
-        { text: 'Dashboard', icon: <BarChartOutlinedIcon />, path: '/dashboard' },
+        { text: 'Statistics', icon: <BarChartOutlinedIcon />, path: '/statistics' },
         { text: 'Products', icon: <InventoryOutlinedIcon />, path: '/products' },
         { text: 'Components', icon: <ComponentOutlinedIcon />, path: '/components' },
     ];
