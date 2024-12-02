@@ -55,7 +55,7 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => (
         <TableCell align="left">{component.supplierIncomingStock}</TableCell>
         <TableCell align="left">{component.supplierIncomingDate}</TableCell>
         <TableCell align="left">
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: 95 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: 110 }}>
                 <Button
                     variant="outlined"
                     size="small"
