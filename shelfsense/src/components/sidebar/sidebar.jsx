@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Box from '@mui/material/Box';
+import { useThemeContext} from "../../theme/ThemeContext.jsx";
 
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
@@ -17,12 +18,16 @@ import ComponentOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 
 import { useNavigate } from 'react-router-dom';
+import {Button, Typography} from "@mui/material";
+import {Brightness4, Brightness7} from "@mui/icons-material";
 
 export const drawerWidth = 180;
 export const collapsedWidth = 60;
 
 export const Sidebar = ({ open, toggleDrawer }) => {
     const navigate = useNavigate();
+    const { mode, toggleTheme } = useThemeContext(); // Get theme mode and toggle function
+
 
     const mainMenuItems = [
         { text: 'Dashboard', icon: <BarChartOutlinedIcon />, path: '/dashboard' },
@@ -116,6 +121,28 @@ export const Sidebar = ({ open, toggleDrawer }) => {
                     ))}
                 </>
             </List>
+            <Divider />
+            <ListItem disablePadding sx={{ display: 'block' }}>
+                <ListItemButton
+                    onClick={toggleTheme}
+                    sx={{
+                        minHeight: 48,
+                        justifyContent: open ? 'initial' : 'center',
+                        px: 2.5,
+                    }}
+                >
+                    <ListItemIcon
+                        sx={{
+                            minWidth: 0,
+                            mr: open ? 3 : 'auto',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        {mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
+                    </ListItemIcon>
+                    {open && <ListItemText primary="Dark Mode" sx={{ opacity: open ? 1 : 0, transition: 'opacity 0.3s' }} />}
+                </ListItemButton>
+            </ListItem>
         </Drawer>
     );
 };
