@@ -227,8 +227,8 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                         color="error"
                         onClick={handleDeleteComponent}
                         sx={{
-                            minWidth: 'auto', // Make it fit tightly
-                            p: 1, // Padding for a comfortable click area
+                            minWidth: 'auto',
+                            p: 1,
                         }}
                     >
                         <DeleteOutlineIcon />
