@@ -7,6 +7,7 @@ import {updateComponent, deleteComponent} from "../../util/services/ComponentSer
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx"
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import CloseIcon from '@mui/icons-material/Close';
 
 const ComponentsEditModal = ({ open, onClose, component}) => {
     const [formData, setFormData] = useState(null);
@@ -132,6 +133,17 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                     flexDirection: 'column',
                 }}
             >
+                <Button
+                    onClick={onClose}
+                    sx={{
+                        position: 'absolute',
+                        top: 20,
+                        right: 8,
+                        color: 'grey.500',
+                    }}
+                >
+                    <CloseIcon />
+                </Button>
                 <Typography variant="h6" component="h2" mb={2}>
                     {`${component.name} (${component.manufacturerPart})`}
                 </Typography>
