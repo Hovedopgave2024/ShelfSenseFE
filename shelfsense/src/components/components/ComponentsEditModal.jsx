@@ -205,7 +205,6 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                         </>
                     </Grid>
                 </Box>
-                {/* Add this Box for the buttons */}
                 <Box
                     sx={{
                         display: 'flex',
