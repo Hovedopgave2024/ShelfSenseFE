@@ -6,6 +6,7 @@ import useProductsStore from "../../stores/useProductsStore.js";
 import {updateComponent, deleteComponent} from "../../util/services/ComponentService.jsx";
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx"
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 const ComponentsEditModal = ({ open, onClose, component}) => {
     const [formData, setFormData] = useState(null);
@@ -204,24 +205,35 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                         </>
                     </Grid>
                 </Box>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    sx={{ mt: 'auto' }}
-                    onClick={handleSubmit}
+                {/* Add this Box for the buttons */}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        width: '100%',
+                        mt: 'auto',
+                    }}
                 >
-                    Update Component
-                </Button>
-                <Button
-                    variant="contained"
-                    fullWidth
-                    color="error"
-                    sx={{ mt: 1 }}
-                    onClick={handleDeleteComponent}
-                >
-                    Delete Component
-                </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{ flexGrow: 1, mr: 2 }}
+                        onClick={handleSubmit}
+                    >
+                        Update Component
+                    </Button>
+                    <Button
+                        color="error"
+                        onClick={handleDeleteComponent}
+                        sx={{
+                            minWidth: 'auto', // Make it fit tightly
+                            p: 1, // Padding for a comfortable click area
+                        }}
+                    >
+                        <DeleteOutlineIcon />
+                    </Button>
+                </Box>
                 <ConfirmDialog
                     open={dialogOpen}
                     onClose={handleCloseDialog}
