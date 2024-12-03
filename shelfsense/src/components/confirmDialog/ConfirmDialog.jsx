@@ -23,7 +23,7 @@ const ConfirmDialog = ({
         <Dialog open={open} onClose={onClose} aria-labelledby="dialog-title" PaperProps={{
             sx: {
                 borderRadius: 4,
-                boxShadow: "10px 15px 25px rgba(0, 0, 0, 0.8)",
+                boxShadow: "10px 15px 25px rgba(0, 0, 0, 0.3)",
             },
         }}>
             <Box sx={{ backgroundColor: "#e3f2fd", padding: 1 }}>

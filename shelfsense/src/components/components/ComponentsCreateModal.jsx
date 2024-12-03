@@ -127,7 +127,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                     onClick={onClose}
                     sx={{
                         position: 'absolute',
-                        top: 20,
+                        top: 12,
                         right: 8,
                         color: 'grey.500',
                     }}

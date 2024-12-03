@@ -3,6 +3,7 @@ import { Modal, Box, Typography, Button, TextField } from '@mui/material';
 import useComponentsStore from "../../stores/useComponentsStore";
 import { updateComponent } from "../../util/services/ComponentService";
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
+import CloseIcon from "@mui/icons-material/Close";
 
 const ComponentsAddStockModal = ({ open, onClose, component }) => {
     const [addStockValue, setAddStockValue] = useState("");
@@ -45,6 +46,9 @@ const ComponentsAddStockModal = ({ open, onClose, component }) => {
             <Box
                 sx={{
                     position: 'absolute',
+                    maxHeight: '80vh',
+                    maxWidth: '70vw', // Increased maximum width
+                    width: '30vw',    // Default width for the modal
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
@@ -55,8 +59,20 @@ const ComponentsAddStockModal = ({ open, onClose, component }) => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 2,
+                    overflowY: 'auto', // Enables scrolling for overflow content
                 }}
             >
+                <Button
+                    onClick={onClose}
+                    sx={{
+                        position: 'absolute',
+                        top: 12,
+                        right: 8,
+                        color: 'grey.500',
+                    }}
+                >
+                    <CloseIcon />
+                </Button>
                 <Typography variant="h6">
                     {`${component.name} (${component.manufacturerPart})`}
                 </Typography>
