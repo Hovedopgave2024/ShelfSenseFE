@@ -17,12 +17,13 @@ import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
 import ComponentOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 
 import { useNavigate } from 'react-router-dom';
 import {UserModal} from "./UserModal.jsx";
 import {Brightness4, Brightness7} from "@mui/icons-material";
 import useThemeStore from "../../stores/useThemeStore.js";
-
+import { logout } from "../../util/services/UserService.jsx";
 
 export const drawerWidth = 180;
 export const collapsedWidth = 60;
@@ -45,6 +46,8 @@ export const Sidebar = ({ open, toggleDrawer }) => {
         { text: 'About', icon: <InfoOutlinedIcon />, path: '/about' }
     ];
 
+    const logoutItem = {text: "Logout", icon: < LogoutOutlinedIcon /> }
+
     const handleNavigation = (path) => {
         navigate(path);
     };
@@ -52,6 +55,14 @@ export const Sidebar = ({ open, toggleDrawer }) => {
     const toggleUserModal = () => {
         setUserModalOpen((prev) => !prev);
     };
+
+    const handleLogout = async () => {
+       const response = await logout();
+       if(!response){
+           return;
+       }
+        handleNavigation("/");
+    }
 
 
     return (
@@ -178,6 +189,30 @@ export const Sidebar = ({ open, toggleDrawer }) => {
                         </ListItemButton>
                     </ListItem>
                 </List>
+                <Divider />
+                <List>
+                    <ListItem key={logoutItem.text} disablePadding sx={{ display: 'block' }}>
+                        <ListItemButton onClick={() => handleLogout()}
+                                        sx={{
+                                            minHeight: 48,
+                                            justifyContent: open ? 'initial' : 'center',
+                                            px: 2.5,
+                                        }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: 0,
+                                    mr: open ? 3 : 'auto',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                {logoutItem.icon}
+                            </ListItemIcon>
+                            <ListItemText primary={logoutItem.text} sx={{ opacity: open ? 1 : 0, transition: 'opacity 0.3s' }} />
+                        </ListItemButton>
+                    </ListItem>
+                </List>
+
             </Drawer>
             <UserModal open={userModalOpen} onClose={toggleUserModal} />
         </>

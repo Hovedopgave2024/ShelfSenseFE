@@ -83,3 +83,39 @@ export const updateUser = async (updatedData) => {
         return null;
     }
 };
+
+export const logout = async () => {
+    const LOGOUT_URL = `${import.meta.env.VITE_API_URL}/logout`;
+    const showSnackbar = useSnackbarStore.getState().showSnackbar;
+
+    try {
+        const response = await fetch(LOGOUT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+        });
+
+        if (!response.ok) {
+            showSnackbar('error', 'Unexpected error during logout. Please try again or contact Support.');
+            console.error("Logout failed: ", response);
+            return null;
+        }
+
+        showSnackbar('success', 'Logout successful.');
+
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+
+        localStorage.removeItem('apiUpdate-store');
+        localStorage.removeItem('components-store');
+        localStorage.removeItem('products-store');
+        localStorage.removeItem('sales-orders-store');
+        localStorage.removeItem('user-session');
+        localStorage.removeItem('theme-storage');
+        return response.json;
+    } catch (error) {
+        showSnackbar('error', 'Network error or server is not responding. Please try again.');
+        console.error("Logout error: ", error);
+        return null;
+    }
+};
+
