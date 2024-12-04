@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "@date-io/date-fns": "^3.0.0",
-    "@mui/x-date-pickers": "^7.23.0",
-    "chart.js": "^4.4.7",
-    "date-fns": "^3.6.0"
-  }
-}
