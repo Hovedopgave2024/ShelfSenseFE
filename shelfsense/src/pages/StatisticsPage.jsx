@@ -1,11 +1,11 @@
-import { Select, MenuItem, FormControl, InputLabel, Box, TextField} from '@mui/material';
+import {  Box, TextField, Autocomplete, Card, CardContent, Typography} from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useEffect, useState } from "react";
 import { Sidebar } from "../components/sidebar/sidebar.jsx";
-import { fetchSalesOrders } from "../util/services/SalesOrdersService";
-import { BarChart } from '@mui/x-charts';
+import { fetchSalesOrders, calculateMonthlyStockUsage, calculateMonthlyEarnings } from "../util/services/SalesOrdersService";
+import { BarChart, LineChart } from '@mui/x-charts';
 import useComponentsStore from "../stores/useComponentsStore.js";
 import useProductsStore from "../stores/useProductsStore.js";
 
@@ -15,7 +15,7 @@ const StatisticsPage = () => {
 
     const components = useComponentsStore((state) => state.components);
 
-    const [selectedProduct, setSelectedProduct] = useState('');
+    const [selectedProducts, setSelectedProducts] = useState([]);
 
     const [open, setOpen] = useState(false);
 
@@ -27,12 +27,24 @@ const StatisticsPage = () => {
 
     const [salesOrders, setSalesOrders] = useState([]);
 
+    const [selectedComponents, setSelectedComponents] = useState([]);
+
+    const [stockUsageData, setStockUsageData] = useState([]);
+
+    const [totalRevenue, setTotalRevenue] = useState(0);
+
+
+
     const toggleDrawer = () => {
         setOpen((prevOpen) => !prevOpen);
     };
 
-    const handleProductChange = (event) => {
-        setSelectedProduct(event.target.value);
+    const handleProductChange = (event, newValue) => {
+        setSelectedProducts(newValue);
+    };
+
+    const handleComponentChange = (event, newValue) => {
+        setSelectedComponents(newValue);
     };
 
 
@@ -41,114 +53,62 @@ const StatisticsPage = () => {
         const fetchData = async () => {
             const salesOrdersData = await fetchSalesOrders();
             setSalesOrders(salesOrdersData);
-            // Calculate initial chart data with all products
-            const monthlyEarnings = calculateMonthlyEarnings(salesOrdersData, '', null, null);
+            // Calculate initial chart data with all products and components
+            const monthlyEarnings = calculateMonthlyEarnings(
+                salesOrdersData,
+                [],
+                null,
+                null
+            );
             setChartData(monthlyEarnings);
+
+            const monthlyStockUsage = calculateMonthlyStockUsage(
+                salesOrdersData,
+                products,
+                components,
+                [],
+                null,
+                null
+            );
+            setStockUsageData(monthlyStockUsage);
+
+            // Calculate total yearly revenue
+            const total = salesOrdersData.reduce((accumulator, salesOrder) => {
+                const date = new Date(salesOrder.createdDate);
+                const currentYear = new Date().getFullYear();
+                if (date.getFullYear() === currentYear) {
+                    return accumulator + salesOrder.price * salesOrder.quantity;
+                }
+                return accumulator;
+            }, 0);
+            setTotalRevenue(total);
         };
 
         fetchData();
-    }, []); // Empty dependency array to run only on mount
+    }, [products, components]);
+
 
     useEffect(() => {
         if (salesOrders.length > 0) {
             const monthlyEarnings = calculateMonthlyEarnings(
                 salesOrders,
-                selectedProduct,
+                selectedProducts,
                 startDate,
                 endDate
             );
             setChartData(monthlyEarnings);
+
+            const monthlyStockUsage = calculateMonthlyStockUsage(
+                salesOrders,
+                products,
+                components,
+                selectedComponents,
+                startDate,
+                endDate
+            );
+            setStockUsageData(monthlyStockUsage);
         }
-    }, [salesOrders, selectedProduct, startDate, endDate]);
-
-
-    const calculateMonthlyEarnings = (data, selectedProduct, startDate, endDate) =>
-    {
-        const earningsByMonth = Array(12).fill(0); // Array for each month
-
-        data.forEach((salesOrder) => {
-            const date = new Date(salesOrder.createdDate);
-
-            // Filter by selected product and date range if provided
-            if (
-                (selectedProduct === '' || salesOrder.productId === selectedProduct) &&
-                (startDate === null || date >= startDate) &&
-                (endDate === null || date <= endDate)
-            ) {
-                const month = date.getMonth(); // 0 = January, 11 = December
-                const revenue = salesOrder.price * salesOrder.quantity;
-                earningsByMonth[month] += revenue;
-            }
-        });
-
-        return earningsByMonth.map((value, index) => ({
-            month: new Date(0, index).toLocaleString('default', { month: 'long' }),
-            revenue: value,
-        }));
-    };
-
-    const calculateMonthlyStockUsage = (
-        salesOrders,
-        products,
-        components,
-        selectedComponentId,
-        startDate,
-        endDate
-    ) => {
-        const usageByMonth = {}; // Object to store usage per month
-
-        salesOrders.forEach((salesOrder) => {
-            const orderDate = new Date(salesOrder.createdDate);
-
-            // Filter by date range if provided
-            if (
-                (startDate === null || orderDate >= startDate) &&
-                (endDate === null || orderDate <= endDate)
-            ) {
-                const monthKey = `${orderDate.getFullYear()}-${orderDate.getMonth()}`; // e.g., '2023-7' for August 2023
-
-                // Get the product associated with the sales order
-                const product = products.find((p) => p.id === salesOrder.productId);
-
-                if (product) {
-                    // Get the components associated with the product
-                    const productComponents = product.productComponentList;
-
-                    productComponents.forEach((pc) => {
-                        // If selectedComponentId is provided, filter on it
-                        if (selectedComponentId === '' || pc.componentId === selectedComponentId) {
-                            // Calculate the usage
-                            const componentUsage = salesOrder.quantity * pc.quantity;
-
-                            // Initialize the usage for this month if not already
-                            if (!usageByMonth[monthKey]) {
-                                usageByMonth[monthKey] = 0;
-                            }
-                            // Accumulate the usage
-                            usageByMonth[monthKey] += componentUsage;
-                        }
-                    });
-                }
-            }
-        });
-
-        // Convert usageByMonth object into an array, sort by month
-        const usageArray = Object.keys(usageByMonth).map((monthKey) => {
-            const [year, month] = monthKey.split('-').map(Number);
-            const date = new Date(year, month);
-            const monthName = date.toLocaleString('default', { month: 'long', year: 'numeric' });
-            return {
-                month: monthName,
-                usage: usageByMonth[monthKey],
-            };
-        });
-
-        // Sort the array by date
-        usageArray.sort((a, b) => new Date(a.month) - new Date(b.month));
-
-        return usageArray;
-    };
-
+    }, [salesOrders, selectedProducts, selectedComponents, startDate, endDate]);
 
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -162,29 +122,71 @@ const StatisticsPage = () => {
                         flexDirection: 'column',
                     }}
                 >
+                    {/* Cards Container */}
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                        <Card sx={{ width: '30%' }}>
+                            <CardContent>
+                                <Typography variant="h6" component="div">
+                                    Total Yearly Revenue
+                                </Typography>
+                                <Typography variant="h4" color="primary">
+                                    ${totalRevenue.toLocaleString()}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                        <Card sx={{ width: '30%' }}>
+                            <CardContent>
+                                <Typography variant="h6" component="div">
+                                    Total Products
+                                </Typography>
+                                <Typography variant="h4" color="primary">
+                                    {products.length}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                        <Card sx={{ width: '30%' }}>
+                            <CardContent>
+                                <Typography variant="h6" component="div">
+                                    Total Components
+                                </Typography>
+                                <Typography variant="h4" color="primary">
+                                    {components.length}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Box>
+
+                    {/* Filters */}
                     <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
-                        <FormControl sx={{ width: '200px', marginRight: 2 }}>
-                            <InputLabel id="product-select-label">Product</InputLabel>
-                            <Select
-                                labelId="product-select-label"
-                                id="product-select"
-                                value={selectedProduct}
-                                label="Product"
-                                onChange={handleProductChange}
-                            >
-                                <MenuItem value="">All Products</MenuItem>
-                                {products.map((product) => (
-                                    <MenuItem key={product.id} value={product.id}>
-                                        {product.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                        <Autocomplete
+                            multiple
+                            options={products}
+                            getOptionLabel={(option) => option.name}
+                            value={selectedProducts}
+                            onChange={handleProductChange}
+                            renderInput={(params) => (
+                                <TextField {...params} label="Products" placeholder="Select products" />
+                            )}
+                            sx={{ width: 300, marginRight: 2 }}
+                        />
+                        <Autocomplete
+                            multiple
+                            options={components}
+                            getOptionLabel={(option) => option.name}
+                            value={selectedComponents}
+                            onChange={handleComponentChange}
+                            renderInput={(params) => (
+                                <TextField {...params} label="Components" placeholder="Select components" />
+                            )}
+                            sx={{ width: 300, marginRight: 2 }}
+                        />
                         <DatePicker
                             label="Start Date"
                             value={startDate}
                             onChange={(newValue) => setStartDate(newValue)}
-                            renderInput={(params) => <TextField {...params} sx={{ marginRight: 2 }} />}
+                            renderInput={(params) => (
+                                <TextField {...params} sx={{ marginRight: 2 }} />
+                            )}
                         />
                         <DatePicker
                             label="End Date"
@@ -193,6 +195,8 @@ const StatisticsPage = () => {
                             renderInput={(params) => <TextField {...params} />}
                         />
                     </Box>
+
+                    {/* Charts */}
                     <Box
                         sx={{
                             flexGrow: 1,
@@ -203,6 +207,20 @@ const StatisticsPage = () => {
                             series={[{ dataKey: 'revenue', label: 'Monthly Revenue' }]}
                             height={400}
                             dataset={chartData}
+                            margin={{ left: 80 }}
+                        />
+                    </Box>
+                    <Box
+                        sx={{
+                            flexGrow: 1,
+                            marginTop: 4,
+                        }}
+                    >
+                        <LineChart
+                            xAxis={[{ dataKey: 'month', scaleType: 'band' }]}
+                            series={[{ dataKey: 'usage', label: 'Monthly Stock Usage' }]}
+                            height={400}
+                            dataset={stockUsageData}
                             margin={{ left: 80 }}
                         />
                     </Box>
