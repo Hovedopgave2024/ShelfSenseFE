@@ -101,9 +101,9 @@ export const logout = async () => {
             return null;
         }
 
-        showSnackbar('success', 'Logout successful.');
+        showSnackbar('success', 'Logout successful. Navigating to login page.');
 
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        await new Promise((resolve) => setTimeout(resolve, 2000));
 
         localStorage.removeItem('apiUpdate-store');
         localStorage.removeItem('components-store');
