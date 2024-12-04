@@ -21,7 +21,7 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import { useNavigate } from 'react-router-dom';
 import {UserModal} from "./UserModal.jsx";
 import {Brightness4, Brightness7} from "@mui/icons-material";
-import { useThemeContext} from "../../theme/ThemeContext.jsx";
+import useThemeStore from "../../stores/useThemeStore.js";
 
 
 export const drawerWidth = 180;
@@ -29,7 +29,8 @@ export const collapsedWidth = 60;
 
 export const Sidebar = ({ open, toggleDrawer }) => {
     const navigate = useNavigate();
-    const { mode, toggleTheme } = useThemeContext();
+    const mode = useThemeStore((state) => state.mode);
+    const toggleTheme = useThemeStore((state) => state.toggleTheme);
     const [userModalOpen, setUserModalOpen] = useState(false);
 
     const userItem = { text: 'Profile', icon: <AccountCircleOutlinedIcon/> }

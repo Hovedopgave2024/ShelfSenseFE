@@ -97,7 +97,7 @@ const ComponentsTable = ({ onEdit, onAddStock }) => {
                                     ))
                             ) : (
                                 <TableRow>
-                                    {[...Array(4)].map((_, index) => (
+                                    {[...Array(columnTitles.length)].map((_, index) => (
                                         <TableCell key={index}>
                                             <Skeleton animation="wave" variant="rectangular" height={25} />
                                         </TableCell>
