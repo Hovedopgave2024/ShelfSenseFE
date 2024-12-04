@@ -6,6 +6,8 @@ import useProductsStore from "../../stores/useProductsStore.js";
 import {updateComponent, deleteComponent} from "../../util/services/ComponentService.jsx";
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx"
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import CloseIcon from '@mui/icons-material/Close';
 
 const ComponentsEditModal = ({ open, onClose, component}) => {
     const [formData, setFormData] = useState(null);
@@ -131,6 +133,17 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                     flexDirection: 'column',
                 }}
             >
+                <Button
+                    onClick={onClose}
+                    sx={{
+                        position: 'absolute',
+                        top: 12,
+                        right: 8,
+                        color: 'grey.500',
+                    }}
+                >
+                    <CloseIcon />
+                </Button>
                 <Typography variant="h6" component="h2" mb={2}>
                     {`${component.name} (${component.manufacturerPart})`}
                 </Typography>
@@ -204,24 +217,34 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                         </>
                     </Grid>
                 </Box>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    sx={{ mt: 'auto' }}
-                    onClick={handleSubmit}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        width: '100%',
+                        mt: 'auto',
+                    }}
                 >
-                    Update Component
-                </Button>
-                <Button
-                    variant="contained"
-                    fullWidth
-                    color="error"
-                    sx={{ mt: 1 }}
-                    onClick={handleDeleteComponent}
-                >
-                    Delete Component
-                </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{ flexGrow: 1, mr: 2 }}
+                        onClick={handleSubmit}
+                    >
+                        Update Component
+                    </Button>
+                    <Button
+                        color="error"
+                        onClick={handleDeleteComponent}
+                        sx={{
+                            minWidth: 'auto',
+                            p: 1,
+                        }}
+                    >
+                        <DeleteOutlineIcon />
+                    </Button>
+                </Box>
                 <ConfirmDialog
                     open={dialogOpen}
                     onClose={handleCloseDialog}
