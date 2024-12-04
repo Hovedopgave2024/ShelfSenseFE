@@ -5,8 +5,7 @@ import {Sidebar} from "../components/sidebar/sidebar.jsx";
 import ComponentsCreateModal from "../components/components/ComponentsCreateModal.jsx";
 import ComponentsEditModal from "../components/components/ComponentsEditModal.jsx";
 import ComponentsAddStockModal from "../components/components/ComponentsAddStockModal.jsx";
-import { useThemeContext} from "../theme/ThemeContext.jsx";
-import {Brightness4, Brightness7} from "@mui/icons-material";
+import useThemeStore from "../stores/useThemeStore.js";
 
 const ComponentsPage = () => {
     const [open, setOpen] = useState(false);
@@ -16,7 +15,8 @@ const ComponentsPage = () => {
     const [addStockModal, setAddStockModal] = useState(false);
     const [componentToAddStock, setComponentToAddStock] = useState(null);
 
-    const { mode, toggleTheme } = useThemeContext();
+    const mode = useThemeStore(state => state.mode);
+    const toggleTheme = useThemeStore(state => state.toggleTheme);
 
     const toggleDrawer = () => {
         setOpen((prevOpen) => !prevOpen);
