@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import {Box, Button, TextField, Modal, Typography, CircularProgress} from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -13,7 +13,22 @@ export const UserModal = ({ open, onClose }) => {
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(false);
     const getUser =  useSessionStore((state) => state.user);
-    const showSnackbar = useSnackbarStore((state => state.showSnackbar))
+    const showSnackbar = useSnackbarStore((state => state.showSnackbar));
+
+    useEffect(() => {
+        if (open) {
+            setNewPassword("");
+            setOldPassword("");
+            setConfirmPassword("");
+            setValidation({
+                hasLowercase: false,
+                hasUppercase: false,
+                hasSpecialChar: false,
+                hasMinLength: false,
+                matchesWithOldPassword: true,
+            });
+        }
+    }, [open, onClose]);
 
     const [validation, setValidation] = useState({
         hasLowercase: false,
@@ -36,18 +51,12 @@ export const UserModal = ({ open, onClose }) => {
     };
 
     const handleUpdate = async () => {
-        if (newPassword !== confirmPassword) {
-            alert('Passwords do not match.');
-            return;
-        }
-
         if (
             !validation.hasLowercase ||
             !validation.hasUppercase ||
             !validation.hasSpecialChar ||
             !validation.hasMinLength
         ) {
-            alert('Please meet all password requirements.');
             return;
         }
 
@@ -57,12 +66,17 @@ export const UserModal = ({ open, onClose }) => {
             oldPassword: oldPassword,
             newPassword: newPassword
         }
-
+        setLoading(true);
         const response = await updateUser(requestData);
         if (!response) {
+            setLoading(false);
             return;
         }
         showSnackbar("success", "User updated successfully.")
+        setNewPassword("");
+        setOldPassword("");
+        setConfirmPassword("");
+        setLoading(false);
         onClose();
     };
 
@@ -95,7 +109,7 @@ export const UserModal = ({ open, onClose }) => {
                 p: 4,
                 borderRadius: 2,
             }}>
-                <h2 id="user-modal-title">User Settings</h2>
+                <Typography variant="h5" id="user-modal-title">User Settings</Typography>
                 <Box
                     component="form"
                     sx={{
@@ -144,9 +158,21 @@ export const UserModal = ({ open, onClose }) => {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                     {loading ? (
-                            <CircularProgress sx={{ ml: 2 }} />
+                        <Box
+                            sx={{
+                                mt: 2,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                height: '100%', // Ensure it takes full height of the parent container
+                                width: '100%',  // Ensure it takes full width of the parent container
+                            }}
+                        >
+                            <CircularProgress />
+                        </Box>
                         ) : (
                         <Button
+                            sx={{mt: 2}}
                             variant="contained"
                             color="primary"
                             onClick={handleUpdate}
