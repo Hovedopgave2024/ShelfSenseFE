@@ -1,4 +1,5 @@
 // Sidebar.js
+import { useState } from "react";
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -15,14 +16,19 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
 import ComponentOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 
 import { useNavigate } from 'react-router-dom';
+import {UserModal} from "./UserModal.jsx";
 
 export const drawerWidth = 180;
 export const collapsedWidth = 60;
 
 export const Sidebar = ({ open, toggleDrawer }) => {
     const navigate = useNavigate();
+    const [userModalOpen, setUserModalOpen] = useState(false);
+
+    const userItem = { text: 'Profile', icon: <AccountCircleOutlinedIcon/> }
 
     const mainMenuItems = [
         { text: 'Dashboard', icon: <BarChartOutlinedIcon />, path: '/dashboard' },
@@ -38,84 +44,113 @@ export const Sidebar = ({ open, toggleDrawer }) => {
         navigate(path);
     };
 
+    const toggleUserModal = () => {
+        setUserModalOpen((prev) => !prev);
+    };
+
 
     return (
-        <Drawer
-            variant="permanent"
-            anchor="left"
-            open={open}
-            sx={{
-                width: open ? drawerWidth : collapsedWidth,
-                flexShrink: 0,
-                '& .MuiDrawer-paper': {
+        <>
+            <Drawer
+                variant="permanent"
+                anchor="left"
+                open={open}
+                sx={{
                     width: open ? drawerWidth : collapsedWidth,
-                    transition: 'width 0.3s',
-                    overflowX: 'hidden',
-                },
-            }}
-        >
-            <Box display="flex" justifyContent="center" p={1}>
-                <IconButton onClick={toggleDrawer}>
-                    {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                </IconButton>
-            </Box>
-            <Divider />
-
-            <List>
-                <>
-                    {mainMenuItems.map((item) => (
-                        <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
-                            <ListItemButton
-                                onClick={() => handleNavigation(item.path)}
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': {
+                        width: open ? drawerWidth : collapsedWidth,
+                        transition: 'width 0.3s',
+                        overflowX: 'hidden',
+                    },
+                }}
+            >
+                <Box display="flex" justifyContent="center" p={1}>
+                    <IconButton onClick={toggleDrawer}>
+                        {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                    </IconButton>
+                </Box>
+                <Divider />
+                <List>
+                    <ListItem key={userItem.text} disablePadding sx={{ display: 'block' }}>
+                        <ListItemButton onClick={() => toggleUserModal()}
+                                        sx={{
+                                            minHeight: 48,
+                                            justifyContent: open ? 'initial' : 'center',
+                                            px: 2.5,
+                                        }}
+                        >
+                            <ListItemIcon
                                 sx={{
-                                    minHeight: 48,
-                                    justifyContent: open ? 'initial' : 'center',
-                                    px: 2.5,
+                                    minWidth: 0,
+                                    mr: open ? 3 : 'auto',
+                                    justifyContent: 'center',
                                 }}
                             >
-                                <ListItemIcon
+                                {userItem.icon}
+                            </ListItemIcon>
+                            <ListItemText primary={userItem.text} sx={{ opacity: open ? 1 : 0, transition: 'opacity 0.3s' }} />
+                        </ListItemButton>
+                    </ListItem>
+                </List>
+                <Divider />
+                <List>
+                    <>
+                        {mainMenuItems.map((item) => (
+                            <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
+                                <ListItemButton
+                                    onClick={() => handleNavigation(item.path)}
                                     sx={{
-                                        minWidth: 0,
-                                        mr: open ? 3 : 'auto',
-                                        justifyContent: 'center',
+                                        minHeight: 48,
+                                        justifyContent: open ? 'initial' : 'center',
+                                        px: 2.5,
                                     }}
                                 >
-                                    {item.icon}
-                                </ListItemIcon>
-                                <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0, transition: 'opacity 0.3s' }} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
-                </>
-            </List>
-            <Divider />
-            <List>
-                <>
-                    {subMenuItems.map((item) => (
-                        <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
-                            <ListItemButton
-                                onClick={() => handleNavigation(item.path)}
-                                sx={{
-                                    minHeight: 48,
-                                    justifyContent: open ? 'initial' : 'center',
-                                    px: 2.5,
-                                }}
-                            >
-                                <ListItemIcon
+                                    <ListItemIcon
+                                        sx={{
+                                            minWidth: 0,
+                                            mr: open ? 3 : 'auto',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        {item.icon}
+                                    </ListItemIcon>
+                                    <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0, transition: 'opacity 0.3s' }} />
+                                </ListItemButton>
+                            </ListItem>
+                        ))}
+                    </>
+                </List>
+                <Divider />
+                <List>
+                    <>
+                        {subMenuItems.map((item) => (
+                            <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
+                                <ListItemButton
+                                    onClick={() => handleNavigation(item.path)}
                                     sx={{
-                                        minWidth: 0,
-                                        mr: open ? 3 : 'auto',
-                                        justifyContent: 'center',
+                                        minHeight: 48,
+                                        justifyContent: open ? 'initial' : 'center',
+                                        px: 2.5,
                                     }}
                                 >
-                                    {item.icon}
-                                </ListItemIcon>
-                                <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0, transition: 'opacity 0.3s' }} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
-                </>
-            </List>
-        </Drawer>
+                                    <ListItemIcon
+                                        sx={{
+                                            minWidth: 0,
+                                            mr: open ? 3 : 'auto',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        {item.icon}
+                                    </ListItemIcon>
+                                    <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0, transition: 'opacity 0.3s' }} />
+                                </ListItemButton>
+                            </ListItem>
+                        ))}
+                    </>
+                </List>
+            </Drawer>
+            <UserModal open={userModalOpen} onClose={toggleUserModal} />
+        </>
     );
 };

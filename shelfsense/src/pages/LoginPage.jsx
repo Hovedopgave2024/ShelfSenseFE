@@ -22,8 +22,7 @@ const LoginPage = () => {
 
         const response = await login(name, password);
 
-        if (!response.ok) {
-            showSnackbar('error', 'Username or password is wrong, please try again or contact Support.');
+        if (!response) {
             setLoading(false);
             return;
         }
