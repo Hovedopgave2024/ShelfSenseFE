@@ -20,12 +20,16 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 
 import { useNavigate } from 'react-router-dom';
 import {UserModal} from "./UserModal.jsx";
+import {Brightness4, Brightness7} from "@mui/icons-material";
+import { useThemeContext} from "../../theme/ThemeContext.jsx";
+
 
 export const drawerWidth = 180;
 export const collapsedWidth = 60;
 
 export const Sidebar = ({ open, toggleDrawer }) => {
     const navigate = useNavigate();
+    const { mode, toggleTheme } = useThemeContext();
     const [userModalOpen, setUserModalOpen] = useState(false);
 
     const userItem = { text: 'Profile', icon: <AccountCircleOutlinedIcon/> }
@@ -148,6 +152,30 @@ export const Sidebar = ({ open, toggleDrawer }) => {
                             </ListItem>
                         ))}
                     </>
+                </List>
+                <Divider />
+                <List>
+                    <ListItem disablePadding sx={{ display: 'block' }}>
+                        <ListItemButton
+                            onClick={toggleTheme}
+                            sx={{
+                                minHeight: 48,
+                                justifyContent: open ? 'initial' : 'center',
+                                px: 2.5,
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: 0,
+                                    mr: open ? 3 : 'auto',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                {mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
+                            </ListItemIcon>
+                            {open && <ListItemText primary="Dark Mode" sx={{ opacity: open ? 1 : 0, transition: 'opacity 0.3s' }} />}
+                        </ListItemButton>
+                    </ListItem>
                 </List>
             </Drawer>
             <UserModal open={userModalOpen} onClose={toggleUserModal} />
