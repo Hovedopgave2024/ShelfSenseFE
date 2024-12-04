@@ -4,16 +4,20 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useEffect, useState } from "react";
 import { Sidebar } from "../components/sidebar/sidebar.jsx";
-import { fetchSalesOrders, calculateMonthlyStockUsage, calculateMonthlyEarnings } from "../util/services/SalesOrdersService";
+import { calculateMonthlyStockUsage, calculateMonthlyEarnings } from "../util/services/SalesOrdersService";
 import { BarChart, LineChart } from '@mui/x-charts';
 import useComponentsStore from "../stores/useComponentsStore.js";
 import useProductsStore from "../stores/useProductsStore.js";
+import useSalesOrdersStore from "../stores/useSalesOrdersStore.js";
 
 const StatisticsPage = () => {
 
     const products = useProductsStore((state) => state.products);
 
     const components = useComponentsStore((state) => state.components);
+
+    const salesOrdersData= useSalesOrdersStore((state) => state.salesOrders);
+
 
     const [selectedProducts, setSelectedProducts] = useState([]);
 
@@ -51,7 +55,6 @@ const StatisticsPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const salesOrdersData = await fetchSalesOrders();
             setSalesOrders(salesOrdersData);
             // Calculate initial chart data with all products and components
             const monthlyEarnings = calculateMonthlyEarnings(
