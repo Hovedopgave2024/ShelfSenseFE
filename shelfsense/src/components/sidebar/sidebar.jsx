@@ -19,6 +19,7 @@ import { Brightness4, Brightness7 } from "@mui/icons-material";
 import useThemeStore from "../../stores/useThemeStore.js";
 import useSidebarStore from "../../stores/useSidebarStore.js"; // Import the Sidebar store
 import { logout } from "../../util/services/UserService.jsx";
+import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx";
 
 export const drawerWidth = 180;
 export const collapsedWidth = 60;
@@ -32,6 +33,7 @@ export const Sidebar = () => {
 
     const { isOpen, toggleSidebar, activePage, setActivePage } = useSidebarStore();
     const [userModalOpen, setUserModalOpen] = useState(false);
+    const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
     const userItem = { text: 'Profile', icon: <AccountCircleOutlined /> };
 
@@ -43,6 +45,8 @@ export const Sidebar = () => {
     ];
 
     const logoutItem = { text: "Logout", icon: <LogoutOutlined /> };
+
+    const handleCloseLogoutDialog = () => setLogoutDialogOpen(false);
 
     useEffect(() => {
         // Set active page based on current route
@@ -58,7 +62,12 @@ export const Sidebar = () => {
         setUserModalOpen((prev) => !prev);
     };
 
-    const handleLogout = async () => {
+    const handleLogout = () => {
+        setLogoutDialogOpen(true);
+    }
+
+    const confirmLogout = async () => {
+        setLogoutDialogOpen(false);
         const response = await logout();
         if (!response) {
             return;
@@ -110,6 +119,16 @@ export const Sidebar = () => {
                             <ListItemText primary={logoutItem.text} sx={{ opacity: isOpen ? 1 : 0, transition: 'opacity 0.3s' }} />
                         </ListItemButton>
                     </ListItem>
+                    <ConfirmDialog
+                        open={logoutDialogOpen}
+                        onClose={handleCloseLogoutDialog}
+                        headline="Confirm Logout"
+                        text="Are you sure you want to logout of the platform?"
+                        onAccept={confirmLogout}
+                        onDecline={handleCloseLogoutDialog}
+                        acceptText="Logout"
+                        declineText="Cancel"
+                    />
                 </List>
                 <Divider />
                 <List>
