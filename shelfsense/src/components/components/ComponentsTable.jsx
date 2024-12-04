@@ -13,6 +13,7 @@ import ComponentsTableRow from './ComponentsTableRow';
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import {Typography} from "@mui/material";
 import DataManipulationBar from '../dataManipulationBar/DataManipulationBar.jsx';
+import { useTheme } from "@mui/material";
 
 const ComponentsTable = ({ onEdit, onAddStock }) => {
     const components = useComponentsStore((state) => state.components);
@@ -23,6 +24,7 @@ const ComponentsTable = ({ onEdit, onAddStock }) => {
     const manufacturers = [...new Set(components.map(component => component.manufacturer))];
     const suppliers = [...new Set(components.map(component => component.supplier))];
     const columnTitles = ["Name", "Manufacturer Part", "Supplier", "Footprint", "Stock", "Stock Status", "Safety Stock", "Supplier Stock", "Supplier Stock Status", "Supplier Incoming Stock", "Supplier Incoming Date", "Actions"];
+    const theme = useTheme();
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -66,7 +68,16 @@ const ComponentsTable = ({ onEdit, onAddStock }) => {
                         <TableHead>
                             <TableRow>
                                 {columnTitles.map((title, index) => (
-                                    <TableCell align="left" key={index}>
+                                    <TableCell
+                                        align="left"
+                                        key={index}
+                                        sx={{
+                                            backgroundColor: theme.palette.background.paper, // Dynamic color based on theme
+                                            color: theme.palette.text.primary,
+                                            fontWeight: "bold",
+                                            borderBottom: `2px solid ${theme.palette.divider}`,
+                                        }}
+                                    >
                                         {title}
                                     </TableCell>
                                 ))}

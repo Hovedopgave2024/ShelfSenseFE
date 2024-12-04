@@ -16,6 +16,17 @@ export const ThemeProviderWrapper = ({ children }) => {
             createTheme({
                 palette: {
                     mode,
+                    background: {
+                        default: mode === "light" ? "#ffffff" : "#121212", // Adjust default background
+                        paper: mode === "light" ? "#ffffff" : "#1e1e1e", // Adjust card background (modals)
+                    },
+                    primary: {
+                        main: mode === "light" ? "#1976d2" : "#90caf9", // Adjust primary color (buttons etc.)
+                    },
+                    text: {
+                        primary: mode === "light" ? "#000000" : "#ffffff", // Adjust primary text
+                        secondary: mode === "light" ? "#757575" : "#bdbdbd", // Adjust secondary text
+                    },
                 },
             }),
         [mode]
