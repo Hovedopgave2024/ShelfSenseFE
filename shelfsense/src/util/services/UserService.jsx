@@ -101,7 +101,7 @@ export const logout = async () => {
             return null;
         }
 
-        showSnackbar('success', 'Logout successful. Navigating to login page.');
+        showSnackbar('success', 'Logout successful. Navigating to login page. See you soon!');
 
         await new Promise((resolve) => setTimeout(resolve, 2000));
 

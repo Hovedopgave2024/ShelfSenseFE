@@ -120,7 +120,7 @@ const ProductsPage = () => {
                                 headline="Confirm Fetch API"
                                 text={
                                     <>
-                                        Are you sure you want to fetch API to update supplier info? <br />
+                                        Are you sure you want to fetch API, updating supplier info? <br />
                                         {apiUpdate?.lastUpdated
                                             ? `API last fetched ${calculateApiFetchTimeDif(apiUpdate.lastUpdated)}.`
                                             : 'API not fetched yet.'}
