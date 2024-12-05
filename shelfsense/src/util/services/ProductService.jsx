@@ -1,10 +1,4 @@
-import { getRequest } from './GetRequestService.jsx';
-import { CheckCircleOutlined, WarningOutlined, ErrorOutlined } from '@mui/icons-material';
-import useProductsStore from "../../stores/useProductsStore.js";
-
-export const fetchComponents = async () => {
-    return await getRequest(`products`);
-};
+import {destroyStoresAndLogout} from "../destroyStoresAndLogout.js";
 
 export const createProduct = async (productData) => {
     const BASE_URL = `${import.meta.env.VITE_API_URL}/products`;
@@ -18,7 +12,7 @@ export const createProduct = async (productData) => {
         });
 
         if (response.status === 401) {
-            console.error('Unauthorized request while creating product.');
+            await destroyStoresAndLogout();
             return null;
         }
 
@@ -49,7 +43,7 @@ export const createProductComponents = async (productComponentsData) => {
         });
 
         if (response.status === 401) {
-            console.error('Unauthorized request while creating product components.');
+            await destroyStoresAndLogout();
             return null;
         }
 
@@ -78,7 +72,7 @@ export const updateProduct = async (product) => {
         });
 
         if (response.status === 401) {
-            console.error('Unauthorized request while updating product components.');
+            await destroyStoresAndLogout();
             return null;
         }
 
@@ -90,7 +84,7 @@ export const updateProduct = async (product) => {
         return await response.json();
     } catch (error) {
         console.error('Error in updateProduct:', error);
-        throw error;
+        return null;
     }
 };
 
@@ -105,7 +99,7 @@ export const deleteProduct = async (product) => {
         });
 
         if (response.status === 401) {
-            console.error('Unauthorized request while removing product components.');
+            await destroyStoresAndLogout();
             return null;
         }
 
@@ -113,10 +107,10 @@ export const deleteProduct = async (product) => {
             console.error('Failed to remove product components:', response.status);
             return null;
         }
-        return await response.json();
+        return true;
     } catch (error) {
         console.error('Error in updateProduct:', error);
-        throw error;
+        return null;
     }
 };
 

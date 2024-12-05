@@ -128,6 +128,7 @@ export const UserModal = ({ open, onClose }) => {
                         onChange={(e) => setName(e.target.value)}
                     />
                     <TextField
+                        required
                         label="Old password"
                         type="password"
                         variant="outlined"
@@ -136,6 +137,7 @@ export const UserModal = ({ open, onClose }) => {
                         onChange={(e) => setOldPassword(e.target.value)}
                     />
                     <TextField
+                        required
                         label="New Password"
                         type="password"
                         variant="outlined"
@@ -150,6 +152,7 @@ export const UserModal = ({ open, onClose }) => {
                         {getValidationFeedback(validation.hasMinLength, 'At least 8 characters long')}
                     </Box>
                     <TextField
+                        required
                         label="Confirm New Password"
                         type="password"
                         variant="outlined"

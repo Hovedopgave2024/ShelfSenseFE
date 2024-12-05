@@ -4,10 +4,10 @@ import { persist } from 'zustand/middleware';
 const useThemeStore = create(
     persist(
         (set) => ({
-            mode: "light",
+            mode: "dark",
             toggleTheme: () =>
                 set((state) => ({
-                    mode: state.mode === "light" ? "dark" : "light",
+                    mode: state.mode === "dark" ? "light" : "dark",
                 })),
         }),
         {

@@ -165,13 +165,13 @@ function UpdateProductModal({ open, onClose, product }) {
         setDialogOpen(true);
     }
 
-    const confirmDeleteProduct = () => {
+    const confirmDeleteProduct = async () => {
         setDialogOpen(false);
         const payload = {
             id: product.id
         }
-        const deleteProductResult = deleteProduct(payload);
-        if (!deleteProductResult){
+        const deleteProductResult = await deleteProduct(payload);
+        if (!deleteProductResult) {
             showSnackbar('error', 'Error: Product was not deleted. Please try again or contact Support');
             return;
         }

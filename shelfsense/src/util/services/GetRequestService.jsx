@@ -6,11 +6,6 @@ export const getRequest = async (url) => {
             credentials: "include",
         });
 
-        if (response.status === 401) {
-            console.error('Unauthorized get request while fetching:', url);
-            return null;
-        }
-
         if (!response.ok) {
             console.error('Get request for:', url, ' failed with status: ', response.status);
             return null;
