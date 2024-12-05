@@ -6,10 +6,6 @@ import {destroyStoresAndLogout} from "../destroyStoresAndLogout.js";
 
 const BASE_URL = `${import.meta.env.VITE_API_URL}/components`;
 
-export const fetchComponents = async () => {
-    return await getRequest(`components`);
-};
-
 export const createComponent = async (componentData) => {
 
     try {

@@ -44,7 +44,7 @@ export const fetchAllData = async () => {
     const showSnackbar = useSnackbarStore.getState().showSnackbar;
 
     if (!userData) {
-        showSnackbar("error", "error while fetching user data");
+        showSnackbar("error", "error while fetching user data. Please logout and login again or contact Support");
     }
 
     const products = userData.productList ? JSON.parse(JSON.stringify(userData.productList)) : [];

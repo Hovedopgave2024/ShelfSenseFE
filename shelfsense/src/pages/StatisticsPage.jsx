@@ -127,7 +127,7 @@ const StatisticsPage = () => {
                 >
                     {/* Cards Container */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                        <Card sx={{ width: '30%' }}>
+                        <Card sx={{ width: '30%', borderRadius: "20px 0 0 20px" }}>
                             <CardContent>
                                 <Typography variant="h6" component="div">
                                     Total Yearly Revenue
@@ -147,7 +147,7 @@ const StatisticsPage = () => {
                                 </Typography>
                             </CardContent>
                         </Card>
-                        <Card sx={{ width: '30%' }}>
+                        <Card sx={{ width: '30%', borderRadius: "0 20px 20px 0" }}>
                             <CardContent>
                                 <Typography variant="h6" component="div">
                                     Total Components

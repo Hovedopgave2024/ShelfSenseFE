@@ -1,9 +1,4 @@
-import { getRequest } from './GetRequestService.jsx';
 import {destroyStoresAndLogout} from "../destroyStoresAndLogout.js";
-
-export const fetchComponents = async () => {
-    return await getRequest(`products`);
-};
 
 export const createProduct = async (productData) => {
     const BASE_URL = `${import.meta.env.VITE_API_URL}/products`;
