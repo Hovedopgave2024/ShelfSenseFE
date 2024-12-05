@@ -1,3 +1,5 @@
+import {destroyStoresAndLogout} from "../destroyStoresAndLogout.js";
+
 export const getRequest = async (url) => {
     const BASE_URL = `${import.meta.env.VITE_API_URL}/`;
 
@@ -7,7 +9,7 @@ export const getRequest = async (url) => {
         });
 
         if (response.status === 401) {
-            console.error('Unauthorized get request while fetching:', url);
+            await destroyStoresAndLogout();
             return null;
         }
 

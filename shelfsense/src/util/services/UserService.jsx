@@ -5,6 +5,7 @@ import useSalesOrdersStore from '../../stores/useSalesOrdersStore';
 import useSessionStore from "../../stores/useSessionStore.js";
 import useApiUpdateStore from '../../stores/useApiUpdateStore.js';
 import useSnackbarStore from '../../stores/useSnackbarStore';
+import {destroyStoresAndLogout} from "../destroyStoresAndLogout.js";
 
 export const login = async (name, password) => {
 
@@ -40,6 +41,12 @@ export const login = async (name, password) => {
 export const fetchAllData = async () => {
     const userId = useSessionStore.getState().user.id;
     const userData = await getRequest(`users/${userId}`)
+    const showSnackbar = useSnackbarStore.getState().showSnackbar;
+
+    if (!userData) {
+        showSnackbar("error", "error while fetching user data");
+    }
+
     const products = userData.productList ? JSON.parse(JSON.stringify(userData.productList)) : [];
     const components = userData.componentList ? JSON.parse(JSON.stringify(userData.componentList)) : [];
     const salesOrders = userData.salesOrderList ? JSON.parse(JSON.stringify(userData.salesOrderList)) : [];
@@ -72,6 +79,11 @@ export const updateUser = async (updatedData) => {
             console.error('Failed to update user:', response.status);
             return null;
         }
+        if (response.status === 401) {
+            await destroyStoresAndLogout();
+            return null;
+        }
+
         if (!response.ok) {
             showSnackbar("error", "Failed to update user, please try again or contact Support")
             console.error('Failed to update user:', response.status);
@@ -96,26 +108,25 @@ export const logout = async () => {
         });
 
         if (!response.ok) {
-            showSnackbar('error', 'Unexpected error during logout. Please try again or contact Support.');
-            console.error("Logout failed: ", response);
-            return null;
+            showSnackbar('error', 'Server error. Logging out locally. Navigating to login page.');
+            console.error('Logout failed on server:', response);
         }
 
         showSnackbar('success', 'Logout successful. Navigating to login page. See you soon!');
-
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
+    } catch (error) {
+        // Handle network or other fetch-related errors
+        showSnackbar('error', 'Network error. Logout successful locally. Navigating to login page.');
+        console.error('Logout error:', error);
+    } finally {
+        // Clear local data regardless of the result
         localStorage.removeItem('apiUpdate-store');
         localStorage.removeItem('components-store');
         localStorage.removeItem('products-store');
         localStorage.removeItem('sales-orders-store');
         localStorage.removeItem('user-session');
         localStorage.removeItem('theme-storage');
-        return response.json;
-    } catch (error) {
-        showSnackbar('error', 'Network error or server is not responding. Please try again.');
-        console.error("Logout error: ", error);
-        return null;
+
+        await new Promise((resolve) => setTimeout(resolve, 2000));
     }
 };
 

@@ -2,6 +2,7 @@ import {CheckCircleOutlined, RemoveCircleOutline, ErrorOutline, WarningAmber} fr
 import { getRequest } from './GetRequestService.jsx';
 import useSessionStore from "../../stores/useSessionStore.js";
 import useApiUpdateStore from "../../stores/useApiUpdateStore.js";
+import {destroyStoresAndLogout} from "../destroyStoresAndLogout.js";
 
 const BASE_URL = `${import.meta.env.VITE_API_URL}/components`;
 
@@ -20,7 +21,7 @@ export const createComponent = async (componentData) => {
         });
 
         if (response.status === 401) {
-            console.error('Unauthorized request while creating component.');
+            await destroyStoresAndLogout();
             return null;
         }
 
@@ -83,6 +84,11 @@ export const updateComponent = async (id, updatedData) => {
             body: JSON.stringify(updatedData),
         });
 
+        if (response.status === 401) {
+            await destroyStoresAndLogout();
+            return null;
+        }
+
         if (!response.ok) {
             console.error('Failed to update component:', response.status);
             return null;
@@ -103,15 +109,20 @@ export const deleteComponent = async (id) => {
             credentials: "include",
         });
 
+        if (response.status === 401) {
+            await destroyStoresAndLogout();
+            return null;
+        }
+
         if (!response.ok) {
             console.log('Cannot delete component as it is associated with a product.');
             return false;
         }
 
-        return true; // Return true if deletion was successful
+        return true;
     } catch (error) {
         console.error('Error occurred while deleting component:', error);
-        return false;
+        return null;
     }
 };
 
@@ -135,7 +146,7 @@ export const createApiRequest = async () => {
         });
 
         if (response.status === 401) {
-            console.error('Unauthorized request while creating component.');
+            await destroyStoresAndLogout();
             return null;
         }
 
