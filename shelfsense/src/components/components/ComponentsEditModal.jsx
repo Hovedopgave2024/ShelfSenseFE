@@ -137,7 +137,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                     onClick={onClose}
                     sx={{
                         position: 'absolute',
-                        top: 12,
+                        top: 8,
                         right: 8,
                         color: 'grey.500',
                     }}

@@ -18,6 +18,7 @@ import {
 import Grid from '@mui/material/Grid2';
 import { Add, Remove } from '@mui/icons-material';
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
+import CloseIcon from "@mui/icons-material/Close";
 
 function CreateProductModal({ open, onClose }) {
     const [formData, setFormData] = useState({
@@ -149,6 +150,17 @@ function CreateProductModal({ open, onClose }) {
                     maxWidth: 600,
                 }}
             >
+                <Button
+                    onClick={onClose}
+                    sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        color: 'grey.500',
+                    }}
+                >
+                    <CloseIcon />
+                </Button>
                 <Box
                     sx={{
                         overflowY: 'auto',

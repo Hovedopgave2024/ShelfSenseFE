@@ -5,6 +5,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import {updateUser} from "../../util/services/UserService.jsx";
 import useSessionStore from "../../stores/useSessionStore.js";
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
+import CloseIcon from "@mui/icons-material/Close";
 
 export const UserModal = ({ open, onClose }) => {
     const [oldPassword, setOldPassword] = useState('');
@@ -109,6 +110,17 @@ export const UserModal = ({ open, onClose }) => {
                 p: 4,
                 borderRadius: 2,
             }}>
+                <Button
+                    onClick={onClose}
+                    sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        color: 'grey.500',
+                    }}
+                >
+                    <CloseIcon />
+                </Button>
                 <Typography variant="h5" id="user-modal-title">User Settings</Typography>
                 <Box
                     component="form"
