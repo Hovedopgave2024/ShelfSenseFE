@@ -4,6 +4,7 @@ import ProductModal from "./ProductModal.jsx";
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import { statusLabel } from '../../util/services/ComponentService.jsx';
 import UpdateProductModal from "./ProductsEditModal.jsx";
+import CloseIcon from "@mui/icons-material/Close";
 
 const ProductsCard = ({ product }) => {
 

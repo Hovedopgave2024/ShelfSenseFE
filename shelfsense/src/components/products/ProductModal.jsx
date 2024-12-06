@@ -2,7 +2,8 @@ import React from 'react';
 import { Box, Button, Modal, Typography, Chip, Stack, } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import useComponentsStore from "../../stores/useComponentsStore.js";
-import { statusLabel } from '../../util/services/ComponentService.jsx'; // Adjust the import path as needed
+import { statusLabel } from '../../util/services/ComponentService.jsx';
+import CloseIcon from "@mui/icons-material/Close"; // Adjust the import path as needed
 
 function ProductModal({ open, onClose, product }) {
     const actualProduct = product.product; // Extract the product object
@@ -25,6 +26,17 @@ function ProductModal({ open, onClose, product }) {
                     overflowY: 'auto',
                 }}
             >
+                <Button
+                    onClick={onClose}
+                    sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        color: 'grey.500',
+                    }}
+                >
+                    <CloseIcon />
+                </Button>
                 <Typography variant="h7" component="h2" mb={2}>
                     Product Details
                 </Typography>
