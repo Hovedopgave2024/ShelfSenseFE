@@ -2,9 +2,8 @@ import { Card, CardContent, Chip, Avatar, Stack, Typography, Button } from '@mui
 import { useState } from "react";
 import ProductModal from "./ProductModal.jsx";
 import useComponentsStore from "../../stores/useComponentsStore.js";
-import { statusLabel } from '../../util/services/ComponentService.jsx';
+import { statusLabel } from '../../util/services/components/statusLabel.js';
 import UpdateProductModal from "./ProductsEditModal.jsx";
-import CloseIcon from "@mui/icons-material/Close";
 
 const ProductsCard = ({ product }) => {
 

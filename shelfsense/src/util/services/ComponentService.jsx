@@ -1,45 +1,8 @@
-import {CheckCircleOutlined, RemoveCircleOutline, ErrorOutline, WarningAmber} from "@mui/icons-material";
-import { getRequest } from './GetRequestService.jsx';
 import useSessionStore from "../../stores/useSessionStore.js";
 import useApiUpdateStore from "../../stores/useApiUpdateStore.js";
 import {destroyStoresAndLogout} from "../destroyStoresAndLogout.js";
 
 const BASE_URL = `${import.meta.env.VITE_API_URL}/components`;
-
-export const statusLabel = (status) => {
-
-    if (status === 4) {
-        return {
-            color: 'success',
-            label: 'In stock',
-            icon: <CheckCircleOutlined fontSize="small" />,
-        };
-    } else if (status === 3) {
-        return {
-            color: 'warning',
-            label: 'Low',
-            icon: <WarningAmber fontSize="small" />,
-        };
-    } else if (status === 2) {
-        return {
-            color: 'error',
-            label: 'Warning',
-            icon: <ErrorOutline fontSize="small" />,
-        };
-    } else if (status === 1){
-        return {
-            color: "#000000",
-            label: 'Critical',
-            icon: <RemoveCircleOutline fontSize="small" />,
-        };
-    } else {
-        return {
-            color: "gray",
-            label: "No Data",
-            icon: null,
-        }
-    }
-};
 
 export const updateComponent = async (id, updatedData) => {
     const BASE_URL = `${import.meta.env.VITE_API_URL}/components/${id}`;

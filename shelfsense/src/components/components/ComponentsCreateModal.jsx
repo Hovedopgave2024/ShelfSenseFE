@@ -5,7 +5,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import CloseIcon from '@mui/icons-material/Close';
 
 import useComponentsStore from "../../stores/useComponentsStore.js";
-import {createComponent} from "../../util/services/Components/createComponent.js";
+import {createComponent} from "../../util/services/components/createComponent.js";
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 
 const ComponentsCreateModal = ({ open, onClose }) => {
