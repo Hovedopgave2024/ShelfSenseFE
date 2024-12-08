@@ -3,7 +3,7 @@ import { Modal, Box, Typography, Button, TextField, Select, MenuItem, FormContro
 import Grid from '@mui/material/Grid2';
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import useProductsStore from "../../stores/useProductsStore.js";
-import {deleteComponent} from "../../util/services/ComponentService.jsx";
+import {deleteComponent} from "../../util/services/components/deleteComponent.js";
 import {updateComponent} from "../../util/services/components/updateComponent.js";
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx"

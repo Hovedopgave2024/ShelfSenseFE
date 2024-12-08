@@ -2,7 +2,7 @@ import { Card, CardContent, Chip, Avatar, Stack, Typography, Button } from '@mui
 import { useState } from "react";
 import ProductModal from "./ProductModal.jsx";
 import useComponentsStore from "../../stores/useComponentsStore.js";
-import { statusLabel } from '../../util/services/components/statusLabel.js';
+import { statusLabel } from '../../util/services/components/StatusLabel.jsx';
 import UpdateProductModal from "./ProductsEditModal.jsx";
 
 const ProductsCard = ({ product }) => {
