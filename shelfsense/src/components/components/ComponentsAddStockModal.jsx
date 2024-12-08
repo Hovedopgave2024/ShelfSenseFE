@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Modal, Box, Typography, Button, TextField } from '@mui/material';
 import useComponentsStore from "../../stores/useComponentsStore";
-import { updateComponent } from "../../util/services/ComponentService";
+import { updateComponent } from "../../util/services/components/updateComponent.js";
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 import CloseIcon from "@mui/icons-material/Close";
 
