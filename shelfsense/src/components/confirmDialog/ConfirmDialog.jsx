@@ -30,12 +30,11 @@ const ConfirmDialog = ({
         }}>
             <Box sx={{ backgroundColor: theme.palette.background.paper, padding: 1 }}>
                 <DialogTitle id="dialog-title">
-                    <Typography
-                        variant="h5"
-                    >
+                    <Typography variant="h5" component="div">
                         {headline}
                     </Typography>
                 </DialogTitle>
+
             </Box>
             <Divider sx={{ backgroundColor: theme.palette.divider, }} />
             <DialogContent sx={{ backgroundColor: theme.palette.background.default, padding: 3 }}>
