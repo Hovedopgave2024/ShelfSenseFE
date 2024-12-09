@@ -1,6 +1,6 @@
 import {TableRow, TableCell, Button, Box} from '@mui/material';
 
-const SalesOrdersTableRow = ({ salesOrder, productName, onEdit }) => (
+const SalesOrdersTableRow = ({ salesOrder, onEdit }) => (
     <TableRow hover key={salesOrder.id}>
         <TableCell align="left">{salesOrder.createdDate}</TableCell>
         <TableCell align="left">{salesOrder.productName}</TableCell>
