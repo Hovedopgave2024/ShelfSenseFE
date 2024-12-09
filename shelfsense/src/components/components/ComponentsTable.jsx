@@ -48,17 +48,15 @@ const ComponentsTable = ({ onEdit, onAddStock, currentComponentIds }) => {
     };
 
 
-
-    // If Component ids is provided with the prop, we reorder the filteredComponents array
-    // so that the passed ones come first.
     useEffect(() => {
-        if (localCurrentComponentIds.length > 0 && filteredComponents.length > 0) {
-            const components = filteredComponents.filter((c) =>
-                localCurrentComponentIds.includes(c.id)
-            );
+        console.log("inde i use effect")
+        if (localCurrentComponentIds.length > 0) {
+
+            setFilteredComponents(components.filter((c) => localCurrentComponentIds.includes(c.id)));
+        } else {
             setFilteredComponents(components);
         }
-    }, [localCurrentComponentIds, filteredComponents]);
+    }, [localCurrentComponentIds, components]);
 
 
 
@@ -71,7 +69,7 @@ const ComponentsTable = ({ onEdit, onAddStock, currentComponentIds }) => {
             }}
             >
                 <DataManipulationBar
-                    data={components}
+                    data={filteredComponents}
                     onUpdate={setFilteredComponents}
                     filterOptions={[
                         { key: 'type', label: 'Type', values: types },
