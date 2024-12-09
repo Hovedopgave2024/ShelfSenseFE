@@ -18,21 +18,23 @@ import { useTheme } from "@mui/material";
 
 
 const ComponentsTable = ({ onEdit, onAddStock, currentComponentIds }) => {
-    const components = useComponentsStore((state) => state.components);
+    const storeComponents = useComponentsStore((state) => state.components);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [components, setComponents] = useState([]);
+    const [localfilteredComponents, setlocalfilteredComponents] = useState([]);
     const [filteredComponents, setFilteredComponents] = useState([]);
     const types = [...new Set(components.map(component => component.type))];
     const manufacturers = [...new Set(components.map(component => component.manufacturer))];
     const suppliers = [...new Set(components.map(component => component.supplier))];
     const columnTitles = ["Name", "Manufacturer Part", "Supplier", "Footprint", "Stock", "Stock Status", "Safety Stock", "Supplier Stock", "Supplier Stock Status", "Supplier Incoming Stock", "Supplier Incoming Date", "Actions"];
     const theme = useTheme();
-    const [localCurrentComponentIds, setLocalCurrentComponentIds] = useState(currentComponentIds);
-
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
+
+    console.log("he");
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
@@ -41,20 +43,23 @@ const ComponentsTable = ({ onEdit, onAddStock, currentComponentIds }) => {
 
     // Handler to remove filters and show all components again
     const handleRemoveFilter = () => {
-        // Clear the locally stored IDs
-        setLocalCurrentComponentIds([]);
+        setlocalfilteredComponents([]);
         setFilteredComponents(components);
     };
 
+    useEffect(() => {
+        setlocalfilteredComponents(currentComponentIds)
+        if (currentComponentIds.length > 0) {
+            setComponents(storeComponents.filter((c) => currentComponentIds.includes(c.id)));
+        } else {
+            setComponents(storeComponents);
+        }
+    }, []);
 
     useEffect(() => {
-        if (localCurrentComponentIds.length > 0) {
-
-            setFilteredComponents(components.filter((c) => localCurrentComponentIds.includes(c.id)));
-        } else {
+        localfilteredComponents.length === 0 ? setFilteredComponents(storeComponents) :
             setFilteredComponents(components);
-        }
-    }, [localCurrentComponentIds, components]);
+    }, [components, localfilteredComponents]);
 
 
 
@@ -67,7 +72,7 @@ const ComponentsTable = ({ onEdit, onAddStock, currentComponentIds }) => {
             }}
             >
                 <DataManipulationBar
-                    data={filteredComponents}
+                    data={components}
                     onUpdate={setFilteredComponents}
                     filterOptions={[
                         { key: 'type', label: 'Type', values: types },
