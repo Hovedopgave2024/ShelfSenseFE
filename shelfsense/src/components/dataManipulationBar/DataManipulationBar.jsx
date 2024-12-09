@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import {TextField, MenuItem, Select, FormControl, InputLabel, Box} from '@mui/material';
+import { TextField, MenuItem, Select, FormControl, InputLabel, Box } from '@mui/material';
 import Grid from "@mui/material/Grid2";
+import toCamelCase from "../../util/misc/toCamcelCase.js";
 
 const DataControls = ({ data, onUpdate, filterOptions, sortOptions }) => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -8,6 +9,12 @@ const DataControls = ({ data, onUpdate, filterOptions, sortOptions }) => {
     const [filterValue, setFilterValue] = useState('');
     const [sortKey, setSortKey] = useState('');
     const [sortOrder, setSortOrder] = useState('asc');
+
+    // Transform sort options to camelCase keys
+    const transformedSortOptions = sortOptions.map(option => ({
+        key: toCamelCase(option.label), // Convert the label to a camelCase key
+        label: option.label
+    }));
 
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
@@ -31,10 +38,10 @@ const DataControls = ({ data, onUpdate, filterOptions, sortOptions }) => {
     };
 
     useEffect(() => {
-        if (!sortKey && sortOptions?.length > 0) {
-            setSortKey(sortOptions[0].key);
+        if (!sortKey && transformedSortOptions?.length > 0) {
+            setSortKey(transformedSortOptions[0].key);
         }
-    }, [sortOptions, sortKey]);
+    }, [transformedSortOptions, sortKey]);
 
     useEffect(() => {
         const applyFilters = () => {
@@ -42,7 +49,7 @@ const DataControls = ({ data, onUpdate, filterOptions, sortOptions }) => {
 
             if (searchQuery) {
                 filteredData = filteredData.filter((item) =>
-                    String(item.name).toLowerCase().includes(searchQuery.toLowerCase()) // Example: searching only by "name"
+                    String(item.name).toLowerCase().includes(searchQuery.toLowerCase())
                 );
             }
 
@@ -69,7 +76,7 @@ const DataControls = ({ data, onUpdate, filterOptions, sortOptions }) => {
     }, [searchQuery, filterKey, filterValue, sortKey, sortOrder, data, onUpdate]);
 
     return (
-        <Box sx={{ mb: 2, width: '100%' }}>
+        <Box sx={{ mb: 2 }}>
             <Grid container spacing={2}>
                 <Grid xs={12} sm={6} md={4} lg={3}>
                     <TextField
@@ -118,7 +125,7 @@ const DataControls = ({ data, onUpdate, filterOptions, sortOptions }) => {
                     <FormControl fullWidth variant="outlined" size="small" sx={{ minWidth: 100 }}>
                         <InputLabel>Sort By</InputLabel>
                         <Select value={sortKey} onChange={handleSortChange} label="Sort By" variant="outlined">
-                            {sortOptions.map((option) => (
+                            {transformedSortOptions.map((option) => (
                                 <MenuItem key={option.key} value={option.key}>
                                     {option.label}
                                 </MenuItem>

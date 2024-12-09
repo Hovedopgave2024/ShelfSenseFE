@@ -11,14 +11,18 @@ import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
 import ComponentsTableRow from './ComponentsTableRow';
 import useComponentsStore from "../../stores/useComponentsStore.js";
-import {Typography} from "@mui/material";
+import { IconButton, Tooltip, Typography} from "@mui/material";
+import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import DataManipulationBar from '../dataManipulationBar/DataManipulationBar.jsx';
 import { useTheme } from "@mui/material";
 
-const ComponentsTable = ({ onEdit, onAddStock }) => {
-    const components = useComponentsStore((state) => state.components);
+
+const ComponentsTable = ({ onEdit, onAddStock, productComponentIds }) => {
+    const storeComponents = useComponentsStore((state) => state.components);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [components, setComponents] = useState([]);
+    const [filteredProductComponentIds, setFilteredProductComponentIds] = useState([]);
     const [filteredComponents, setFilteredComponents] = useState([]);
     const types = [...new Set(components.map(component => component.type))];
     const manufacturers = [...new Set(components.map(component => component.manufacturer))];
@@ -30,30 +34,69 @@ const ComponentsTable = ({ onEdit, onAddStock }) => {
         setPage(newPage);
     };
 
+    console.log("he");
+
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
 
-    useEffect(() => {
+    // Handler to remove filters and show all components again
+    const handleRemoveFilter = () => {
+        setFilteredProductComponentIds([]);
         setFilteredComponents(components);
-    }, [components]);
+    };
+
+    useEffect(() => {
+        setFilteredProductComponentIds(productComponentIds)
+        if (productComponentIds && productComponentIds.length > 0) {
+            setComponents(storeComponents.filter((c) => productComponentIds.includes(c.id)));
+        } else {
+            setComponents(storeComponents);
+        }
+    }, []);
+
+    useEffect(() => {
+        filteredProductComponentIds.length === 0 ? setFilteredComponents(storeComponents) :
+            setFilteredComponents(components);
+    }, [components, filteredProductComponentIds]);
+
+
 
     return (
         <Box>
-            <DataManipulationBar
-                data={components}
-                onUpdate={setFilteredComponents}
-                filterOptions={[
-                    { key: 'type', label: 'Type', values: types },
-                    { key: 'manufacturer', label: 'Manufacturer', values: manufacturers },
-                    { key: 'supplier', label: 'Supplier', values: suppliers },
-                ]}
-                sortOptions={columnTitles.map((title) => ({
-                    key: title.toLowerCase(),
-                    label: title,
-                }))}
-            />
+            <Box sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px', // or 'flex-start', depending on how you want the layout
+            }}
+            >
+                <DataManipulationBar
+                    data={components}
+                    onUpdate={setFilteredComponents}
+                    filterOptions={[
+                        { key: 'type', label: 'Type', values: types },
+                        { key: 'manufacturer', label: 'Manufacturer', values: manufacturers },
+                        { key: 'supplier', label: 'Supplier', values: suppliers },
+                    ]}
+                    sortOptions={columnTitles.map((title) => ({
+                        key: title.toLowerCase(),
+                        label: title,
+                    }))}
+
+                />
+
+                <Tooltip sx={{
+                    pb: 3,
+                    color: theme.palette.text.primary
+                }}
+                         title="Remove all filters" arrow>
+                    <IconButton onClick={handleRemoveFilter} color="secondary">
+                        < FilterAltOffIcon />
+                    </IconButton>
+                </Tooltip>
+        </Box>
+
             <Paper
                 sx={{
                     justifyContent: 'center',
