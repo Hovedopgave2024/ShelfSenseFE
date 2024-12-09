@@ -334,7 +334,6 @@ function UpdateProductModal({ open, onClose, product }) {
                 </Box>
                 <Grid
                     container
-                    item
                     xs={12}
                     sm={6}
                     alignItems="center"

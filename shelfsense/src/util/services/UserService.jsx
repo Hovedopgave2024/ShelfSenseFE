@@ -108,14 +108,14 @@ export const logout = async () => {
         });
 
         if (!response.ok) {
-            showSnackbar('error', 'Server error. Logging out locally. Navigating to login page.');
+            showSnackbar('error', 'Server error. Logging out from your device. Navigating to login page.');
             console.error('Logout failed on server:', response);
         }
 
         showSnackbar('success', 'Logout successful. Navigating to login page. See you soon!');
     } catch (error) {
         // Handle network or other fetch-related errors
-        showSnackbar('error', 'Network error. Logout successful locally. Navigating to login page.');
+        showSnackbar('error', 'Server or network error. Logging out from your device. Navigating to login page.');
         console.error('Logout error:', error);
     } finally {
         // Clear local data regardless of the result
@@ -127,6 +127,7 @@ export const logout = async () => {
         localStorage.removeItem('theme-storage');
 
         await new Promise((resolve) => setTimeout(resolve, 2000));
+        window.location.href = '/';
     }
 };
 

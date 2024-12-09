@@ -71,7 +71,7 @@ const DataControls = ({ data, onUpdate, filterOptions, sortOptions }) => {
     return (
         <Box sx={{ mb: 2, width: '100%' }}>
             <Grid container spacing={2}>
-                <Grid item xs={12} sm={6} md={4} lg={3}>
+                <Grid xs={12} sm={6} md={4} lg={3}>
                     <TextField
                         fullWidth
                         label="Search"
@@ -82,7 +82,7 @@ const DataControls = ({ data, onUpdate, filterOptions, sortOptions }) => {
                     />
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={4} lg={3}>
+                <Grid xs={12} sm={6} md={4} lg={3}>
                     <FormControl fullWidth variant="outlined" size="small" sx={{ minWidth: 110 }}>
                         <InputLabel>Filter By</InputLabel>
                         <Select value={filterKey} onChange={handleFilterKeyChange} label="Filter By" variant="outlined">
@@ -97,7 +97,7 @@ const DataControls = ({ data, onUpdate, filterOptions, sortOptions }) => {
                 </Grid>
 
                 {filterKey && (
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
+                    <Grid xs={12} sm={6} md={4} lg={3}>
                         <FormControl fullWidth variant="outlined" size="small" sx={{ minWidth: 130 }}>
                             <InputLabel>Filter Value</InputLabel>
                             <Select value={filterValue} onChange={handleFilterValueChange} label="Filter Value" variant="outlined">
@@ -114,7 +114,7 @@ const DataControls = ({ data, onUpdate, filterOptions, sortOptions }) => {
                     </Grid>
                 )}
 
-                <Grid item xs={12} sm={6} md={4} lg={3}>
+                <Grid xs={12} sm={6} md={4} lg={3}>
                     <FormControl fullWidth variant="outlined" size="small" sx={{ minWidth: 100 }}>
                         <InputLabel>Sort By</InputLabel>
                         <Select value={sortKey} onChange={handleSortChange} label="Sort By" variant="outlined">
@@ -127,7 +127,7 @@ const DataControls = ({ data, onUpdate, filterOptions, sortOptions }) => {
                     </FormControl>
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={4} lg={3}>
+                <Grid xs={12} sm={6} md={4} lg={3}>
                     <FormControl fullWidth variant="outlined" size="small">
                         <InputLabel>Order</InputLabel>
                         <Select value={sortOrder} onChange={handleSortOrderChange} label="Order" variant="outlined">
