@@ -18,7 +18,7 @@ import { UserModal } from "./UserModal.jsx";
 import { Brightness4, Brightness7 } from "@mui/icons-material";
 import useThemeStore from "../../stores/useThemeStore.js";
 import useSidebarStore from "../../stores/useSidebarStore.js"; // Import the Sidebar store
-import { logout } from "../../util/services/UserService.jsx";
+import { logout } from "../../util/services/Users/logout.js";
 import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx";
 
 export const drawerWidth = 180;

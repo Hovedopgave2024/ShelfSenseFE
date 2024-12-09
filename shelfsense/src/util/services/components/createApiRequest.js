@@ -1,5 +1,5 @@
 import useSessionStore from "../../../stores/useSessionStore.js";
-import {destroyStoresAndLogout} from "../../destroyStoresAndLogout.js";
+import {destroyStoresAndLogout} from "../Users/destroyStoresAndLogout.js";
 import useApiUpdateStore from "../../../stores/useApiUpdateStore.js";
 
 export const createApiRequest = async () => {

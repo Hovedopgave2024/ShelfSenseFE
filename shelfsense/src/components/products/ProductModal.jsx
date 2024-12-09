@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Button, Modal, Typography, Chip, Stack, } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import useComponentsStore from "../../stores/useComponentsStore.js";
-import { statusLabel } from '../../util/services/components/StatusLabel.jsx';
+import { statusLabel } from '../../util/ComponentStatusLabel.jsx';
 import CloseIcon from "@mui/icons-material/Close"; // Adjust the import path as needed
 
 function ProductModal({ open, onClose, product }) {

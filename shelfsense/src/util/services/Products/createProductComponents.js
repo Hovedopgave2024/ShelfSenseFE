@@ -1,4 +1,4 @@
-import {destroyStoresAndLogout} from "../../destroyStoresAndLogout.js";
+import {destroyStoresAndLogout} from "../Users/destroyStoresAndLogout.js";
 
 export const createProductComponents = async (productComponentsData) => {
     const BASE_URL = `${import.meta.env.VITE_API_URL}/productComponents`;
