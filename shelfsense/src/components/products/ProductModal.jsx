@@ -182,13 +182,19 @@ function ProductModal({ open, onClose, product }) {
                     })}
                 </Grid>
 
-                {/* Close Button */}
+                {/* Go To Related Components Button and passing componentsIds */}
                 <Button
                     variant="contained"
                     color="primary"
                     fullWidth
                     sx={{ mt: 3 }}
-                    onClick={() => navigate('/components')}
+                    onClick={() =>
+                        navigate('/components', {
+                            state: {
+                                componentIds: actualProduct.productComponentList.map(pc => pc.componentId)
+                            }
+                        })
+                    }
                 >
                     Go To Related Components
                 </Button>

@@ -6,6 +6,7 @@ import ComponentsCreateModal from "../components/components/ComponentsCreateModa
 import ComponentsEditModal from "../components/components/ComponentsEditModal.jsx";
 import ComponentsAddStockModal from "../components/components/ComponentsAddStockModal.jsx";
 import useThemeStore from "../stores/useThemeStore.js";
+import {useLocation} from "react-router-dom";
 
 const ComponentsPage = () => {
     const [open, setOpen] = useState(false);
@@ -14,6 +15,11 @@ const ComponentsPage = () => {
     const [componentToEdit, setComponentToEdit] = useState(null);
     const [addStockModal, setAddStockModal] = useState(false);
     const [componentToAddStock, setComponentToAddStock] = useState(null);
+
+    // Get the component IDs passed from the previous page
+    const location = useLocation();
+    const passedComponentIds = location.state?.componentIds || [];
+
 
     const mode = useThemeStore(state => state.mode);
     const toggleTheme = useThemeStore(state => state.toggleTheme);
@@ -56,7 +62,12 @@ const ComponentsPage = () => {
                         Create Component
                     </Button>
                 </Box>
-                <ComponentTable onEdit={handleEdit} onAddStock={handleAddStock}/>
+                {/* Passing the components with prop */}
+                <ComponentTable
+                    onEdit={handleEdit}
+                    onAddStock={handleAddStock}
+                    currentComponentIds={passedComponentIds}/>
+
                 <ComponentsCreateModal open={CreateModal} onClose={toggleCreateModal} />
                 <>
                     {componentToEdit && (

@@ -161,7 +161,8 @@ const StatisticsPage = () => {
                     </Box>
 
                     {/* Filters */}
-                    <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
+                        {/* Left Side (Products) */}
                         <Autocomplete
                             multiple
                             options={products}
@@ -171,33 +172,26 @@ const StatisticsPage = () => {
                             renderInput={(params) => (
                                 <TextField {...params} label="Products" placeholder="Select products" />
                             )}
-                            sx={{ width: 300, marginRight: 2 }}
+                            sx={{ width: 300 }}
                         />
-                        <Autocomplete
-                            multiple
-                            options={components}
-                            getOptionLabel={(option) => option.name}
-                            value={selectedComponents}
-                            onChange={handleComponentChange}
-                            renderInput={(params) => (
-                                <TextField {...params} label="Components" placeholder="Select components" />
-                            )}
-                            sx={{ width: 300, marginRight: 2 }}
-                        />
-                        <DatePicker
-                            label="Start Date"
-                            value={startDate}
-                            onChange={(newValue) => setStartDate(newValue)}
-                            renderInput={(params) => (
-                                <TextField {...params} sx={{ marginRight: 2 }} />
-                            )}
-                        />
-                        <DatePicker
-                            label="End Date"
-                            value={endDate}
-                            onChange={(newValue) => setEndDate(newValue)}
-                            renderInput={(params) => <TextField {...params} />}
-                        />
+
+                        {/* Right Side (Dates) */}
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <DatePicker
+                                label="Start Date"
+                                value={startDate}
+                                onChange={(newValue) => setStartDate(newValue)}
+                                renderInput={(params) => (
+                                    <TextField {...params} sx={{ marginRight: 2 }} />
+                                )}
+                            />
+                            <DatePicker
+                                label="End Date"
+                                value={endDate}
+                                onChange={(newValue) => setEndDate(newValue)}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </Box>
                     </Box>
 
                     {/* Charts */}
@@ -214,6 +208,18 @@ const StatisticsPage = () => {
                             margin={{ left: 80 }}
                         />
                     </Box>
+                    <Box>
+                    <Autocomplete
+                        multiple
+                        options={components}
+                        getOptionLabel={(option) => option.name}
+                        value={selectedComponents}
+                        onChange={handleComponentChange}
+                        renderInput={(params) => (
+                            <TextField {...params} label="Components" placeholder="Select components" />
+                        )}
+                        sx={{ width: 300, marginRight: 2 }}
+                    />
                     <Box
                         sx={{
                             flexGrow: 1,
@@ -227,6 +233,7 @@ const StatisticsPage = () => {
                             dataset={stockUsageData}
                             margin={{ left: 80 }}
                         />
+                    </Box>
                     </Box>
                 </Box>
             </Box>
