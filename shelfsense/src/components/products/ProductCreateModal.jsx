@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import useProductStore from '../../stores/useProductsStore.js';
 import useComponentsStore from '../../stores/useComponentsStore.js';
-import { createProduct } from '../../util/services/ProductService.jsx';
-import { createProductComponents } from '../../util/services/ProductService.jsx';
+import { createProduct } from '../../util/services/Products/createProduct.js';
+import { createProductComponents } from '../../util/services/Products/createProductComponents.js';
 import {
     Box,
     Button,
@@ -147,7 +147,7 @@ function CreateProductModal({ open, onClose }) {
                     p: 4,
                     borderRadius: 2,
                     minWidth: 200,
-                    maxWidth: 600,
+                    maxWidth: 650,
                 }}
             >
                 <Button

@@ -16,7 +16,8 @@ import Grid from '@mui/material/Grid2';
 import {Add, Delete, Remove} from '@mui/icons-material';
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 import useProductsStore from "../../stores/useProductsStore.js";
-import {deleteProduct, updateProduct} from '../../util/services/ProductService.jsx';
+import {deleteProduct} from '../../util/services/Products/deleteProduct.js';
+import {updateProduct} from '../../util/services/Products/updateProduct.js'
 import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx"
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -194,7 +195,7 @@ function UpdateProductModal({ open, onClose, product }) {
                     p: 4,
                     borderRadius: 3,
                     minWidth: 200,
-                    maxWidth: 600,
+                    maxWidth: 650,
                 }}
             >
                 <Button
