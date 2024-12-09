@@ -39,6 +39,7 @@ export const Sidebar = () => {
 
     const mainMenuItems = [
         { text: 'Statistics', icon: <BarChartOutlined />, path: '/statistics' },
+        { text: 'Sales Orders', icon: <BarChartOutlined />, path: '/salesorders' },
         { text: 'Products', icon: <InventoryOutlined />, path: '/products' },
         { text: 'Components', icon: <ExtensionOutlined />, path: '/components' },
         { text: 'About', icon: <InfoOutlined />, path: '/about' },

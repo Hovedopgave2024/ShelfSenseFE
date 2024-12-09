@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import {TextField, MenuItem, Select, FormControl, InputLabel, Box} from '@mui/material';
 import Grid from "@mui/material/Grid2";
 
-const DataControls = ({ data, onUpdate, filterOptions, sortOptions }) => {
+const DataControls = ({ data, onUpdate, filterOptions, sortOptions, searchOptions }) => {
     const [searchQuery, setSearchQuery] = useState('');
+    const [searchKey, setSearchKey] = useState('');
     const [filterKey, setFilterKey] = useState('');
     const [filterValue, setFilterValue] = useState('');
     const [sortKey, setSortKey] = useState('');
@@ -11,6 +12,10 @@ const DataControls = ({ data, onUpdate, filterOptions, sortOptions }) => {
 
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
+    };
+
+    const handleSearchKeyChange = (e) => {
+        setSearchKey(e.target.value);
     };
 
     const handleFilterKeyChange = (e) => {
@@ -40,9 +45,9 @@ const DataControls = ({ data, onUpdate, filterOptions, sortOptions }) => {
         const applyFilters = () => {
             let filteredData = [...data];
 
-            if (searchQuery) {
+            if (searchQuery && searchKey) {
                 filteredData = filteredData.filter((item) =>
-                    String(item.name).toLowerCase().includes(searchQuery.toLowerCase()) // Example: searching only by "name"
+                    String(item[searchKey]).toLowerCase().includes(searchQuery.toLowerCase()) // Example: searching only by "name"
                 );
             }
 
@@ -66,11 +71,24 @@ const DataControls = ({ data, onUpdate, filterOptions, sortOptions }) => {
         };
 
         applyFilters();
-    }, [searchQuery, filterKey, filterValue, sortKey, sortOrder, data, onUpdate]);
+    }, [searchQuery, searchKey, filterKey, filterValue, sortKey, sortOrder, data, onUpdate]);
 
     return (
         <Box sx={{ mb: 2, width: '100%' }}>
             <Grid container spacing={2}>
+                <Grid xs={12} sm={6} md={4} lg={3}>
+                    <FormControl fullWidth variant="outlined" size="small" sx={{ minWidth: 110 }}>
+                        <InputLabel>Search By</InputLabel>
+                        <Select value={searchKey} onChange={handleSearchKeyChange} label="Search By" variant="outlined">
+                            <MenuItem value="">None</MenuItem>
+                            {searchOptions.map((option) => (
+                                <MenuItem key={option.key} value={option.key}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
                 <Grid xs={12} sm={6} md={4} lg={3}>
                     <TextField
                         fullWidth

@@ -27,6 +27,9 @@ const ProductsList = () => {
                     key: title.toLowerCase(),
                     label: title,
                 }))}
+                searchOptions={[
+                    { key: 'name', label: 'Name' },
+                ]}
             />
             <Grid container overflow="auto"
                   spacing={6}

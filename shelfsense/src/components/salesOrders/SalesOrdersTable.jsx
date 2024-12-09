@@ -9,21 +9,19 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
-import ComponentsTableRow from './ComponentsTableRow';
-import useComponentsStore from "../../stores/useComponentsStore.js";
 import {Typography} from "@mui/material";
 import DataManipulationBar from '../dataManipulationBar/DataManipulationBar.jsx';
 import { useTheme } from "@mui/material";
+import useSalesOrdersStore from "../../stores/useSalesOrdersStore.js";
+import SalesOrdersTableRow from "./SalesOrdersTableRow.jsx";
 
-const ComponentsTable = ({ onEdit, onAddStock }) => {
-    const components = useComponentsStore((state) => state.components);
+const SalesOrdersTable = ({ onEdit }) => {
+    const salesOrders = useSalesOrdersStore((state) => state.salesOrders);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [filteredComponents, setFilteredComponents] = useState([]);
-    const types = [...new Set(components.map(component => component.type))];
-    const manufacturers = [...new Set(components.map(component => component.manufacturer))];
-    const suppliers = [...new Set(components.map(component => component.supplier))];
-    const columnTitles = ["Name", "Manufacturer Part", "Supplier", "Footprint", "Stock", "Stock Status", "Safety Stock", "Supplier Stock", "Supplier Stock Status", "Supplier Incoming Stock", "Supplier Incoming Date", "Actions"];
+    const [filteredSalesOrders, setFilteredSalesOrders] = useState([]);
+    const productNames = [...new Set(salesOrders.map(salesOrder => salesOrder.productName))];
+    const columnTitles = ["CreatedDate", "Product Name", "Quantity", "Price", "Actions"];
     const theme = useTheme();
 
     const handleChangePage = (event, newPage) => {
@@ -35,27 +33,20 @@ const ComponentsTable = ({ onEdit, onAddStock }) => {
         setPage(0);
     };
 
-    useEffect(() => {
-        setFilteredComponents(components);
-    }, [components]);
-
     return (
         <Box>
             <DataManipulationBar
-                data={components}
-                onUpdate={setFilteredComponents}
+                data={salesOrders}
+                onUpdate={setFilteredSalesOrders}
                 filterOptions={[
-                    { key: 'type', label: 'Type', values: types },
-                    { key: 'manufacturer', label: 'Manufacturer', values: manufacturers },
-                    { key: 'supplier', label: 'Supplier', values: suppliers },
+                    { key: 'productName', label: 'Product Name', values: productNames },
                 ]}
                 sortOptions={columnTitles.map((title) => ({
                     key: title.toLowerCase(),
                     label: title,
                 }))}
                 searchOptions={[
-                    { key: 'name', label: 'Name' },
-                    { key: 'manufacturerPart', label: 'Manufacturer Part' },
+                    { key: 'productName', label: 'Product Name' },
                 ]}
             />
             <Paper
@@ -88,15 +79,14 @@ const ComponentsTable = ({ onEdit, onAddStock }) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {filteredComponents && filteredComponents.length > 0 ? (
-                                filteredComponents
+                            {filteredSalesOrders && filteredSalesOrders.length > 0 ? (
+                                filteredSalesOrders
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((data) => (
-                                        <ComponentsTableRow
+                                        <SalesOrdersTableRow
                                             key={data.id}
-                                            component={data}
+                                            salesOrder={data}
                                             onEdit={onEdit}
-                                            onAddStock={onAddStock}
                                         />
                                     ))
                             ) : (
@@ -111,7 +101,7 @@ const ComponentsTable = ({ onEdit, onAddStock }) => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                {(!filteredComponents || filteredComponents.length === 0) && (
+                {(!filteredSalesOrders || filteredSalesOrders.length === 0) && (
                     <Typography align="center">No components available</Typography>
                 )}
             </Paper>
@@ -125,7 +115,7 @@ const ComponentsTable = ({ onEdit, onAddStock }) => {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 15]}
                     component="div"
-                    count={filteredComponents.length}
+                    count={filteredSalesOrders.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
@@ -136,4 +126,4 @@ const ComponentsTable = ({ onEdit, onAddStock }) => {
     );
 };
 
-export default ComponentsTable;
+export default SalesOrdersTable;
