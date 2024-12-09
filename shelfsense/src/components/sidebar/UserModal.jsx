@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {Box, Button, TextField, Modal, Typography, CircularProgress} from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import {updateUser} from "../../util/services/UserService.jsx";
+import {updateUser} from "../../services/user/updateUser.js";
 import useSessionStore from "../../stores/useSessionStore.js";
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 import CloseIcon from "@mui/icons-material/Close";
