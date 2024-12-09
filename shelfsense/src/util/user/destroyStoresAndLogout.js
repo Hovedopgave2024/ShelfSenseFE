@@ -1,4 +1,4 @@
-import useSnackbarStore from "../../../stores/useSnackbarStore.js";
+import useSnackbarStore from "../../stores/useSnackbarStore.js";
 
 export const destroyStoresAndLogout = async () => {
     const showSnackbar = useSnackbarStore.getState().showSnackbar;

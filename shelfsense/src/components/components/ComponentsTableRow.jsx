@@ -1,5 +1,5 @@
 import {TableRow, TableCell, Button, Chip, Box} from '@mui/material';
-import { statusLabel } from '../../util/ComponentStatusLabel.jsx';
+import { statusLabel } from '../../util/component/ComponentStatusLabel.jsx';
 
 const ComponentsTableRow = ({ component, onEdit, onAddStock }) => (
     <TableRow hover key={component.id}>

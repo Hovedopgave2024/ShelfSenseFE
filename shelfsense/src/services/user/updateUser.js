@@ -1,5 +1,5 @@
-import useSnackbarStore from "../../../stores/useSnackbarStore.js";
-import {destroyStoresAndLogout} from "./destroyStoresAndLogout.js";
+import useSnackbarStore from "../../stores/useSnackbarStore.js";
+import {destroyStoresAndLogout} from "../../util/user/destroyStoresAndLogout.js";
 
 export const updateUser = async (updatedData) => {
     const BASE_URL = `${import.meta.env.VITE_API_URL}/users`;

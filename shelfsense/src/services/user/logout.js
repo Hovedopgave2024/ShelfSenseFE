@@ -1,4 +1,4 @@
-import useSnackbarStore from "../../../stores/useSnackbarStore.js";
+import useSnackbarStore from "../../stores/useSnackbarStore.js";
 
 export const logout = async () => {
     const LOGOUT_URL = `${import.meta.env.VITE_API_URL}/logout`;

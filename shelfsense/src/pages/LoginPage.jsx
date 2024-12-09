@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Box, Button, Card, CardContent, TextField, Typography, CircularProgress } from '@mui/material';
-import { fetchAllData } from '../util/services/Users/fetchAllData.js';
-import { login } from '../util/services/Users/login.js';
+import { fetchAllData } from '../services/user/fetchAllData.js';
+import { login } from '../services/user/login.js';
 import { useNavigate } from 'react-router-dom';
 import useSessionStore from '../stores/useSessionStore';
 import useSnackbarStore from '../stores/useSnackbarStore';

@@ -4,10 +4,10 @@ import {Button, Box, CircularProgress, Tooltip} from '@mui/material';
 import ProductsList from '../components/products/ProductsList';
 import { Sidebar } from '../components/sidebar/sidebar.jsx';
 import ProductCreateModal from '../components/products/ProductCreateModal.jsx';
-import {createApiRequest} from "../util/services/components/createApiRequest.js";
+import {createApiRequest} from "../services/component/createApiRequest.js";
 import useComponentsStore from "../stores/useComponentsStore.js";
 import useApiUpdateStore from "../stores/useApiUpdateStore.js"; // Import the modal
-import calculateApiFetchTimeDif from '../util/calculateApiFetchTimeDif.js';
+import calculateApiFetchTimeDif from '../util/component/calculateApiFetchTimeDif.js';
 import ConfirmDialog from "../components/confirmDialog/ConfirmDialog.jsx"
 import useSnackbarStore from "../stores/useSnackbarStore.js";
 

@@ -1,10 +1,10 @@
-import {destroyStoresAndLogout} from "../Users/destroyStoresAndLogout.js";
+import {destroyStoresAndLogout} from "../../util/user/destroyStoresAndLogout.js";
 
-export const updateProduct = async (product) => {
+export const deleteProduct = async (product) => {
     const BASE_URL = `${import.meta.env.VITE_API_URL}/products`;
     try {
         const response = await fetch(BASE_URL, {
-            method: 'PUT',
+            method: 'DELETE',
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify(product),
@@ -16,11 +16,10 @@ export const updateProduct = async (product) => {
         }
 
         if (!response.ok) {
-            console.error('Failed to update product components:', response.status);
+            console.error('Failed to remove product components:', response.status);
             return null;
         }
-
-        return await response.json();
+        return true;
     } catch (error) {
         console.error('Error in updateProduct:', error);
         return null;

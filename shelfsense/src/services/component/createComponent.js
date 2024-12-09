@@ -1,4 +1,4 @@
-import {destroyStoresAndLogout} from "../Users/destroyStoresAndLogout.js";
+import {destroyStoresAndLogout} from "../../util/user/destroyStoresAndLogout.js";
 
 
 export const createComponent = async (componentData) => {

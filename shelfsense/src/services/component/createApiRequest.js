@@ -1,6 +1,6 @@
-import useSessionStore from "../../../stores/useSessionStore.js";
-import {destroyStoresAndLogout} from "../Users/destroyStoresAndLogout.js";
-import useApiUpdateStore from "../../../stores/useApiUpdateStore.js";
+import useSessionStore from "../../stores/useSessionStore.js";
+import {destroyStoresAndLogout} from "../../util/user/destroyStoresAndLogout.js";
+import useApiUpdateStore from "../../stores/useApiUpdateStore.js";
 
 export const createApiRequest = async () => {
     const BASE_URL = `${import.meta.env.VITE_API_URL}/components/mouser`;

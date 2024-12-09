@@ -1,10 +1,10 @@
-import useSessionStore from "../../../stores/useSessionStore.js";
+import useSessionStore from "../../stores/useSessionStore.js";
 import {getRequest} from "../GetRequestService.jsx";
-import useSnackbarStore from "../../../stores/useSnackbarStore.js";
-import useProductsStore from "../../../stores/useProductsStore.js";
-import useComponentsStore from "../../../stores/useComponentsStore.js";
-import useSalesOrdersStore from "../../../stores/useSalesOrdersStore.js";
-import useApiUpdateStore from "../../../stores/useApiUpdateStore.js";
+import useSnackbarStore from "../../stores/useSnackbarStore.js";
+import useProductsStore from "../../stores/useProductsStore.js";
+import useComponentsStore from "../../stores/useComponentsStore.js";
+import useSalesOrdersStore from "../../stores/useSalesOrdersStore.js";
+import useApiUpdateStore from "../../stores/useApiUpdateStore.js";
 
 export const fetchAllData = async () => {
     const userId = useSessionStore.getState().user.id;
