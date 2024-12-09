@@ -17,12 +17,12 @@ import DataManipulationBar from '../dataManipulationBar/DataManipulationBar.jsx'
 import { useTheme } from "@mui/material";
 
 
-const ComponentsTable = ({ onEdit, onAddStock, currentComponentIds }) => {
+const ComponentsTable = ({ onEdit, onAddStock, productComponentIds }) => {
     const storeComponents = useComponentsStore((state) => state.components);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [components, setComponents] = useState([]);
-    const [localfilteredComponents, setlocalfilteredComponents] = useState([]);
+    const [filteredProductComponentIds, setFilteredProductComponentIds] = useState([]);
     const [filteredComponents, setFilteredComponents] = useState([]);
     const types = [...new Set(components.map(component => component.type))];
     const manufacturers = [...new Set(components.map(component => component.manufacturer))];
@@ -43,23 +43,23 @@ const ComponentsTable = ({ onEdit, onAddStock, currentComponentIds }) => {
 
     // Handler to remove filters and show all components again
     const handleRemoveFilter = () => {
-        setlocalfilteredComponents([]);
+        setFilteredProductComponentIds([]);
         setFilteredComponents(components);
     };
 
     useEffect(() => {
-        setlocalfilteredComponents(currentComponentIds)
-        if (currentComponentIds.length > 0) {
-            setComponents(storeComponents.filter((c) => currentComponentIds.includes(c.id)));
+        setFilteredProductComponentIds(productComponentIds)
+        if (productComponentIds && productComponentIds.length > 0) {
+            setComponents(storeComponents.filter((c) => productComponentIds.includes(c.id)));
         } else {
             setComponents(storeComponents);
         }
     }, []);
 
     useEffect(() => {
-        localfilteredComponents.length === 0 ? setFilteredComponents(storeComponents) :
+        filteredProductComponentIds.length === 0 ? setFilteredComponents(storeComponents) :
             setFilteredComponents(components);
-    }, [components, localfilteredComponents]);
+    }, [components, filteredProductComponentIds]);
 
 
 

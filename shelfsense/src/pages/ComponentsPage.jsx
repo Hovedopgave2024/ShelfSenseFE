@@ -66,7 +66,7 @@ const ComponentsPage = () => {
                 <ComponentTable
                     onEdit={handleEdit}
                     onAddStock={handleAddStock}
-                    currentComponentIds={passedComponentIds}/>
+                    productComponentIds={passedComponentIds}/>
 
                 <ComponentsCreateModal open={CreateModal} onClose={toggleCreateModal} />
                 <>
