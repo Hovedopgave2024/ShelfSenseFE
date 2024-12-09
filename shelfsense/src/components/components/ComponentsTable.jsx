@@ -30,7 +30,6 @@ const ComponentsTable = ({ onEdit, onAddStock, currentComponentIds }) => {
     const [localCurrentComponentIds, setLocalCurrentComponentIds] = useState(currentComponentIds);
 
 
-
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -49,7 +48,6 @@ const ComponentsTable = ({ onEdit, onAddStock, currentComponentIds }) => {
 
 
     useEffect(() => {
-        console.log("inde i use effect")
         if (localCurrentComponentIds.length > 0) {
 
             setFilteredComponents(components.filter((c) => localCurrentComponentIds.includes(c.id)));
