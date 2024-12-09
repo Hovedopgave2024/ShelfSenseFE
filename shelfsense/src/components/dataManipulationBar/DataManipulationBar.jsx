@@ -77,7 +77,7 @@ const DataControls = ({ data, onUpdate, filterOptions, sortOptions, searchOption
         <Box sx={{ mb: 2, width: '100%' }}>
             <Grid container spacing={2}>
                 <Grid xs={12} sm={6} md={4} lg={3}>
-                    <FormControl fullWidth variant="outlined" size="small" sx={{ minWidth: 110 }}>
+                    <FormControl fullWidth variant="outlined" size="small" sx={{ minWidth: 120 }}>
                         <InputLabel>Search By</InputLabel>
                         <Select value={searchKey} onChange={handleSearchKeyChange} label="Search By" variant="outlined">
                             <MenuItem value="">None</MenuItem>
