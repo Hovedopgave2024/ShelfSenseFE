@@ -54,24 +54,23 @@ const ProductsCard = ({ product }) => {
 
     return (
         <Card
+
             sx={{
+                mt: 2,
                 minHeight: 300,
                 minWidth: 250,
                 display: 'flex',
                 flexDirection: 'column',
-                backgroundColor: 'rgba(227, 242, 253, 0.7)',
                 borderRadius: 3,
-                boxShadow: "10px 15px 25px rgba(0, 0, 0, 0.3)",
             }}
         >
-            <CardContent sx={{ flexGrow: 1 }}>
+            <CardContent sx={{ flexGrow: 1,  }}>
                 <Stack direction="column" spacing={2}>
                     <Typography
                         variant="h6"
                         component="div"
                         display="flex"
                         justifyContent="center"
-                        color="black"
                         sx={{ cursor: 'default' }}
                     >
                         {product.name}
@@ -141,10 +140,8 @@ const ProductsCard = ({ product }) => {
                     borderRadius: 3,
                     backgroundColor: 'rgba(135, 206, 250)',
                     color: '#000',
-                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                     '&:hover': {
                         backgroundColor: 'rgba(173, 216, 230)',
-                        boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.3)',
                     },
                 }}
                 onClick={toggleModal}
@@ -158,10 +155,8 @@ const ProductsCard = ({ product }) => {
                     borderRadius: 3,
                     backgroundColor: 'rgba(135, 206, 250)',
                     color: '#000',
-                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                     '&:hover': {
                         backgroundColor: 'rgba(173, 216, 230)',
-                        boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.3)',
                     },
                 }}
                 onClick={handleOpenUpdateModal}
