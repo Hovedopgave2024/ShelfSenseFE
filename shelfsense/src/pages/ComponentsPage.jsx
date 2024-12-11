@@ -6,7 +6,7 @@ import ComponentsCreateModal from "../components/components/ComponentsCreateModa
 import ComponentsEditModal from "../components/components/ComponentsEditModal.jsx";
 import ComponentsAddStockModal from "../components/components/ComponentsAddStockModal.jsx";
 import useThemeStore from "../stores/useThemeStore.js";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const ComponentsPage = () => {
     const [open, setOpen] = useState(false);
@@ -19,6 +19,7 @@ const ComponentsPage = () => {
     // Get the component IDs passed from the previous page
     const location = useLocation();
     const passedComponentIds = location.state?.componentIds || [];
+    const navigate = useNavigate();
 
 
     const mode = useThemeStore(state => state.mode);
@@ -28,8 +29,13 @@ const ComponentsPage = () => {
         setOpen((prevOpen) => !prevOpen);
     };
 
-    const toggleCreateModal = () => {
+    const toggleOpenCreateModal = () => {
         setCreateModal((prevOpen) => !prevOpen);
+    };
+
+    const toggleCloseCreateModal = () => {
+        setCreateModal((prevOpen) => !prevOpen);
+        navigate(0);
     };
 
     const handleEdit = (component) => {
@@ -57,7 +63,7 @@ const ComponentsPage = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={toggleCreateModal}
+                        onClick={toggleOpenCreateModal}
                     >
                         Create Component
                     </Button>
@@ -68,7 +74,7 @@ const ComponentsPage = () => {
                     onAddStock={handleAddStock}
                     productComponentIds={passedComponentIds}/>
 
-                <ComponentsCreateModal open={CreateModal} onClose={toggleCreateModal} />
+                <ComponentsCreateModal open={CreateModal} onClose={toggleCloseCreateModal} />
                 <>
                     {componentToEdit && (
                         <ComponentsEditModal
