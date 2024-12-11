@@ -22,7 +22,6 @@ const ComponentsTable = ({ onEdit, onAddStock, productComponentIds }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [components, setComponents] = useState([]);
-    const [filteredProductComponentIds, setFilteredProductComponentIds] = useState([]);
     const [filteredComponents, setFilteredComponents] = useState([]);
     const types = [...new Set(components.map(component => component.type))];
     const manufacturers = [...new Set(components.map(component => component.manufacturer))];
@@ -43,23 +42,26 @@ const ComponentsTable = ({ onEdit, onAddStock, productComponentIds }) => {
 
     // Handler to remove filters and show all components again
     const handleRemoveFilter = () => {
-        setFilteredProductComponentIds([]);
-        setFilteredComponents(components);
+        setFilteredComponents(storeComponents);
+        setComponents(storeComponents);
     };
 
     useEffect(() => {
-        setFilteredProductComponentIds(productComponentIds)
         if (productComponentIds && productComponentIds.length > 0) {
             setComponents(storeComponents.filter((c) => productComponentIds.includes(c.id)));
+        } else if (filteredComponents && filteredComponents.length > 0) {
+            console.log("In useEffect", filteredComponents);
+            console.log("storeComponents", storeComponents);
+            setComponents(storeComponents.filter((fc) =>
+                filteredComponents.some((sc) => sc.id === fc.id)));
         } else {
             setComponents(storeComponents);
         }
-    }, []);
+    }, [storeComponents]);
 
     useEffect(() => {
-        filteredProductComponentIds.length === 0 ? setFilteredComponents(storeComponents) :
-            setFilteredComponents(components);
-    }, [components, filteredProductComponentIds]);
+         setFilteredComponents(components);
+    }, [components]);
 
 
 
