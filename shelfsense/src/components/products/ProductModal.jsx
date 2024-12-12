@@ -4,8 +4,11 @@ import Grid from '@mui/material/Grid2';
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import { statusLabel } from '../../util/component/ComponentStatusLabel.jsx';
 import CloseIcon from "@mui/icons-material/Close"; // Adjust the import path as needed
+import { useNavigate } from 'react-router-dom';
+
 
 function ProductModal({ open, onClose, product }) {
+    const navigate = useNavigate();
     const actualProduct = product.product; // Extract the product object
     const components = useComponentsStore((state) => state.components);
 
@@ -179,15 +182,21 @@ function ProductModal({ open, onClose, product }) {
                     })}
                 </Grid>
 
-                {/* Close Button */}
+                {/* Go To Related Components Button and passing componentsIds */}
                 <Button
                     variant="contained"
                     color="primary"
                     fullWidth
                     sx={{ mt: 3 }}
-                    onClick={onClose}
+                    onClick={() =>
+                        navigate('/components', {
+                            state: {
+                                componentIds: actualProduct.productComponentList.map(pc => pc.componentId)
+                            }
+                        })
+                    }
                 >
-                    Close
+                    Go To Related Components
                 </Button>
             </Box>
         </Modal>

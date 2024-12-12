@@ -11,14 +11,17 @@ import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
 import ComponentsTableRow from './ComponentsTableRow';
 import useComponentsStore from "../../stores/useComponentsStore.js";
-import {Typography} from "@mui/material";
+import { IconButton, Tooltip, Typography} from "@mui/material";
+import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import DataManipulationBar from '../dataManipulationBar/DataManipulationBar.jsx';
 import { useTheme } from "@mui/material";
 
-const ComponentsTable = ({ onEdit, onAddStock }) => {
-    const components = useComponentsStore((state) => state.components);
+
+const ComponentsTable = ({ onEdit, onAddStock, productComponentIds }) => {
+    const storeComponents = useComponentsStore((state) => state.components);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [components, setComponents] = useState([]);
     const [filteredComponents, setFilteredComponents] = useState([]);
     const types = [...new Set(components.map(component => component.type))];
     const manufacturers = [...new Set(components.map(component => component.manufacturer))];
@@ -30,14 +33,37 @@ const ComponentsTable = ({ onEdit, onAddStock }) => {
         setPage(newPage);
     };
 
+    console.log("he");
+
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
 
+    // Handler to remove filters and show all components again
+    const handleRemoveFilter = () => {
+        setFilteredComponents(storeComponents);
+        setComponents(storeComponents);
+    };
+
     useEffect(() => {
-        setFilteredComponents(components);
+        if (productComponentIds && productComponentIds.length > 0) {
+            setComponents(storeComponents.filter((c) => productComponentIds.includes(c.id)));
+        } else if (filteredComponents && filteredComponents.length > 0) {
+            console.log("In useEffect", filteredComponents);
+            console.log("storeComponents", storeComponents);
+            setComponents(storeComponents.filter((fc) =>
+                filteredComponents.some((sc) => sc.id === fc.id)));
+        } else {
+            setComponents(storeComponents);
+        }
+    }, [storeComponents]);
+
+    useEffect(() => {
+         setFilteredComponents(components);
     }, [components]);
+
+
 
     return (
         <Box>
