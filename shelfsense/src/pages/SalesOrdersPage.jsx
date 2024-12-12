@@ -3,7 +3,7 @@ import {useState} from "react";
 import {Sidebar} from "../components/sidebar/sidebar.jsx";
 import ComponentsEditModal from "../components/components/ComponentsEditModal.jsx";
 import SalesOrdersTable from "../components/salesOrders/SalesOrdersTable.jsx";
-import SalesOrdersCreateModal from "../components/salesOrders/SalesOrdersCreateModal.jsx";
+import SalesOrdersCreateCard from "../components/salesOrders/SalesOrdersCreateCard.jsx";
 
 const SalesOrdersPage = () => {
     const [open, setOpen] = useState(false);
@@ -31,30 +31,29 @@ const SalesOrdersPage = () => {
                  sx={{
                      flex: 1,
                      pt: 4,
+                     display: "flex",
+                     flexDirection: { xs: 'column', md: 'column', lg: 'row' },
                      px: { xs: 2, sm: 3, md: 4, lg: 5 },
-                     margin: "0 auto",
                  }}
             >
-                <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={toggleCreateModal}
-                    >
-                        Create Sales Order
-                    </Button>
+                <Box
+                    sx={{
+                        flex: 1,
+                        minWidth: 0,
+                    }}
+                >
+                    <SalesOrdersTable onEdit={handleEdit} />
                 </Box>
-                <SalesOrdersCreateModal open={CreateModal} onClose={toggleCreateModal} />
-                <SalesOrdersTable onEdit={handleEdit} />
-                <>
-                    {salesOrderToEdit && (
-                        <ComponentsEditModal
-                            open={EditModal}
-                            onClose={() => setEditModal(false)}
-                            component={salesOrderToEdit}
-                        />
-                    )}
-                </>
+                <Box sx={{ display: "flex", justifyContent: "center", mx: 5}}>
+                    <SalesOrdersCreateCard open={CreateModal} onClose={toggleCreateModal} />
+                </Box>
+                {salesOrderToEdit && (
+                    <ComponentsEditModal
+                        open={EditModal}
+                        onClose={() => setEditModal(false)}
+                        component={salesOrderToEdit}
+                    />
+                )}
             </Box>
         </Box>
     );

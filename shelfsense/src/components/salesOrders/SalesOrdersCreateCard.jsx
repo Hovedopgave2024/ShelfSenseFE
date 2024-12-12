@@ -1,11 +1,9 @@
 import {useEffect, useState} from 'react';
-import { Modal, Box, Typography, Button, TextField } from '@mui/material/';
 import Grid from '@mui/material/Grid2';
-import CloseIcon from '@mui/icons-material/Close';
-
+import {TextField, Card, CardContent, CardHeader, Button} from "@mui/material";
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 
-const SalesOrdersCreateModal = ({ open, onClose }) => {
+const SalesOrdersCreateCard = () => {
     // Initial empty form data for creating a component
     const initialFormData = {
         productId: '',
@@ -66,59 +64,33 @@ const SalesOrdersCreateModal = ({ open, onClose }) => {
             return;
         }
         addComponent(result); */
-        showSnackbar('success', 'Component created successfully');
-        onClose();
+        showSnackbar('success', 'Sales order created successfully');
         setFormData(initialFormData);
         setErrors({});
     };
 
     // Reset form data and errors when the modal opens
     useEffect(() => {
-        if (open) {
             setFormData(initialFormData);
             setErrors({});
-        }
-    }, [open]);
+    }, []);
 
     return (
-        <Modal open={open} onClose={onClose}>
-            <Box alignItems="center" justifyContent="center"
-                 sx={{
-                     position: 'absolute',
-                     maxHeight: '80vh',
-                     top: '50%',
-                     left: '50%',
-                     transform: 'translate(-50%, -50%)',
-                     bgcolor: 'background.paper',
-                     borderRadius: 2,
-                     boxShadow: 24,
-                     p: 4,
-                     display: 'flex',
-                     flexDirection: 'column',
-                 }}
-            >
-                <Button
-                    onClick={onClose}
-                    sx={{
-                        position: 'absolute',
-                        top: 8,
-                        right: 8,
-                        color: 'grey.500',
-                    }}
-                >
-                    <CloseIcon />
-                </Button>
-                <Typography variant="h6" component="h2" mb={2}>
-                    Create a New Sales Order
-                </Typography>
-                <Box
-                    sx={{
-                        overflowY: 'auto',
-                        maxHeight: '60vh',
-                        mb: 3,
-                    }}
-                >
-                    <Grid container alignItems="center" justifyContent="center" spacing={2}>
+        <Card sx={{
+            maxWidth: { lg: 400, md: '100%' },
+            width: '100%',
+            pt: 2,
+            px: 2,
+            borderRadius: 5,
+            my: { lg: 7, md: 3 },
+            margin: "0 auto",
+        }}>
+            <CardHeader
+                title="Create a New Sales Order"
+                sx={{ textAlign: 'center' }}
+            />
+            <CardContent>
+                    <Grid container alignItems="center" spacing={2} sx={{pb: 3, justifyContent: 'center',}}>
                         <>
                             {Object.keys(formData).map((field) => (
                                 <Grid xs={12} lg={3} key={field}>
@@ -143,19 +115,17 @@ const SalesOrdersCreateModal = ({ open, onClose }) => {
                             ))}
                         </>
                     </Grid>
-                </Box>
                 <Button
                     variant="contained"
                     color="primary"
                     fullWidth
-                    sx={{ mt: 'auto' }}
                     onClick={handleSubmit}
                 >
                     Save Component
                 </Button>
-            </Box>
-        </Modal>
+            </CardContent>
+        </Card>
     );
 };
 
-export default SalesOrdersCreateModal;
+export default SalesOrdersCreateCard;
