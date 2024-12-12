@@ -1,18 +1,7 @@
 import {useEffect, useState} from 'react';
-import Box from '@mui/material/Box';
-import Skeleton from '@mui/material/Skeleton';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import TablePagination from '@mui/material/TablePagination';
 import ComponentsTableRow from './ComponentsTableRow';
 import useComponentsStore from "../../stores/useComponentsStore.js";
-import { IconButton, Tooltip, Typography} from "@mui/material";
-import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
+import { Typography, Box, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination} from "@mui/material";
 import DataManipulationBar from '../dataManipulationBar/DataManipulationBar.jsx';
 import { useTheme } from "@mui/material";
 
@@ -50,8 +39,6 @@ const ComponentsTable = ({ onEdit, onAddStock, productComponentIds }) => {
         if (productComponentIds && productComponentIds.length > 0) {
             setComponents(storeComponents.filter((c) => productComponentIds.includes(c.id)));
         } else if (filteredComponents && filteredComponents.length > 0) {
-            console.log("In useEffect", filteredComponents);
-            console.log("storeComponents", storeComponents);
             setComponents(storeComponents.filter((fc) =>
                 filteredComponents.some((sc) => sc.id === fc.id)));
         } else {
@@ -75,6 +62,7 @@ const ComponentsTable = ({ onEdit, onAddStock, productComponentIds }) => {
                     { key: 'manufacturer', label: 'Manufacturer', values: manufacturers },
                     { key: 'supplier', label: 'Supplier', values: suppliers },
                 ]}
+                initialSortKey={'name'}
                 sortOptions={columnTitles.map((title) => ({
                     key: title.toLowerCase(),
                     label: title,
@@ -83,6 +71,7 @@ const ComponentsTable = ({ onEdit, onAddStock, productComponentIds }) => {
                     { key: 'name', label: 'Name' },
                     { key: 'manufacturerPart', label: 'Manufacturer Part' },
                 ]}
+                onClick={handleRemoveFilter}
             />
             <Paper
                 sx={{

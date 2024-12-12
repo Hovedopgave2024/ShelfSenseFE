@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react';
-import { TextField, MenuItem, Select, FormControl, InputLabel, Box } from '@mui/material';
+import {TextField, MenuItem, Select, FormControl, InputLabel, Box, IconButton, Tooltip} from '@mui/material';
 import Grid from "@mui/material/Grid2";
 import toCamelCase from "../../util/misc/toCamcelCase.js";
+import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
+import { useTheme } from "@mui/material";
 
-const DataControls = ({ data, onUpdate, filterOptions, sortOptions, searchOptions }) => {
+const DataControls = ({ data, onUpdate, filterOptions, sortOptions, searchOptions, onClick }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchKey, setSearchKey] = useState('');
     const [filterKey, setFilterKey] = useState('');
     const [filterValue, setFilterValue] = useState('');
-    const [sortKey, setSortKey] = useState('');
+    const [sortKey, setSortKey] = useState(sortOptions[0]?.key || '');
     const [sortOrder, setSortOrder] = useState('asc');
+    const theme = useTheme();
 
     // Transform sort options to camelCase keys
     const transformedSortOptions = sortOptions.map(option => ({
@@ -42,11 +45,24 @@ const DataControls = ({ data, onUpdate, filterOptions, sortOptions, searchOption
         setSortOrder(e.target.value);
     };
 
+    const resetControls = () => {
+        setSearchQuery('');
+        setSearchKey('');
+        setFilterKey('');
+        setFilterValue('');
+        setSortKey(transformedSortOptions.length > 0 ? transformedSortOptions[0].key : '');
+        setSortOrder('asc');
+        onUpdate(data);
+        if (onClick) {
+            onClick();
+        }
+    };
+
     useEffect(() => {
         if (!sortKey && transformedSortOptions?.length > 0) {
             setSortKey(transformedSortOptions[0].key);
         }
-    }, [transformedSortOptions, sortKey]);
+    }, []);
 
     useEffect(() => {
         const applyFilters = () => {
@@ -160,6 +176,17 @@ const DataControls = ({ data, onUpdate, filterOptions, sortOptions, searchOption
                             <MenuItem value="desc">Descending</MenuItem>
                         </Select>
                     </FormControl>
+                </Grid>
+                <Grid xs={12} sm={6} md={4} lg={3}>
+                    <Tooltip sx={{
+                        pb: 3,
+                        color: theme.palette.text.primary
+                    }}
+                             title="Remove all filters" arrow>
+                        <IconButton onClick={resetControls} color="secondary">
+                            < FilterAltOffIcon />
+                        </IconButton>
+                    </Tooltip>
                 </Grid>
             </Grid>
         </Box>
