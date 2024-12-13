@@ -1,4 +1,4 @@
-import {Box, Button} from '@mui/material';
+import {Box} from '@mui/material';
 import {useState} from "react";
 import {Sidebar} from "../components/sidebar/sidebar.jsx";
 import SalesOrdersEditModal from "../components/salesOrders/SalesOrdersEditModal.jsx";

@@ -10,8 +10,6 @@ const ProductsList = () => {
     const [filteredProducts, setFilteredProducts] = useState([]);
     const productSortParameters = ["Name", "Price"]
 
-    console.log("hello");
-
     useEffect(() => {
         setFilteredProducts(products);
     }, [products]);

@@ -22,7 +22,6 @@ export const createProductComponents = async (productComponentsData) => {
         }
 
         const data = await response.json();
-        console.log('Created product components:', data);
         return data;
     } catch (error) {
         console.error('Error occurred while creating product components:', error);
