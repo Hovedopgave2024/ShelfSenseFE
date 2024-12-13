@@ -125,7 +125,6 @@ const SalesOrdersCreateCard = () => {
     return (
         <Card sx={{
             maxWidth: { lg: 400, md: '100%' },
-            maxHeight: { lg: 460, xs: 500},
             width: '100%',
             pt: 2,
             px: 2,
@@ -138,7 +137,16 @@ const SalesOrdersCreateCard = () => {
                 sx={{ textAlign: 'center' }}
             />
             <CardContent>
-                    <Grid container alignItems="center" spacing={2} sx={{pb: 3, justifyContent: 'center'}}>
+                    <Grid
+                        container
+                        spacing={2}
+                        sx={{
+                           display: 'flex',
+                           justifyContent: 'center',
+                           alignItems: 'center',
+                            height: '100%',
+                           pb: 3,
+                       }}>
                         <Grid xs={12} lg={3} >
                             <Autocomplete sx={{ width: 195 }}
                                 options={products}
