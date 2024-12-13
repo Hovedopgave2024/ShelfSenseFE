@@ -1,7 +1,7 @@
 import {Box, Button} from '@mui/material';
 import {useState} from "react";
 import {Sidebar} from "../components/sidebar/sidebar.jsx";
-import ComponentsEditModal from "../components/components/ComponentsEditModal.jsx";
+import SalesOrdersEditModal from "../components/salesOrders/SalesOrdersEditModal.jsx";
 import SalesOrdersTable from "../components/salesOrders/SalesOrdersTable.jsx";
 import SalesOrdersCreateCard from "../components/salesOrders/SalesOrdersCreateCard.jsx";
 
@@ -46,10 +46,10 @@ const SalesOrdersPage = () => {
                     <SalesOrdersCreateCard />
                 </Box>
                 {salesOrderToEdit && (
-                    <ComponentsEditModal
+                    <SalesOrdersEditModal
                         open={EditModal}
                         onClose={() => setEditModal(false)}
-                        component={salesOrderToEdit}
+                        salesOrder={salesOrderToEdit}
                     />
                 )}
             </Box>

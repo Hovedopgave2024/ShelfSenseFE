@@ -99,6 +99,11 @@ const SalesOrdersCreateCard = () => {
 
         const result = await createSalesOrder(formData);
 
+        if (!result) {
+            showSnackbar('error', 'Error: Sales order was not created. Please try again or contact Support');
+            return;
+        }
+
         const product = products.find((prod) => prod.id === formData.productId);
 
         const newStoreOrder = {
@@ -106,10 +111,6 @@ const SalesOrdersCreateCard = () => {
             productName: product?.name || "Unknown",
         };
 
-        if (!result) {
-            showSnackbar('error', 'Error: Component was not created. Please try again or contact Support');
-            return;
-        }
         addSalesOrder(newStoreOrder);
         showSnackbar('success', 'Sales order created successfully');
         setFormData(initialFormData);

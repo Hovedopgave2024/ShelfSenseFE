@@ -28,6 +28,8 @@ const SalesOrdersTable = ({ onEdit }) => {
         setPage(newPage);
     };
 
+    console.log(salesOrders);
+
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
