@@ -196,45 +196,40 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
                             height: '100%',
                             pb: 3,
                         }}>
-                        <Grid xs={12} lg={3} >
-                            <Autocomplete sx={{ width: 195 }}
-                              options={products}
-                              getOptionLabel={(option) => option.name || ''}
-                              value={products.find((prod) => prod.id === formData.productId) || salesOrder.productId}
-                              onChange={(e, newValue) => {
-                                  setFormData((prevData) => ({
-                                      ...prevData,
-                                      productId: newValue?.id || '',
-                                  }));
-                                  if (errors.productId) {
-                                      setErrors((prevErrors) => ({
-                                          ...prevErrors,
-                                          productId: null,
-                                      }));
-                                  }
-                              }}
-                              onInputChange={(e, newInputValue) => {
-                                  setFormData((prevData) => ({
-                                      ...prevData,
-                                      productId: newInputValue || '',
-                                  }));
-                                  if (errors.productId) {
-                                      setErrors((prevErrors) => ({
-                                          ...prevErrors,
-                                          productId: null,
-                                      }));
-                                  }
-                              }}
-                              renderInput={(params) => (
-                                  <TextField
-                                      {...params}
-                                      label="Product ID"
-                                      name="productId"
-                                      variant="outlined"
-                                      error={!!errors.productId}
-                                      helperText={errors.productId || ''}
-                                  />
-                              )}
+                        <Grid xs={12} lg={3}>
+                            <Autocomplete
+                                sx={{ width: 195 }}
+                                options={products}
+                                // Use productName from salesOrder to display in the field
+                                getOptionLabel={(option) => option.name || 'Unknown Product'}
+                                value={
+                                    formData.productId
+                                        ? { id: formData.productId, name: formData.productName }
+                                        : { id: salesOrder.productId, name: salesOrder.productName }
+                                }
+                                onChange={(e, newValue) => {
+                                    setFormData((prevData) => ({
+                                        ...prevData,
+                                        productId: newValue?.id || '',
+                                        productName: newValue?.name || '',
+                                    }));
+                                    if (errors.productId) {
+                                        setErrors((prevErrors) => ({
+                                            ...prevErrors,
+                                            productId: null,
+                                        }));
+                                    }
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Product"
+                                        name="productId"
+                                        variant="outlined"
+                                        error={!!errors.productId}
+                                        helperText={errors.productId || ''}
+                                    />
+                                )}
                             />
                         </Grid>
                         <Grid xs={12} lg={3} >
