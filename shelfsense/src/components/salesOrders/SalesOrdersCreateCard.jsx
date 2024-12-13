@@ -8,6 +8,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import useProductsStore from "../../stores/useProductsStore.js";
 import Autocomplete from "@mui/material/Autocomplete";
+import {createSalesOrder} from "../../services/salesOrder/createSalesOrder.js";
+import useSalesOrdersStore from "../../stores/useSalesOrdersStore.js";
 
 const SalesOrdersCreateCard = () => {
     const initialFormData = {
@@ -26,7 +28,7 @@ const SalesOrdersCreateCard = () => {
 
     const [formData, setFormData] = useState(initialFormData);
     const [errors, setErrors] = useState({});
-    // const addSalesOrder = useSalesOrdersStore((state) => state.addSalesOrder());
+    const addSalesOrder = useSalesOrdersStore((state) => state.addSalesOrder);
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
     const products = useProductsStore((state) => state.products);
 
@@ -95,13 +97,20 @@ const SalesOrdersCreateCard = () => {
 
         console.log(formData);
 
-        /* const result = await createComponent(formData); // Send form data to backend to create a component
+        const result = await createSalesOrder(formData);
+
+        const product = products.find((prod) => prod.id === formData.productId);
+
+        const newStoreOrder = {
+            ...formData,
+            productName: product?.name || "Unknown",
+        };
 
         if (!result) {
             showSnackbar('error', 'Error: Component was not created. Please try again or contact Support');
             return;
         }
-        addComponent(result); */
+        addSalesOrder(newStoreOrder);
         showSnackbar('success', 'Sales order created successfully');
         setFormData(initialFormData);
         setErrors({});
@@ -225,7 +234,7 @@ const SalesOrdersCreateCard = () => {
                     fullWidth
                     onClick={handleSubmit}
                 >
-                    Save Component
+                    Save Sales Order
                 </Button>
             </CardContent>
         </Card>

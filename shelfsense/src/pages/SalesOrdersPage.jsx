@@ -9,7 +9,6 @@ const SalesOrdersPage = () => {
     const [open, setOpen] = useState(false);
     const [EditModal, setEditModal] = useState(false);
     const [salesOrderToEdit, setSalesOrderToEdit] = useState(null);
-    const [CreateModal, setCreateModal] = useState(false);
 
     const toggleDrawer = () => {
         setOpen((prevOpen) => !prevOpen);
@@ -18,10 +17,6 @@ const SalesOrdersPage = () => {
     const handleEdit = (salesOrder) => {
         setSalesOrderToEdit(salesOrder);
         setEditModal(true);
-    };
-
-    const toggleCreateModal = () => {
-        setCreateModal((prevOpen) => !prevOpen);
     };
 
     return (
@@ -45,7 +40,7 @@ const SalesOrdersPage = () => {
                     <SalesOrdersTable onEdit={handleEdit} />
                 </Box>
                 <Box sx={{ display: "flex", justifyContent: "center", mx: 5}}>
-                    <SalesOrdersCreateCard open={CreateModal} onClose={toggleCreateModal} />
+                    <SalesOrdersCreateCard />
                 </Box>
                 {salesOrderToEdit && (
                     <ComponentsEditModal
