@@ -7,7 +7,15 @@ export const updateSalesOrder = async (salesOrderData) => {
             method: 'PUT',
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify(salesOrderData),
+            body: JSON.stringify(
+                {
+                    id: salesOrderData.id,
+                    createdDate: salesOrderData.createdDate,
+                    price: salesOrderData.price,
+                    productId: salesOrderData.productId,
+                    quantity: salesOrderData.quantity,
+                }
+            ),
         });
 
         if (response.status === 401) {
@@ -19,6 +27,8 @@ export const updateSalesOrder = async (salesOrderData) => {
             console.error('Failed to update sales order:', response.status);
             return null;
         }
+
+        console.log(salesOrderData);
 
         return await response.json();
     } catch (error) {

@@ -11,12 +11,13 @@ import Autocomplete from "@mui/material/Autocomplete";
 import {createSalesOrder} from "../../services/salesOrder/createSalesOrder.js";
 import useSalesOrdersStore from "../../stores/useSalesOrdersStore.js";
 
+
 const SalesOrdersCreateCard = () => {
     const initialFormData = {
         productId: '',
         quantity: '',
         price: '',
-        createdDate: '2022-04-17',
+        createdDate: '2024-04-17',
     };
 
     const requiredFields = [
@@ -95,7 +96,7 @@ const SalesOrdersCreateCard = () => {
 
         console.log("triggered handle submit")
 
-        console.log(formData);
+        console.log("created sales order: ", formData);
 
         const result = await createSalesOrder(formData);
 
@@ -220,7 +221,7 @@ const SalesOrdersCreateCard = () => {
                             />
                         </Grid>
                         <Grid xs={12} lg={3}>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs} >
                                 <DatePicker
                                     sx={{ width: 195 }}
                                     label="Order Date"

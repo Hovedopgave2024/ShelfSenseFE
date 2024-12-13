@@ -11,6 +11,8 @@ export const createSalesOrder = async (salesOrderData) => {
             body: JSON.stringify(salesOrderData),
         });
 
+        console.log("create service for sales order", salesOrderData)
+
         if (response.status === 401) {
             await destroyStoresAndLogout();
             return null;

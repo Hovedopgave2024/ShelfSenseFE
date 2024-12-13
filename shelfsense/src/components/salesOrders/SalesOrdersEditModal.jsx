@@ -18,10 +18,10 @@ import {deleteSalesOrder} from "../../services/salesOrder/deleteSalesOrder.js";
 
 const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
     const [formData, setFormData] = useState({
-        productId: salesOrder.productId || 1,
-        quantity: salesOrder.quantity || 1,
-        price: salesOrder.price || 1,
-        createdDate: salesOrder.createdDate || "2024-02-12",
+        productId: salesOrder.productId || '',
+        quantity: salesOrder.quantity || '',
+        price: salesOrder.price || '',
+        createdDate: salesOrder.createdDate || '',
     });
     const [errors, setErrors] = useState({});
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -31,8 +31,6 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
     const products = useProductsStore((state) => state.products);
 
     const handleCloseDialog = () => setDialogOpen(false);
-
-    console.log(salesOrder);
 
     useEffect(() => {
         if (open && salesOrder) {
@@ -130,8 +128,7 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
 
         updateSalesOrderInStore(updatedStoreOrder);
         showSnackbar('success', 'Sales order updated successfully');
-        setFormData(null);
-        setErrors({});
+        onClose();
     };
 
     const handleDeleteSalesOrder = async () => {
@@ -275,7 +272,7 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
                                 <DatePicker
                                     sx={{ width: 195 }}
                                     label="Order Date"
-                                    value={dayjs(formData.createdDate || salesOrder.createdDate)}
+                                    value={dayjs(formData.createdDate)}
                                     onChange={handleDateChange}
                                     slotProps={{
                                         textField: {
