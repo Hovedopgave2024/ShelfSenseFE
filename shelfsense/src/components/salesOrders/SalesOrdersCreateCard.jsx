@@ -6,15 +6,19 @@ import useSnackbarStore from "../../stores/useSnackbarStore.js";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import useProductsStore from "../../stores/useProductsStore.js";
+import Autocomplete from "@mui/material/Autocomplete";
 
 const SalesOrdersCreateCard = () => {
     const initialFormData = {
+        productId: '',
         quantity: '',
         price: '',
         orderDate: '2022-04-17',
     };
 
     const requiredFields = [
+        "productId",
         'quantity',
         'price',
         'orderDate',
@@ -24,6 +28,7 @@ const SalesOrdersCreateCard = () => {
     const [errors, setErrors] = useState({});
     // const addSalesOrder = useSalesOrdersStore((state) => state.addSalesOrder());
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
+    const products = useProductsStore((state) => state.products);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -60,7 +65,7 @@ const SalesOrdersCreateCard = () => {
                 newErrors[field] = `Required`;
             }
 
-            if (['quantity', 'price'].includes(field)) {
+            if (['quantity', 'price', 'productId'].includes(field)) {
                 if (isNaN(formData[field]) || formData[field] <= 0) {
                     newErrors[field] = 'Must be a valid positive number';
                 }
@@ -111,12 +116,13 @@ const SalesOrdersCreateCard = () => {
     return (
         <Card sx={{
             maxWidth: { lg: 400, md: '100%' },
-            maxHeight: 400,
+            maxHeight: { lg: 460, xs: 500},
             width: '100%',
             pt: 2,
             px: 2,
             borderRadius: 5,
-            mt: 16,
+            mt: { lg: 9, md: 5 },
+            mb: 2,
         }}>
             <CardHeader
                 title="Create a New Sales Order"
@@ -125,18 +131,59 @@ const SalesOrdersCreateCard = () => {
             <CardContent>
                     <Grid container alignItems="center" spacing={2} sx={{pb: 3, justifyContent: 'center'}}>
                         <Grid xs={12} lg={3} >
+                            <Autocomplete sx={{ width: 195 }}
+                                options={products}
+                                getOptionLabel={(option) => option.name || ''}
+                                value={products.find((prod) => prod.id === formData.productId) || null}
+                                onChange={(e, newValue) => {
+                                    setFormData((prevData) => ({
+                                        ...prevData,
+                                        productId: newValue?.id || '',
+                                    }));
+                                    if (errors.productId) {
+                                        setErrors((prevErrors) => ({
+                                            ...prevErrors,
+                                            productId: null,
+                                        }));
+                                    }
+                                }}
+                                onInputChange={(e, newInputValue) => {
+                                    setFormData((prevData) => ({
+                                        ...prevData,
+                                        productId: newInputValue || '',
+                                    }));
+                                    if (errors.productId) {
+                                        setErrors((prevErrors) => ({
+                                            ...prevErrors,
+                                            productId: null,
+                                        }));
+                                    }
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Product ID"
+                                        name="productId"
+                                        variant="outlined"
+                                        error={!!errors.productId}
+                                        helperText={errors.productId || ''}
+                                    />
+                                )}
+                            />
+                        </Grid>
+                        <Grid xs={12} lg={3} >
                             <TextField
-                                label={requiredFields.includes('quantity')
-                                    ? `quantity *`
-                                    : 'quantity'}
-                                name='quantity'
-                                variant="outlined"
-                                sx={{ width: 195 }}
-                                value={formData.quantity}
-                                onChange={handleChange}
-                                error={!!errors.quantity}
-                                helperText={errors.quantity || ''}
-                                type='number'
+                                    label={requiredFields.includes('quantity')
+                                        ? `quantity *`
+                                        : 'quantity'}
+                                    name='quantity'
+                                    variant="outlined"
+                                    sx={{ width: 195 }}
+                                    value={formData.quantity}
+                                    onChange={handleChange}
+                                    error={!!errors.quantity}
+                                    helperText={errors.quantity || ''}
+                                    type='number'
                             />
                         </Grid>
                         <Grid xs={12} lg={3}>
