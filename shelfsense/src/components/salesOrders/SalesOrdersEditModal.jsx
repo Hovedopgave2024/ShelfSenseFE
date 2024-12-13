@@ -140,10 +140,7 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
 
     const confirmDeleteSalesOrder = async () => {
         setDialogOpen(false);
-        const payload = {
-            id: salesOrder.id
-        }
-        const deleteProductResult = await deleteSalesOrder(payload);
+        const deleteProductResult = await deleteSalesOrder(salesOrder.id);
         if (!deleteProductResult) {
             showSnackbar('error', 'Error: Product was not deleted. Please try again or contact Support');
             return;

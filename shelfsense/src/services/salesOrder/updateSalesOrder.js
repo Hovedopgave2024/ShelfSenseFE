@@ -1,7 +1,7 @@
 import {destroyStoresAndLogout} from "../../util/user/destroyStoresAndLogout.js";
 
 export const updateSalesOrder = async (salesOrderData) => {
-    const BASE_URL = `${import.meta.env.VITE_API_URL}/salesOrder`;
+    const BASE_URL = `${import.meta.env.VITE_API_URL}/salesOrders`;
     try {
         const response = await fetch(BASE_URL, {
             method: 'PUT',

@@ -1,13 +1,12 @@
 import {destroyStoresAndLogout} from "../../util/user/destroyStoresAndLogout.js";
 
-export const deleteSalesOrder = async (salesOrderData) => {
-    const BASE_URL = `${import.meta.env.VITE_API_URL}/salesOrders`;
+export const deleteSalesOrder = async (id) => {
+    const BASE_URL = `${import.meta.env.VITE_API_URL}/salesOrders/${id}`;
     try {
         const response = await fetch(BASE_URL, {
             method: 'DELETE',
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify(salesOrderData),
         });
 
         if (response.status === 401) {
