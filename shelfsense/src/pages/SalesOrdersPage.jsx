@@ -22,22 +22,25 @@ const SalesOrdersPage = () => {
     return (
         <Box sx={{ display: 'flex' }}>
             <Sidebar open={open} toggleDrawer={toggleDrawer} />
-            <Box overflow="auto"
-                 sx={{
-                     flex: 1,
-                     pt: 4,
-                     display: "flex",
-                     flexDirection: { xs: 'column', md: 'column', lg: 'row' },
-                     px: { xs: 2, sm: 3, md: 4, lg: 5 },
-                 }}
-            >
-                <Box
-                    sx={{
-                        flex: 1,
-                        minWidth: 0,
-                    }}
+            <Box sx={{
+                flex: 1,
+                display: "flex",
+                flexDirection: { xs: 'column', md: 'column', lg: 'row' },
+            }}>
+                <Box overflow="auto"
+                     sx={{
+                         pt: 4,
+                         px: { xs: 2, sm: 3, md: 4, lg: 5 },
+                     }}
                 >
-                    <SalesOrdersTable onEdit={handleEdit} />
+                    <Box
+                        sx={{
+                            flex: 1,
+                            minWidth: 0,
+                        }}
+                    >
+                        <SalesOrdersTable onEdit={handleEdit} />
+                    </Box>
                 </Box>
                 <Box sx={{ display: "flex", justifyContent: "center", mx: 5}}>
                     <SalesOrdersCreateCard />
