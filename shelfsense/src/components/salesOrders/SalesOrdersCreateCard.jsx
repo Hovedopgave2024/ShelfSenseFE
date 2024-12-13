@@ -16,14 +16,14 @@ const SalesOrdersCreateCard = () => {
         productId: '',
         quantity: '',
         price: '',
-        orderDate: '2022-04-17',
+        createdDate: '2022-04-17',
     };
 
     const requiredFields = [
         "productId",
         'quantity',
         'price',
-        'orderDate',
+        'createdDate',
     ];
 
     const [formData, setFormData] = useState(initialFormData);
@@ -50,12 +50,12 @@ const SalesOrdersCreateCard = () => {
         const formattedDate = newValue ? newValue.format('YYYY-MM-DD') : '';
         setFormData((prevData) => ({
             ...prevData,
-            orderDate: formattedDate,
+            createdDate: formattedDate,
         }));
-        if (errors.orderDate) {
+        if (errors.createdDate) {
             setErrors((prevErrors) => ({
                 ...prevErrors,
-                orderDate: null,
+                createdDate: null,
             }));
         }
     };
@@ -73,8 +73,8 @@ const SalesOrdersCreateCard = () => {
                 }
             }
 
-            if (field === 'orderDate') {
-                const selectedDate = dayjs(formData.orderDate);
+            if (field === 'createdDate') {
+                const selectedDate = dayjs(formData.createdDate);
                 const today = dayjs();
                 if (!selectedDate.isValid()) {
                     newErrors[field] = 'Invalid date. Ensure it is a valid date.';
@@ -215,15 +215,15 @@ const SalesOrdersCreateCard = () => {
                                 <DatePicker
                                     sx={{ width: 195 }}
                                     label="Order Date"
-                                    value={dayjs(formData.orderDate)}
+                                    value={dayjs(formData.createdDate)}
                                     onChange={handleDateChange}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            error={!!errors.orderDate}
-                                            helperText={errors.orderDate || ''}
-                                        />
-                                    )}
+                                    slotProps={{
+                                        textField: {
+                                            variant: 'outlined',
+                                            error: !!errors.createdDate,
+                                            helperText: errors.createdDate || '',
+                                        },
+                                    }}
                                 />
                             </LocalizationProvider>
                         </Grid>

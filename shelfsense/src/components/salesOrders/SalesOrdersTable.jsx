@@ -18,7 +18,7 @@ import SalesOrdersTableRow from "./SalesOrdersTableRow.jsx";
 const SalesOrdersTable = ({ onEdit }) => {
     const salesOrders = useSalesOrdersStore((state) => state.salesOrders);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
     const [filteredSalesOrders, setFilteredSalesOrders] = useState([]);
     const productNames = [...new Set(salesOrders.map(salesOrder => salesOrder.productName))];
     const columnTitles = ["CreatedDate", "Product Name", "Quantity", "Price", "Actions"];
