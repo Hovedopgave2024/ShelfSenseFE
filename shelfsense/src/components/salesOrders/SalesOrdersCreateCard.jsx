@@ -5,6 +5,7 @@ import {TextField, Card, CardContent, CardHeader, Button} from "@mui/material";
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import 'dayjs/locale/da.js';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import useProductsStore from "../../stores/useProductsStore.js";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -17,7 +18,7 @@ const SalesOrdersCreateCard = () => {
         productId: '',
         quantity: '',
         price: '',
-        createdDate: '2024-04-17',
+        createdDate: dayjs().format('YYYY-MM-DD'),
     };
 
     const requiredFields = [
@@ -113,6 +114,7 @@ const SalesOrdersCreateCard = () => {
         };
 
         addSalesOrder(newStoreOrder);
+        console.log("add sales order: ", newStoreOrder);
         showSnackbar('success', 'Sales order created successfully');
         setFormData(initialFormData);
         setErrors({});
@@ -221,7 +223,7 @@ const SalesOrdersCreateCard = () => {
                             />
                         </Grid>
                         <Grid xs={12} lg={3}>
-                            <LocalizationProvider dateAdapter={AdapterDayjs} >
+                            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="da">
                                 <DatePicker
                                     sx={{ width: 195 }}
                                     label="Order Date"
