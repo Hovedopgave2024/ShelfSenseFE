@@ -240,7 +240,7 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
                                 name='quantity'
                                 variant="outlined"
                                 sx={{ width: 195 }}
-                                value={formData.quantity || salesOrder.quantity}
+                                value={formData.quantity}
                                 onChange={handleChange}
                                 error={!!errors.quantity}
                                 helperText={errors.quantity || ''}
@@ -255,7 +255,7 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
                                 name='price'
                                 variant="outlined"
                                 sx={{ width: 195 }}
-                                value={formData.price || salesOrder.price}
+                                value={formData.price}
                                 onChange={handleChange}
                                 error={!!errors['price']}
                                 helperText={errors['price'] || ''}

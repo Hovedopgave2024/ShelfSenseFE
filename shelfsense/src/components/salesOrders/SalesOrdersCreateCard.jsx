@@ -109,8 +109,12 @@ const SalesOrdersCreateCard = () => {
         const product = products.find((prod) => prod.id === formData.productId);
 
         const newStoreOrder = {
-            ...formData,
+            id: result.id,
+            productId: result.productId,
             productName: product?.name || "Unknown",
+            quantity: result.quantity,
+            price: result.price,
+            createdDate: result.createdDate,
         };
 
         addSalesOrder(newStoreOrder);

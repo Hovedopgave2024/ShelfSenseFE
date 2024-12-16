@@ -8,7 +8,12 @@ export const createSalesOrder = async (salesOrderData) => {
             method: "POST",
             headers: {"Content-Type": "application/json",},
             credentials: "include",
-            body: JSON.stringify(salesOrderData),
+            body: JSON.stringify({
+                quantity: parseInt(salesOrderData.quantity, 10),
+                price: parseFloat(salesOrderData.price),
+                createdDate: salesOrderData.createdDate,
+                productId: parseInt(salesOrderData.productId, 10),
+            }),
         });
 
         if (response.status === 401) {
