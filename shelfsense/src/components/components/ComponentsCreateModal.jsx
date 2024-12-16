@@ -2,9 +2,10 @@ import {useEffect, useState} from 'react';
 import { Modal, Box, Typography, Button, TextField, FormControl } from '@mui/material/';
 import Grid from '@mui/material/Grid2';
 import Autocomplete from '@mui/material/Autocomplete';
+import CloseIcon from '@mui/icons-material/Close';
 
 import useComponentsStore from "../../stores/useComponentsStore.js";
-import {createComponent} from "../../util/services/ComponentService.jsx";
+import {createComponent} from "../../services/component/createComponent.js";
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 
 const ComponentsCreateModal = ({ open, onClose }) => {
@@ -122,6 +123,17 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                     flexDirection: 'column',
                 }}
             >
+                <Button
+                    onClick={onClose}
+                    sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        color: 'grey.500',
+                    }}
+                >
+                    <CloseIcon />
+                </Button>
                 <Typography variant="h6" component="h2" mb={2}>
                     Create a New Component
                 </Typography>

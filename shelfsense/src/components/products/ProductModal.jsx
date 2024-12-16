@@ -1,14 +1,16 @@
 import React from 'react';
-import {Box, Button, Modal, Typography, List, ListItem, ListItemText, Chip, Stack,}
-from '@mui/material';
+import { Box, Button, Modal, Typography, Chip, Stack, } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import useComponentsStore from "../../stores/useComponentsStore.js";
-import { statusLabel } from '../../util/services/ComponentService.jsx'; // Adjust the import path as needed
+import { statusLabel } from '../../util/component/ComponentStatusLabel.jsx';
+import CloseIcon from "@mui/icons-material/Close"; // Adjust the import path as needed
+import { useNavigate } from 'react-router-dom';
+
 
 function ProductModal({ open, onClose, product }) {
+    const navigate = useNavigate();
     const actualProduct = product.product; // Extract the product object
-
     const components = useComponentsStore((state) => state.components);
-
 
     return (
         <Modal open={open} onClose={onClose}>
@@ -18,7 +20,7 @@ function ProductModal({ open, onClose, product }) {
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    bgcolor: 'background.paper',
+                    backgroundColor: 'background.paper',
                     boxShadow: 24,
                     p: 4,
                     borderRadius: 2,
@@ -27,7 +29,18 @@ function ProductModal({ open, onClose, product }) {
                     overflowY: 'auto',
                 }}
             >
-                <Typography variant="h6" component="h2" mb={2}>
+                <Button
+                    onClick={onClose}
+                    sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        color: 'grey.500',
+                    }}
+                >
+                    <CloseIcon />
+                </Button>
+                <Typography variant="h7" component="h2" mb={2}>
                     Product Details
                 </Typography>
 
@@ -41,24 +54,52 @@ function ProductModal({ open, onClose, product }) {
                     <strong>Price:</strong> ${actualProduct.price}
                 </Typography>
 
-                {/* Components List */}
-                <Typography variant="subtitle1" component="p" mb={1}>
+                {/* Components Grid */}
+                <Typography variant="h6" component="h2" mb={2}>
                     Components:
                 </Typography>
 
-                <List>
-                    {actualProduct.productComponentList.map((productComponent) => {
-                        const component = components.find(
-                            (c) => c.id === productComponent.componentId
-                        );
-
-                        if (!component) {
-                            return (
-                                <ListItem key={productComponent.id}>
-                                    <ListItemText primary="Unknown Component" />
-                                </ListItem>
+                <Grid container spacing={2}>
+                    {actualProduct.productComponentList
+                        .map((productComponent) => {
+                            const component = components.find(
+                                (c) => c.id === productComponent.componentId
                             );
-                        }
+
+                            if (!component) {
+                                return {
+                                    productComponent,
+                                    component: null,
+                                    stockStatusValue: Infinity,
+                                    supplierStockStatusValue: Infinity,
+                                };
+                            }
+
+                            const stockStatusValue = component.stockStatus || Infinity; // Use Infinity if no stockStatus
+                            const supplierStockStatusValue = component.supplierStockStatus || Infinity; // Use Infinity if no supplierStockStatus
+
+                            return {
+                                productComponent,
+                                component,
+                                stockStatusValue,
+                                supplierStockStatusValue,
+                            };
+                        })
+                        .sort((a, b) => {
+                            // Sort by stockStatus first, then by supplierStockStatus
+                            if (a.stockStatusValue !== b.stockStatusValue) {
+                                return a.stockStatusValue - b.stockStatusValue;
+                            }
+                            return a.supplierStockStatusValue - b.supplierStockStatusValue;
+                        })
+                        .map(({ productComponent, component }) => {
+                            if (!component) {
+                                return (
+                                    <Grid item xs={12} key={productComponent.id}>
+                                        <Typography variant="body2">Unknown Component</Typography>
+                                    </Grid>
+                                );
+                            }
 
                         // Retrieve stockStatus and supplierStockStatus
                         const stockStatusValue = component.stockStatus;
@@ -73,64 +114,89 @@ function ProductModal({ open, onClose, product }) {
                             : statusLabel(null);
 
                         return (
-                            <ListItem key={productComponent.id} alignItems="flex-start">
-                                <ListItemText
-                                    primary={component.name}
-                                    secondary={
-                                        <Stack direction="column" spacing={1} mt={1}>
-                                            {/* Component Stock Status */}
-                                            <Box>
-                                                <Typography variant="caption" component="span" mr={1}>
-                                                    Component Stock:
-                                                </Typography>
-                                                <Chip
+                            <Grid item xs={6} key={productComponent.id}>
+                                <Box
+                                    border={1} borderColor="divider" borderRadius={2} p={2}
+                                    sx={{
+                                        width: 250,
+                                }}
+                                >
+                                    <Typography variant="body1" fontWeight="bold">
+                                        {component.name} / {component.manufacturerPart}
+                                    </Typography>
 
-                                                    sx={{
-                                                        fontSize: '0.75rem',
-                                                        borderRadius: 1,
-                                                        backgroundColor: stockStatus.color,
-                                                        color: "white",
-                                                    }}
-                                                    color={stockStatus.color}
-                                                    label={stockStatus.label}
-                                                    avatar={stockStatus.icon}
-                                                />
-                                            </Box>
+                                    <Stack direction="column" spacing={1} mt={1}>
+                                        {/* Component Stock Status */}
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                            }}
+                                        >
+                                            <Typography variant="caption" component="span" mr={1}>
+                                                Component Stock:
+                                            </Typography>
+                                            <Chip
+                                                sx={{
+                                                    fontSize: '0.75rem',
+                                                    borderRadius: 1,
+                                                    width: 100,
+                                                    backgroundColor: stockStatus.color,
+                                                    color: "white",
+                                                }}
+                                                color={stockStatus.color}
+                                                label={stockStatus.label}
+                                                avatar={stockStatus.icon}
+                                            />
+                                        </Box>
 
-                                            {/* Vendor Stock Status */}
-                                            <Box>
-                                                <Typography variant="caption" component="span" mr={1}>
-                                                    Vendor Stock:
-                                                </Typography>
-                                                <Chip
-                                                    sx={{
-                                                        fontSize: '0.75rem',
-                                                        borderRadius: 1,
-                                                        backgroundColor: supplierStockStatus.color,
-                                                        color: "white",
-                                                    }}
-                                                    color={supplierStockStatus.color}
-                                                    label={supplierStockStatus.label}
-                                                    avatar={supplierStockStatus.icon}
-                                                />
-                                            </Box>
-                                        </Stack>
-                                    }
-                                />
-                            </ListItem>
+                                        {/* Vendor Stock Status */}
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                            }}
+                                        >
+                                            <Typography variant="caption" component="span" mr={1}>
+                                                Vendor Stock:
+                                            </Typography>
+                                            <Chip
+                                                sx={{
+                                                    fontSize: '0.75rem',
+                                                    borderRadius: 1,
+                                                    width: 100,
+                                                    backgroundColor: supplierStockStatus.color,
+                                                    color: "white",
+                                                }}
+                                                color={supplierStockStatus.color}
+                                                label={supplierStockStatus.label}
+                                                avatar={supplierStockStatus.icon}
+                                            />
+                                        </Box>
+                                    </Stack>
+                                </Box>
+                            </Grid>
                         );
                     })}
-                </List>
+                </Grid>
 
-                {/* Close Button */}
+                {/* Go To Related Components Button and passing componentsIds */}
                 <Button
                     variant="contained"
                     color="primary"
                     fullWidth
                     sx={{ mt: 3 }}
-                    onClick={onClose}
+                    onClick={() =>
+                        navigate('/components', {
+                            state: {
+                                componentIds: actualProduct.productComponentList.map(pc => pc.componentId)
+                            }
+                        })
+                    }
                 >
-                    Close
+                    Go To Related Components
                 </Button>
             </Box>
         </Modal>

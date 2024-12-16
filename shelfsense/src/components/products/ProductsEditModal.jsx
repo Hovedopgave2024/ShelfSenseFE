@@ -16,8 +16,10 @@ import Grid from '@mui/material/Grid2';
 import {Add, Delete, Remove} from '@mui/icons-material';
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 import useProductsStore from "../../stores/useProductsStore.js";
-import {deleteProduct, updateProduct} from '../../util/services/ProductService.jsx';
+import {deleteProduct} from '../../services/product/deleteProduct.js';
+import {updateProduct} from '../../services/product/updateProduct.js'
 import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx"
+import CloseIcon from "@mui/icons-material/Close";
 
 function UpdateProductModal({ open, onClose, product }) {
     const [formData, setFormData] = useState({
@@ -165,13 +167,13 @@ function UpdateProductModal({ open, onClose, product }) {
         setDialogOpen(true);
     }
 
-    const confirmDeleteProduct = () => {
+    const confirmDeleteProduct = async () => {
         setDialogOpen(false);
         const payload = {
             id: product.id
         }
-        const deleteProductResult = deleteProduct(payload);
-        if (!deleteProductResult){
+        const deleteProductResult = await deleteProduct(payload);
+        if (!deleteProductResult) {
             showSnackbar('error', 'Error: Product was not deleted. Please try again or contact Support');
             return;
         }
@@ -193,9 +195,20 @@ function UpdateProductModal({ open, onClose, product }) {
                     p: 4,
                     borderRadius: 3,
                     minWidth: 200,
-                    maxWidth: 600,
+                    maxWidth: 650,
                 }}
             >
+                <Button
+                    onClick={onClose}
+                    sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        color: 'grey.500',
+                    }}
+                >
+                    <CloseIcon />
+                </Button>
                 <Box
                     sx={{
                         overflowY: 'auto',
@@ -322,7 +335,6 @@ function UpdateProductModal({ open, onClose, product }) {
                 </Box>
                 <Grid
                     container
-                    item
                     xs={12}
                     sm={6}
                     alignItems="center"

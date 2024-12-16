@@ -4,10 +4,10 @@ import {Button, Box, CircularProgress, Tooltip} from '@mui/material';
 import ProductsList from '../components/products/ProductsList';
 import { Sidebar } from '../components/sidebar/sidebar.jsx';
 import ProductCreateModal from '../components/products/ProductCreateModal.jsx';
-import {createApiRequest} from "../util/services/ComponentService.jsx";
+import {createApiRequest} from "../services/component/createApiRequest.js";
 import useComponentsStore from "../stores/useComponentsStore.js";
 import useApiUpdateStore from "../stores/useApiUpdateStore.js"; // Import the modal
-import calculateApiFetchTimeDif from '../util/calculateApiFetchTimeDif.js';
+import calculateApiFetchTimeDif from '../util/component/calculateApiFetchTimeDif.js';
 import ConfirmDialog from "../components/confirmDialog/ConfirmDialog.jsx"
 import useSnackbarStore from "../stores/useSnackbarStore.js";
 
@@ -48,9 +48,6 @@ const ProductsPage = () => {
                 setLoading(false);
                 return;
             }
-
-            console.log(apiInfo);
-
             showSnackbar('success', 'API call to update supplier info was successful.');
 
             apiInfo.forEach((apiComponent) => {
@@ -120,7 +117,7 @@ const ProductsPage = () => {
                                 headline="Confirm Fetch API"
                                 text={
                                     <>
-                                        Are you sure you want to fetch API to update supplier info? <br />
+                                        Are you sure you want to fetch API, updating supplier info? <br />
                                         {apiUpdate?.lastUpdated
                                             ? `API last fetched ${calculateApiFetchTimeDif(apiUpdate.lastUpdated)}.`
                                             : 'API not fetched yet.'}

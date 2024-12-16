@@ -5,6 +5,8 @@ import {Sidebar} from "../components/sidebar/sidebar.jsx";
 import ComponentsCreateModal from "../components/components/ComponentsCreateModal.jsx";
 import ComponentsEditModal from "../components/components/ComponentsEditModal.jsx";
 import ComponentsAddStockModal from "../components/components/ComponentsAddStockModal.jsx";
+import useThemeStore from "../stores/useThemeStore.js";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const ComponentsPage = () => {
     const [open, setOpen] = useState(false);
@@ -14,12 +16,26 @@ const ComponentsPage = () => {
     const [addStockModal, setAddStockModal] = useState(false);
     const [componentToAddStock, setComponentToAddStock] = useState(null);
 
+    // Get the component IDs passed from the previous page
+    const location = useLocation();
+    const passedComponentIds = location.state?.componentIds || [];
+    const navigate = useNavigate();
+
+
+    const mode = useThemeStore(state => state.mode);
+    const toggleTheme = useThemeStore(state => state.toggleTheme);
+
     const toggleDrawer = () => {
         setOpen((prevOpen) => !prevOpen);
     };
 
-    const toggleCreateModal = () => {
+    const toggleOpenCreateModal = () => {
         setCreateModal((prevOpen) => !prevOpen);
+    };
+
+    const toggleCloseCreateModal = () => {
+        setCreateModal((prevOpen) => !prevOpen);
+        navigate(0);
     };
 
     const handleEdit = (component) => {
@@ -47,13 +63,18 @@ const ComponentsPage = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={toggleCreateModal}
+                        onClick={toggleOpenCreateModal}
                     >
                         Create Component
                     </Button>
                 </Box>
-                <ComponentTable onEdit={handleEdit} onAddStock={handleAddStock}/>
-                <ComponentsCreateModal open={CreateModal} onClose={toggleCreateModal} />
+                {/* Passing the components with prop */}
+                <ComponentTable
+                    onEdit={handleEdit}
+                    onAddStock={handleAddStock}
+                    productComponentIds={passedComponentIds}/>
+
+                <ComponentsCreateModal open={CreateModal} onClose={toggleCloseCreateModal} />
                 <>
                     {componentToEdit && (
                         <ComponentsEditModal

@@ -10,7 +10,6 @@ const ProductsList = () => {
     const [filteredProducts, setFilteredProducts] = useState([]);
     const productSortParameters = ["Name", "Price"]
 
-
     useEffect(() => {
         setFilteredProducts(products);
     }, [products]);
@@ -27,6 +26,9 @@ const ProductsList = () => {
                     key: title.toLowerCase(),
                     label: title,
                 }))}
+                searchOptions={[
+                    { key: 'name', label: 'Name' },
+                ]}
             />
             <Grid container overflow="auto"
                   spacing={6}
@@ -35,7 +37,8 @@ const ProductsList = () => {
                       alignItems: 'center',
                       width: '100%',
                       maxHeight: { xs: '35vh', sm: '45vh', md: '55vh', lg: '65vh', xl: '75vh' },
-                      mt: 5,
+                      pb: 2,
+                      mt: 5
                   }}>
                 {filteredProducts && filteredProducts.length > 0 ? (
                     filteredProducts.map((filteredProduct) => (

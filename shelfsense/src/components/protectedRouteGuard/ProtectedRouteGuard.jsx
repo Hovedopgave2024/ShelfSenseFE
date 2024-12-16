@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { validateSession } from '../../util/services/UserService.jsx';
+import { validateSession } from '../../services/user/validateSession.js';
 import useSessionStore from "../../stores/useSessionStore.js";
 import { CircularProgress, Box } from '@mui/material';
 

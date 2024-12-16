@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import useProductStore from '../../stores/useProductsStore.js';
 import useComponentsStore from '../../stores/useComponentsStore.js';
-import { createProduct } from '../../util/services/ProductService.jsx';
-import { createProductComponents } from '../../util/services/ProductService.jsx';
+import { createProduct } from '../../services/product/createProduct.js';
+import { createProductComponents } from '../../services/product/createProductComponents.js';
 import {
     Box,
     Button,
@@ -18,6 +18,7 @@ import {
 import Grid from '@mui/material/Grid2';
 import { Add, Remove } from '@mui/icons-material';
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
+import CloseIcon from "@mui/icons-material/Close";
 
 function CreateProductModal({ open, onClose }) {
     const [formData, setFormData] = useState({
@@ -146,9 +147,20 @@ function CreateProductModal({ open, onClose }) {
                     p: 4,
                     borderRadius: 2,
                     minWidth: 200,
-                    maxWidth: 600,
+                    maxWidth: 650,
                 }}
             >
+                <Button
+                    onClick={onClose}
+                    sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        color: 'grey.500',
+                    }}
+                >
+                    <CloseIcon />
+                </Button>
                 <Box
                     sx={{
                         overflowY: 'auto',

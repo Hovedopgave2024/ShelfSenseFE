@@ -1,41 +1,56 @@
 import {useEffect, useState} from 'react';
-import Box from '@mui/material/Box';
-import Skeleton from '@mui/material/Skeleton';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import TablePagination from '@mui/material/TablePagination';
 import ComponentsTableRow from './ComponentsTableRow';
 import useComponentsStore from "../../stores/useComponentsStore.js";
-import {Typography} from "@mui/material";
+import { Typography, Box, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination} from "@mui/material";
 import DataManipulationBar from '../dataManipulationBar/DataManipulationBar.jsx';
+import { useTheme } from "@mui/material";
 
-const ComponentsTable = ({ onEdit, onAddStock }) => {
-    const components = useComponentsStore((state) => state.components);
+
+const ComponentsTable = ({ onEdit, onAddStock, productComponentIds }) => {
+    const storeComponents = useComponentsStore((state) => state.components);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [components, setComponents] = useState([]);
     const [filteredComponents, setFilteredComponents] = useState([]);
     const types = [...new Set(components.map(component => component.type))];
     const manufacturers = [...new Set(components.map(component => component.manufacturer))];
     const suppliers = [...new Set(components.map(component => component.supplier))];
     const columnTitles = ["Name", "Manufacturer Part", "Supplier", "Footprint", "Stock", "Stock Status", "Safety Stock", "Supplier Stock", "Supplier Stock Status", "Supplier Incoming Stock", "Supplier Incoming Date", "Actions"];
+    const theme = useTheme();
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
+
+    console.log("he");
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
 
+    // Handler to remove filters and show all components again
+    const handleRemoveFilter = () => {
+        setFilteredComponents(storeComponents);
+        setComponents(storeComponents);
+    };
+
     useEffect(() => {
-        setFilteredComponents(components);
+        if (productComponentIds && productComponentIds.length > 0) {
+            setComponents(storeComponents.filter((c) => productComponentIds.includes(c.id)));
+        } else if (filteredComponents && filteredComponents.length > 0) {
+            setComponents(storeComponents.filter((fc) =>
+                filteredComponents.some((sc) => sc.id === fc.id)));
+        } else {
+            setComponents(storeComponents);
+        }
+    }, [storeComponents]);
+
+    useEffect(() => {
+         setFilteredComponents(components);
     }, [components]);
+
+
 
     return (
         <Box>
@@ -47,10 +62,16 @@ const ComponentsTable = ({ onEdit, onAddStock }) => {
                     { key: 'manufacturer', label: 'Manufacturer', values: manufacturers },
                     { key: 'supplier', label: 'Supplier', values: suppliers },
                 ]}
+                initialSortKey={'name'}
                 sortOptions={columnTitles.map((title) => ({
                     key: title.toLowerCase(),
                     label: title,
                 }))}
+                searchOptions={[
+                    { key: 'name', label: 'Name' },
+                    { key: 'manufacturerPart', label: 'Manufacturer Part' },
+                ]}
+                onClick={handleRemoveFilter}
             />
             <Paper
                 sx={{
@@ -66,7 +87,16 @@ const ComponentsTable = ({ onEdit, onAddStock }) => {
                         <TableHead>
                             <TableRow>
                                 {columnTitles.map((title, index) => (
-                                    <TableCell align="left" key={index}>
+                                    <TableCell
+                                        align="left"
+                                        key={index}
+                                        sx={{
+                                            backgroundColor: theme.palette.background.paper, // Dynamic color based on theme
+                                            color: theme.palette.text.primary,
+                                            fontWeight: "bold",
+                                            borderBottom: `2px solid ${theme.palette.divider}`,
+                                        }}
+                                    >
                                         {title}
                                     </TableCell>
                                 ))}
@@ -86,7 +116,7 @@ const ComponentsTable = ({ onEdit, onAddStock }) => {
                                     ))
                             ) : (
                                 <TableRow>
-                                    {[...Array(4)].map((_, index) => (
+                                    {[...Array(columnTitles.length)].map((_, index) => (
                                         <TableCell key={index}>
                                             <Skeleton animation="wave" variant="rectangular" height={25} />
                                         </TableCell>

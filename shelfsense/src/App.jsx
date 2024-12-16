@@ -2,9 +2,10 @@ import { Route, Routes } from 'react-router-dom';
 import ProductsPage from './pages/ProductsPage';
 import ComponentsPage from './pages/ComponentsPage';
 import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
+import StatisticsPage from './pages/StatisticsPage.jsx';
 import ProtectedRouteGuard from "./components/protectedRouteGuard/ProtectedRouteGuard.jsx";
 import AboutPage from "./pages/AboutPage.jsx";
+import SalesOrdersPage from "./pages/SalesOrdersPage.jsx";
 
 const App = () => (
     <Routes>
@@ -19,9 +20,14 @@ const App = () => (
                             <ComponentsPage />
                     </ProtectedRouteGuard>
             }/>
-            <Route path="/dashboard" element={
+            <Route path="/salesorders" element={
                 <ProtectedRouteGuard>
-                    <DashboardPage />
+                    <SalesOrdersPage />
+                </ProtectedRouteGuard>
+            }/>
+            <Route path="/statistics" element={
+                <ProtectedRouteGuard>
+                    <StatisticsPage />
                 </ProtectedRouteGuard>
             }/>
             <Route path="/about" element={

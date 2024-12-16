@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Box, Button, Card, CardContent, TextField, Typography, CircularProgress } from '@mui/material';
-import { fetchAllData, login } from '../util/services/UserService.jsx';
+import { fetchAllData } from '../services/user/fetchAllData.js';
+import { login } from '../services/user/login.js';
 import { useNavigate } from 'react-router-dom';
 import useSessionStore from '../stores/useSessionStore';
 import useSnackbarStore from '../stores/useSnackbarStore';
@@ -23,7 +24,6 @@ const LoginPage = () => {
         const response = await login(name, password);
 
         if (!response) {
-            showSnackbar('error', 'Username or password is wrong, please try again or contact Support.');
             setLoading(false);
             return;
         }
@@ -36,7 +36,7 @@ const LoginPage = () => {
     };
 
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f0f2f5">
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
             <Card sx={{ maxWidth: 400, padding: 2 }}>
                 <CardContent>
                     <Typography variant="h5" align="center" gutterBottom>
