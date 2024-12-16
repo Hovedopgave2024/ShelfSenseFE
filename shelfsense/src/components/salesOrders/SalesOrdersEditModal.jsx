@@ -263,7 +263,7 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
                             />
                         </Grid>
                         <Grid xs={12} lg={3}>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="da">
                                 <DatePicker
                                     sx={{ width: 195 }}
                                     label="Order Date"
