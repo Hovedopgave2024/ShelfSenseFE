@@ -1,14 +1,12 @@
 import {destroyStoresAndLogout} from "../../util/user/destroyStoresAndLogout.js";
 
-export const createProductComponents = async (productComponentsData) => {
-    const BASE_URL = `${import.meta.env.VITE_API_URL}/productComponents`;
-
+export const deleteSalesOrder = async (id) => {
+    const BASE_URL = `${import.meta.env.VITE_API_URL}/salesOrders/${id}`;
     try {
         const response = await fetch(BASE_URL, {
-            method: "POST",
+            method: 'DELETE',
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify(productComponentsData),
         });
 
         if (response.status === 401) {
@@ -17,14 +15,12 @@ export const createProductComponents = async (productComponentsData) => {
         }
 
         if (!response.ok) {
-            console.error('Failed to create product components:', response.status);
+            console.error('Failed to delete sales order', response.status);
             return null;
         }
-
-        const data = await response.json();
-        return data;
+        return true;
     } catch (error) {
-        console.error('Error occurred while creating product components:', error);
+        console.error('Error while deleting sales order:', error);
         return null;
     }
 };

@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import StatisticsPage from './pages/StatisticsPage.jsx';
 import ProtectedRouteGuard from "./components/protectedRouteGuard/ProtectedRouteGuard.jsx";
 import AboutPage from "./pages/AboutPage.jsx";
+import SalesOrdersPage from "./pages/SalesOrdersPage.jsx";
 
 const App = () => (
     <Routes>
@@ -18,6 +19,11 @@ const App = () => (
                     <ProtectedRouteGuard>
                             <ComponentsPage />
                     </ProtectedRouteGuard>
+            }/>
+            <Route path="/salesorders" element={
+                <ProtectedRouteGuard>
+                    <SalesOrdersPage />
+                </ProtectedRouteGuard>
             }/>
             <Route path="/statistics" element={
                 <ProtectedRouteGuard>

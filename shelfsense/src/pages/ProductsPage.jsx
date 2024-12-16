@@ -48,9 +48,6 @@ const ProductsPage = () => {
                 setLoading(false);
                 return;
             }
-
-            console.log(apiInfo);
-
             showSnackbar('success', 'API call to update supplier info was successful.');
 
             apiInfo.forEach((apiComponent) => {

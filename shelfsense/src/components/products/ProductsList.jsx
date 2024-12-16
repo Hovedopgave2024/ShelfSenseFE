@@ -10,8 +10,6 @@ const ProductsList = () => {
     const [filteredProducts, setFilteredProducts] = useState([]);
     const productSortParameters = ["Name", "Price"]
 
-    console.log("hello");
-
     useEffect(() => {
         setFilteredProducts(products);
     }, [products]);
@@ -28,6 +26,9 @@ const ProductsList = () => {
                     key: title.toLowerCase(),
                     label: title,
                 }))}
+                searchOptions={[
+                    { key: 'name', label: 'Name' },
+                ]}
             />
             <Grid container overflow="auto"
                   spacing={6}

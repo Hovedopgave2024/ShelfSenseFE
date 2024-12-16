@@ -36,7 +36,7 @@ const LoginPage = () => {
     };
 
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f0f2f5">
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
             <Card sx={{ maxWidth: 400, padding: 2 }}>
                 <CardContent>
                     <Typography variant="h5" align="center" gutterBottom>
