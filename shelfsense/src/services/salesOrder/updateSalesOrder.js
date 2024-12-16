@@ -9,11 +9,11 @@ export const updateSalesOrder = async (salesOrderData) => {
             credentials: "include",
             body: JSON.stringify(
                 {
-                    id: salesOrderData.id,
+                    id: parseInt(salesOrderData.id, 10),
                     createdDate: salesOrderData.createdDate,
-                    price: salesOrderData.price,
-                    productId: salesOrderData.productId,
-                    quantity: salesOrderData.quantity,
+                    price: parseFloat(salesOrderData.price),
+                    productId: parseInt(salesOrderData.productId, 10),
+                    quantity: parseInt(salesOrderData.quantity, 10),
                 }
             ),
         });
