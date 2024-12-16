@@ -14,6 +14,7 @@ export const updateSalesOrder = async (salesOrderData) => {
                     price: parseFloat(salesOrderData.price),
                     productId: parseInt(salesOrderData.productId, 10),
                     quantity: parseInt(salesOrderData.quantity, 10),
+                    productName: salesOrderData.productName,
                 }
             ),
         });

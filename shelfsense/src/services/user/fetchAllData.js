@@ -20,19 +20,8 @@ export const fetchAllData = async () => {
     const salesOrders = userData.salesOrderList ? JSON.parse(JSON.stringify(userData.salesOrderList)) : [];
     const apiUpdate = userData.apiUpdate ? JSON.parse(JSON.stringify(userData.apiUpdate)) : null;
 
-    const productMap = products.reduce((acc, product) => {
-        acc[product.id] = product.name; // Assuming each product has an `id` and `name`
-        return acc;
-    }, {});
-
-    // Enrich sales orders with productName
-    const enrichedSalesOrders = salesOrders.map((salesOrder) => ({
-        ...salesOrder,
-        productName: productMap[salesOrder.productId] || "Unknown Product",
-    }));
-
     useProductsStore.getState().setProducts(products);
     useComponentsStore.getState().setComponents(components);
-    useSalesOrdersStore.getState().setSalesOrders(enrichedSalesOrders);
+    useSalesOrdersStore.getState().setSalesOrders(salesOrders);
     useApiUpdateStore.getState().setApiUpdate(apiUpdate);
 }
