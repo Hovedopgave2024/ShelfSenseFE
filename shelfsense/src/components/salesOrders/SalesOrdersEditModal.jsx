@@ -19,6 +19,7 @@ import {deleteSalesOrder} from "../../services/salesOrder/deleteSalesOrder.js";
 const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
     const [formData, setFormData] = useState({
         productId: salesOrder.productId || '',
+        productName: salesOrder.productName || '',
         quantity: salesOrder.quantity || '',
         price: salesOrder.price || '',
         createdDate: salesOrder.createdDate || '',
@@ -119,11 +120,13 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
             return;
         }
 
-        const product = products.find((prod) => prod.id === formData.productId);
-
         const updatedStoreOrder = {
-            ...formData,
-            productName: product?.name || "Unknown",
+            id: result.id,
+            productId: result.productId,
+            productName: result.productName,
+            quantity: result.quantity,
+            price: result.price,
+            createdDate: result.createdDate,
         };
 
         updateSalesOrderInStore(updatedStoreOrder);

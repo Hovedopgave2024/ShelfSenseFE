@@ -16,6 +16,7 @@ import useSalesOrdersStore from "../../stores/useSalesOrdersStore.js";
 const SalesOrdersCreateCard = () => {
     const initialFormData = {
         productId: '',
+        productName: '',
         quantity: '',
         price: '',
         createdDate: dayjs().format('YYYY-MM-DD'),
@@ -106,12 +107,10 @@ const SalesOrdersCreateCard = () => {
             return;
         }
 
-        const product = products.find((prod) => prod.id === formData.productId);
-
         const newStoreOrder = {
             id: result.id,
             productId: result.productId,
-            productName: product?.name || "Unknown",
+            productName: result.productName,
             quantity: result.quantity,
             price: result.price,
             createdDate: result.createdDate,
@@ -164,6 +163,7 @@ const SalesOrdersCreateCard = () => {
                                     setFormData((prevData) => ({
                                         ...prevData,
                                         productId: newValue?.id || '',
+                                        productName: newValue.name || '',
                                     }));
                                     if (errors.productId) {
                                         setErrors((prevErrors) => ({

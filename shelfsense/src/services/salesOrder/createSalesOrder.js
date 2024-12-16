@@ -13,6 +13,7 @@ export const createSalesOrder = async (salesOrderData) => {
                 price: parseFloat(salesOrderData.price),
                 createdDate: salesOrderData.createdDate,
                 productId: parseInt(salesOrderData.productId, 10),
+                productName: salesOrderData.productName,
             }),
         });
 
