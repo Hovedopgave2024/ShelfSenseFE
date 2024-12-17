@@ -12,7 +12,7 @@ export const ThemeProviderWrapper = ({ children }) => {
                 palette: {
                     mode,
                     background: {
-                        default: mode === "light" ? "#ffffff" : "#121212",
+                        default: mode === "light" ? "#f2f2f2" : "#121212",
                         paper: mode === "light" ? "#ffffff" : "#1e1e1e",
                     },
                     primary: {
