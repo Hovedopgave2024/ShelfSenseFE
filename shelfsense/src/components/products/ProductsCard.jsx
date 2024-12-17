@@ -144,7 +144,7 @@ const ProductsCard = ({ product }) => {
                 Open Product
             </Button>
             <Button
-                variant="contained"
+                variant="outlined"
                 sx={{
                     margin: '15px',
                     borderRadius: 3,
