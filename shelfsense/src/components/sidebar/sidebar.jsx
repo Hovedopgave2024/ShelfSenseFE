@@ -11,7 +11,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Box from '@mui/material/Box';
 
-import { AddShoppingCartOutlined, InfoOutlined, InventoryOutlined, ExtensionOutlined, BarChartOutlined, AccountCircleOutlined, LogoutOutlined } from '@mui/icons-material';
+import { Inventory2Outlined, AddShoppingCartOutlined, InfoOutlined, InventoryOutlined, ExtensionOutlined, BarChartOutlined, AccountCircleOutlined, LogoutOutlined } from '@mui/icons-material';
 
 import { useNavigate, useLocation } from 'react-router-dom';
 import { UserModal } from "./UserModal.jsx";
@@ -40,7 +40,7 @@ export const Sidebar = () => {
     const mainMenuItems = [
         { text: 'Statistics', icon: <BarChartOutlined />, path: '/statistics' },
         { text: 'Sales Orders', icon: <AddShoppingCartOutlined />, path: '/salesorders' },
-        { text: 'Products', icon: <InventoryOutlined />, path: '/products' },
+        { text: 'Products', icon: <Inventory2Outlined />, path: '/products' },
         { text: 'Components', icon: <ExtensionOutlined />, path: '/components' },
         { text: 'About', icon: <InfoOutlined />, path: '/about' },
     ];
