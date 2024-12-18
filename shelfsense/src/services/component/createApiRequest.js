@@ -1,5 +1,5 @@
 import useSessionStore from "../../stores/useSessionStore.js";
-import {destroyStoresAndLogout} from "../../util/user/destroyStoresAndLogout.js";
+import {clearStoresAndLogout} from "../../util/user/clearStoresAndLogout.js";
 import useApiUpdateStore from "../../stores/useApiUpdateStore.js";
 
 export const createApiRequest = async () => {
@@ -23,7 +23,7 @@ export const createApiRequest = async () => {
         });
 
         if (response.status === 401) {
-            await destroyStoresAndLogout();
+            await clearStoresAndLogout();
             return null;
         }
 

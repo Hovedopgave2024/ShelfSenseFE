@@ -1,4 +1,4 @@
-import {destroyStoresAndLogout} from "../../util/user/destroyStoresAndLogout.js";
+import {clearStoresAndLogout} from "../../util/user/clearStoresAndLogout.js";
 
 export const updateSalesOrder = async (salesOrderData) => {
     const BASE_URL = `${import.meta.env.VITE_API_URL}/salesOrders`;
@@ -20,7 +20,7 @@ export const updateSalesOrder = async (salesOrderData) => {
         });
 
         if (response.status === 401) {
-            await destroyStoresAndLogout();
+            await clearStoresAndLogout();
             return null;
         }
 
