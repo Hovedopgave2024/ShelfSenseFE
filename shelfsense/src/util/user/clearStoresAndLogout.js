@@ -1,6 +1,6 @@
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 
-export const destroyStoresAndLogout = async () => {
+export const clearStoresAndLogout = async () => {
     const showSnackbar = useSnackbarStore.getState().showSnackbar;
     try {
         showSnackbar('error', 'Unauthorized! Logging out and navigating to login page.');

@@ -31,6 +31,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
         'name',
         'type',
         'footprint',
+        'manufacturer',
         'manufacturerPart',
         'price',
         'supplier',

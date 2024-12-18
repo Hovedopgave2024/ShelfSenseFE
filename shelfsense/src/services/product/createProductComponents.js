@@ -1,4 +1,4 @@
-import {destroyStoresAndLogout} from "../../util/user/destroyStoresAndLogout.js";
+import {clearStoresAndLogout} from "../../util/user/clearStoresAndLogout.js";
 
 export const createProductComponents = async (productComponentsData) => {
     const BASE_URL = `${import.meta.env.VITE_API_URL}/productComponents`;
@@ -12,7 +12,7 @@ export const createProductComponents = async (productComponentsData) => {
         });
 
         if (response.status === 401) {
-            await destroyStoresAndLogout();
+            await clearStoresAndLogout();
             return null;
         }
 
@@ -21,8 +21,7 @@ export const createProductComponents = async (productComponentsData) => {
             return null;
         }
 
-        const data = await response.json();
-        return data;
+        return await response.json();
     } catch (error) {
         console.error('Error occurred while creating product components:', error);
         return null;
