@@ -24,16 +24,16 @@ jobs:
         with:
           node-version: 22.11.0
 
-      # Install dependencies
-      - name: Install dependencies
-        run: npm install
-
-      # Run tests
-      - name: Run tests
-        run: npm test
+      # Navigate to the /shelfsense folder, install dependencies, and run tests
+      - name: Install dependencies and run tests
+        run: |
+          cd shelfsense
+          npm install
+          npm test
 
       # (Optional) Collect coverage report
       # - name: Upload coverage report
-      #  if: success()
-      #  run: |
-      #    npm run test:coverage # Example command if you use coverage tools like Jest or Vitest
+      #   if: success()
+      #   run: |
+      #     cd shelfsense
+      #     npm run test:coverage
