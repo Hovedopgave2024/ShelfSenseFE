@@ -10,6 +10,8 @@ export const updateProduct = async (product) => {
             body: JSON.stringify(product),
         });
 
+        console.log(product);
+
         if (response.status === 401) {
             await clearStoresAndLogout();
             return null;
