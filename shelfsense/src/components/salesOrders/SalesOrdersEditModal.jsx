@@ -116,7 +116,7 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
         const result = await updateSalesOrder(formData);
 
         if (!result) {
-            showSnackbar('error', 'Error: Sales order was not updated. Please try again or contact Support');
+            showSnackbar('error', 'Error: Sales order was not updated, maybe the product linked to the sales order was deleted? Please try again or contact Support');
             return;
         }
 
@@ -142,11 +142,11 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
         setDialogOpen(false);
         const deleteProductResult = await deleteSalesOrder(salesOrder.id);
         if (!deleteProductResult) {
-            showSnackbar('error', 'Error: Product was not deleted. Please try again or contact Support');
+            showSnackbar('error', 'Error: Sales order was not deleted. Please try again or contact Support');
             return;
         }
         deleteSalesOrderInStore(salesOrder.id)
-        showSnackbar('success', 'Product deleted successfully.');
+        showSnackbar('success', 'Sales order deleted successfully.');
         onClose();
     }
 
