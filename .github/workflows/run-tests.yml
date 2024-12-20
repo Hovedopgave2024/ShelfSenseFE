@@ -1,0 +1,39 @@
+name: Run Tests on Pull Request
+
+# Trigger this workflow on pull requests to the specified branches
+on:
+  pull_request:
+    branches:
+      - QA
+      - main
+
+# Define the jobs to run
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Node.js (specify Node.js version v22.11.0)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.11.0
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Run tests
+      - name: Run tests
+        run: npm test
+
+      # (Optional) Collect coverage report
+      # - name: Upload coverage report
+      #  if: success()
+      #  run: |
+      #    npm run test:coverage # Example command if you use coverage tools like Jest or Vitest
