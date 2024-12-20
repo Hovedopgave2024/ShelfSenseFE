@@ -51,6 +51,8 @@ describe('updateProduct', () => {
             credentials: 'include',
             body: JSON.stringify(mockProduct),
         });
+
+        expect(clearStoresAndLogout).not.toHaveBeenCalled();
     });
 
     it('calls clearStoresAndLogout and returns null on 401 error', async () => {
@@ -77,6 +79,8 @@ describe('updateProduct', () => {
 
         // Assert the function returns null
         expect(result).toBeNull();
+
+        expect(clearStoresAndLogout).not.toHaveBeenCalled();
     });
 
     it('throws network error and returns null on network error', async () => {
@@ -86,5 +90,7 @@ describe('updateProduct', () => {
 
         // Assert the function returns null
         expect(result).toBeNull();
+
+        expect(clearStoresAndLogout).not.toHaveBeenCalled();
     });
 });
