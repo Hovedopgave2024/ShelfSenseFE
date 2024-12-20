@@ -49,12 +49,13 @@ describe('clearStoresAndLogout', () => {
         expect(global.localStorage.removeItem).toHaveBeenCalledWith('sales-orders-store');
         expect(global.localStorage.removeItem).toHaveBeenCalledWith('user-session');
         expect(global.localStorage.removeItem).toHaveBeenCalledWith('theme-storage');
+        expect(global.localStorage.removeItem).toHaveBeenCalledWith('sidebar-store');
 
         // Validate redirection
         expect(window.location.href).toBe('/');
     });
 
-    it('handles localStorage error gracefully and still redirects', async () => {
+    it('handles localStorage error and still redirects', async () => {
         global.localStorage.removeItem.mockImplementation(() => {
             throw new Error('localStorage error');
         });
@@ -68,6 +69,6 @@ describe('clearStoresAndLogout', () => {
         );
 
         // Validate redirection still happens
-        expect(window.location.href).toBe('');
+        expect(window.location.href).toBe('/');
     });
 });
