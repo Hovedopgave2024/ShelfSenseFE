@@ -1,4 +1,4 @@
-name: Run Tests on Pull Request
+name: Run Tests
 
 # Trigger this workflow on pull requests to the specified branches
 on:
