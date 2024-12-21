@@ -30,7 +30,6 @@ const ComponentsAddStockModal = ({ open, onClose, component }) => {
             showSnackbar('error', 'Failed to update stock. Please try again.');
             return;
         }
-
         updateComponentInStore(result);
         showSnackbar('success', 'Stock updated successfully');
         onClose();
