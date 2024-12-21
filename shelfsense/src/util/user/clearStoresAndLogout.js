@@ -11,11 +11,12 @@ export const clearStoresAndLogout = async () => {
         localStorage.removeItem('sales-orders-store');
         localStorage.removeItem('user-session');
         localStorage.removeItem('theme-storage');
+        localStorage.removeItem('sidebar-store');
 
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        window.location.href = '/';
     } catch (error) {
         console.error('Error during unauthorized logout and store cleanup or redirection:', error);
     }
+        window.location.href = '/';
 };
 
