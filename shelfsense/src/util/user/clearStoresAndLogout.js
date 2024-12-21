@@ -1,6 +1,6 @@
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 
-export const destroyStoresAndLogout = async () => {
+export const clearStoresAndLogout = async () => {
     const showSnackbar = useSnackbarStore.getState().showSnackbar;
     try {
         showSnackbar('error', 'Unauthorized! Logging out and navigating to login page.');
@@ -11,11 +11,12 @@ export const destroyStoresAndLogout = async () => {
         localStorage.removeItem('sales-orders-store');
         localStorage.removeItem('user-session');
         localStorage.removeItem('theme-storage');
+        localStorage.removeItem('sidebar-store');
 
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        window.location.href = '/';
     } catch (error) {
         console.error('Error during unauthorized logout and store cleanup or redirection:', error);
     }
+        window.location.href = '/';
 };
 

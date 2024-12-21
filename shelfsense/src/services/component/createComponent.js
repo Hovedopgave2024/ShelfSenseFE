@@ -1,4 +1,4 @@
-import {destroyStoresAndLogout} from "../../util/user/destroyStoresAndLogout.js";
+import {clearStoresAndLogout} from "../../util/user/clearStoresAndLogout.js";
 
 
 export const createComponent = async (componentData) => {
@@ -13,7 +13,7 @@ export const createComponent = async (componentData) => {
         });
 
         if (response.status === 401) {
-            await destroyStoresAndLogout();
+            await clearStoresAndLogout();
             return null;
         }
 

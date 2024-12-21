@@ -152,6 +152,8 @@ function UpdateProductModal({ open, onClose, product }) {
             }),
         };
 
+        console.log(payload);
+
         const updateProductResult = await updateProduct(payload);
 
         if (!updateProductResult){

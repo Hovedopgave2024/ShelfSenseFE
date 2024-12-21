@@ -138,26 +138,16 @@ const ProductsCard = ({ product }) => {
                 sx={{
                     margin: '15px',
                     borderRadius: 3,
-                    backgroundColor: 'rgba(135, 206, 250)',
-                    color: '#000',
-                    '&:hover': {
-                        backgroundColor: 'rgba(173, 216, 230)',
-                    },
                 }}
                 onClick={toggleModal}
             >
                 Open Product
             </Button>
             <Button
-                variant="contained"
+                variant="outlined"
                 sx={{
                     margin: '15px',
                     borderRadius: 3,
-                    backgroundColor: 'rgba(135, 206, 250)',
-                    color: '#000',
-                    '&:hover': {
-                        backgroundColor: 'rgba(173, 216, 230)',
-                    },
                 }}
                 onClick={handleOpenUpdateModal}
             >

@@ -19,6 +19,7 @@ import {deleteSalesOrder} from "../../services/salesOrder/deleteSalesOrder.js";
 const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
     const [formData, setFormData] = useState({
         productId: salesOrder.productId || '',
+        productName: salesOrder.productName || '',
         quantity: salesOrder.quantity || '',
         price: salesOrder.price || '',
         createdDate: salesOrder.createdDate || '',
@@ -115,15 +116,17 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
         const result = await updateSalesOrder(formData);
 
         if (!result) {
-            showSnackbar('error', 'Error: Sales order was not updated. Please try again or contact Support');
+            showSnackbar('error', 'Error: Sales order was not updated, maybe the product linked to the sales order was deleted? Please try again or contact Support');
             return;
         }
 
-        const product = products.find((prod) => prod.id === formData.productId);
-
         const updatedStoreOrder = {
-            ...formData,
-            productName: product?.name || "Unknown",
+            id: result.id,
+            productId: result.productId,
+            productName: result.productName,
+            quantity: result.quantity,
+            price: result.price,
+            createdDate: result.createdDate,
         };
 
         updateSalesOrderInStore(updatedStoreOrder);
@@ -139,11 +142,11 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
         setDialogOpen(false);
         const deleteProductResult = await deleteSalesOrder(salesOrder.id);
         if (!deleteProductResult) {
-            showSnackbar('error', 'Error: Product was not deleted. Please try again or contact Support');
+            showSnackbar('error', 'Error: Sales order was not deleted. Please try again or contact Support');
             return;
         }
         deleteSalesOrderInStore(salesOrder.id)
-        showSnackbar('success', 'Product deleted successfully.');
+        showSnackbar('success', 'Sales order deleted successfully.');
         onClose();
     }
 

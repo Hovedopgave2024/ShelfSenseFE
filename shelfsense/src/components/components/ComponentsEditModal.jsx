@@ -52,6 +52,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
             'name',
             'type',
             'footprint',
+            'manufacturer',
             'manufacturerPart',
             'price',
             'supplier',

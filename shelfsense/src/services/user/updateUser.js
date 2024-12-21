@@ -1,5 +1,5 @@
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
-import {destroyStoresAndLogout} from "../../util/user/destroyStoresAndLogout.js";
+import {clearStoresAndLogout} from "../../util/user/clearStoresAndLogout.js";
 
 export const updateUser = async (updatedData) => {
     const BASE_URL = `${import.meta.env.VITE_API_URL}/users`;
@@ -19,7 +19,7 @@ export const updateUser = async (updatedData) => {
             return null;
         }
         if (response.status === 401) {
-            await destroyStoresAndLogout();
+            await clearStoresAndLogout();
             return null;
         }
 
