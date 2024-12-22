@@ -5,7 +5,6 @@ import {Sidebar} from "../components/sidebar/sidebar.jsx";
 import ComponentsCreateModal from "../components/components/ComponentsCreateModal.jsx";
 import ComponentsEditModal from "../components/components/ComponentsEditModal.jsx";
 import ComponentsAddStockModal from "../components/components/ComponentsAddStockModal.jsx";
-import useThemeStore from "../stores/useThemeStore.js";
 import {useLocation, useNavigate} from "react-router-dom";
 
 const ComponentsPage = () => {
@@ -20,10 +19,6 @@ const ComponentsPage = () => {
     const location = useLocation();
     const passedComponentIds = location.state?.componentIds || [];
     const navigate = useNavigate();
-
-
-    const mode = useThemeStore(state => state.mode);
-    const toggleTheme = useThemeStore(state => state.toggleTheme);
 
     const toggleDrawer = () => {
         setOpen((prevOpen) => !prevOpen);
