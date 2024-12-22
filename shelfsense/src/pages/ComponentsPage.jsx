@@ -5,7 +5,7 @@ import {Sidebar} from "../components/sidebar/sidebar.jsx";
 import ComponentsCreateModal from "../components/components/ComponentsCreateModal.jsx";
 import ComponentsEditModal from "../components/components/ComponentsEditModal.jsx";
 import ComponentsAddStockModal from "../components/components/ComponentsAddStockModal.jsx";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const ComponentsPage = () => {
     const [open, setOpen] = useState(false);
@@ -18,6 +18,7 @@ const ComponentsPage = () => {
     // Get the component IDs passed from the previous page
     const location = useLocation();
     const passedComponentIds = location.state?.componentIds || [];
+    const navigate = useNavigate();
 
     const toggleDrawer = () => {
         setOpen((prevOpen) => !prevOpen);
@@ -29,7 +30,7 @@ const ComponentsPage = () => {
 
     const toggleCloseCreateModal = () => {
         setCreateModal((prevOpen) => !prevOpen);
-        window.location.reload(); // this is an issue but not fixable right now.
+        navigate(0);
     };
 
     const handleEdit = (component) => {
