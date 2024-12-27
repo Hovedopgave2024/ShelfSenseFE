@@ -33,6 +33,7 @@ const LoginPage = () => {
 
             const dataFetched = await fetchAllData();
             if (!dataFetched) {
+                setLoading(false);
                 return;
             }
 
