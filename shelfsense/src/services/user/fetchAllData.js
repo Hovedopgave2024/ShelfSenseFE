@@ -7,21 +7,37 @@ import useSalesOrdersStore from "../../stores/useSalesOrdersStore.js";
 import useApiUpdateStore from "../../stores/useApiUpdateStore.js";
 
 export const fetchAllData = async () => {
-    const userId = useSessionStore.getState().user.id;
-    const userData = await getRequest(`users/${userId}`)
+    const userId = useSessionStore.getState().user?.id;
     const showSnackbar = useSnackbarStore.getState().showSnackbar;
 
-    if (!userData) {
-        showSnackbar("error", "error while fetching user data. Please logout and login again or contact Support");
+    if (!userId) {
+        showSnackbar("error", "User ID is missing. Please logout and login again.");
+        return false; // Return false if user ID is missing
     }
 
-    const products = userData?.productList ? JSON.parse(JSON.stringify(userData.productList)) : [];
-    const components = userData?.componentList ? JSON.parse(JSON.stringify(userData.componentList)) : [];
-    const salesOrders = userData?.salesOrderList ? JSON.parse(JSON.stringify(userData.salesOrderList)) : [];
-    const apiUpdate = userData?.apiUpdate ? JSON.parse(JSON.stringify(userData.apiUpdate)) : null;
+    try {
+        const userData = await getRequest(`users/${userId}`);
 
-    useProductsStore.getState().setProducts(products);
-    useComponentsStore.getState().setComponents(components);
-    useSalesOrdersStore.getState().setSalesOrders(salesOrders);
-    useApiUpdateStore.getState().setApiUpdate(apiUpdate);
-}
+        const products = userData.productList ? [...userData.productList] : [];
+        const components = userData.componentList ? [...userData.componentList] : [];
+        const salesOrders = userData.salesOrderList ? [...userData.salesOrderList] : [];
+        const apiUpdate = userData.apiUpdate || null;
+
+        useProductsStore.getState().setProducts(products);
+        useComponentsStore.getState().setComponents(components);
+        useSalesOrdersStore.getState().setSalesOrders(salesOrders);
+        useApiUpdateStore.getState().setApiUpdate(apiUpdate);
+
+        if (!userData) {
+            showSnackbar("error", "Error while fetching user data. Please logout and login again or contact Support.");
+            return false;
+        }
+
+        return true;
+
+    } catch (error) {
+        console.error("Error while fetching all data:", error);
+        showSnackbar("error", "Unexpected error occurred while fetching data. Please try again later.");
+        return false;
+    }
+};
