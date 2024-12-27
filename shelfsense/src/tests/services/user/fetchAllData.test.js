@@ -118,7 +118,7 @@ describe('fetchAllData', () => {
         // Validate snackbar call
         expect(showSnackbarMock).toHaveBeenCalledWith(
             'error',
-            'error while fetching user data. Please logout and login again or contact Support'
+            'Error while fetching user data. Please logout and login again or contact Support.'
         );
 
         // Ensure stores are saved with default values
