@@ -36,6 +36,8 @@ const LoginPage = () => {
                 return;
             }
 
+            setLoading(false);
+
             handleNavigation();
 
         } catch (error) {

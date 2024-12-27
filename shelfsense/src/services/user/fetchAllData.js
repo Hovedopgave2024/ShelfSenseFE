@@ -18,6 +18,11 @@ export const fetchAllData = async () => {
     try {
         const userData = await getRequest(`users/${userId}`);
 
+        if (!userData) {
+            showSnackbar("error", "Error while fetching user data. Please logout and login again or contact Support.");
+            return false;
+        }
+
         const products = userData.productList ? [...userData.productList] : [];
         const components = userData.componentList ? [...userData.componentList] : [];
         const salesOrders = userData.salesOrderList ? [...userData.salesOrderList] : [];
@@ -27,11 +32,6 @@ export const fetchAllData = async () => {
         useComponentsStore.getState().setComponents(components);
         useSalesOrdersStore.getState().setSalesOrders(salesOrders);
         useApiUpdateStore.getState().setApiUpdate(apiUpdate);
-
-        if (!userData) {
-            showSnackbar("error", "Error while fetching user data. Please logout and login again or contact Support.");
-            return false;
-        }
 
         return true;
 

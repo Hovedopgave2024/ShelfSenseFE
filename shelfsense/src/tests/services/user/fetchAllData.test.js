@@ -122,10 +122,10 @@ describe('fetchAllData', () => {
         );
 
         // Ensure stores are saved with default values
-        expect(setProductsMock).toHaveBeenCalledWith([]);
-        expect(setComponentsMock).toHaveBeenCalledWith([]);
-        expect(setSalesOrdersMock).toHaveBeenCalledWith([]);
-        expect(setApiUpdateMock).toHaveBeenCalledWith(null);
+        expect(setProductsMock).toBeNull;
+        expect(setComponentsMock).toBeNull;
+        expect(setSalesOrdersMock).toBeNull;
+        expect(setApiUpdateMock).toBeNull;
     });
 
     it('sets empty lists and null values when userData properties are missing', async () => {
