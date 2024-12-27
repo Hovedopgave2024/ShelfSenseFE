@@ -37,7 +37,7 @@ export const fetchAllData = async () => {
 
     } catch (error) {
         console.error("Error while fetching all data:", error);
-        showSnackbar("error", "Unexpected error occurred while fetching data. Please try again later.");
+        showSnackbar("error", "Error while fetching user data. Please logout and login again or contact Support.");
         return false;
     }
 };
