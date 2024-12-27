@@ -17,25 +17,21 @@ export const fetchAllData = async () => {
 
     try {
         const userData = await getRequest(`users/${userId}`);
-        let products = [];
-        let components = [];
-        let salesOrders = [];
-        let apiUpdate = null;
 
-        if (!userData) {
-            showSnackbar("error", "Error while fetching user data. Please logout and login again or contact Support.");
-            return false;
-        }
-
-        products = userData.productList ? [...userData.productList] : [];
-        components = userData.componentList ? [...userData.componentList] : [];
-        salesOrders = userData.salesOrderList ? [...userData.salesOrderList] : [];
-        apiUpdate = userData.apiUpdate || null;
+        const products = userData.productList ? [...userData.productList] : [];
+        const components = userData.componentList ? [...userData.componentList] : [];
+        const salesOrders = userData.salesOrderList ? [...userData.salesOrderList] : [];
+        const apiUpdate = userData.apiUpdate || null;
 
         useProductsStore.getState().setProducts(products);
         useComponentsStore.getState().setComponents(components);
         useSalesOrdersStore.getState().setSalesOrders(salesOrders);
         useApiUpdateStore.getState().setApiUpdate(apiUpdate);
+
+        if (!userData) {
+            showSnackbar("error", "Error while fetching user data. Please logout and login again or contact Support.");
+            return false;
+        }
 
         return true;
 
