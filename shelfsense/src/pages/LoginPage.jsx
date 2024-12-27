@@ -21,29 +21,18 @@ const LoginPage = () => {
     const handleLogin = async () => {
         setLoading(true);
 
-        try {
-            const loginResponse = await login(name, password);
-            if (!loginResponse) {
-                showSnackbar('error', 'Login failed. Please check your credentials.');
-                return;
-            }
+        const response = await login(name, password);
 
-            setGlobalUser(loginResponse);
-            showSnackbar('success', 'Login successful. Fetching your data, please wait...');
-
-            const dataFetched = await fetchAllData();
-            if (!dataFetched) {
-                return;
-            }
-
-            handleNavigation();
-
-        } catch (error) {
-            console.error('Unexpected error during login process:', error);
-            showSnackbar('error', 'An unexpected error occurred. Please try again or contact Support.');
-        } finally {
+        if (!response) {
             setLoading(false);
+            return;
         }
+
+        setGlobalUser(response);
+        showSnackbar('success', 'Login successful, fetching your data.');
+        await fetchAllData();
+        setLoading(false);
+        handleNavigation();
     };
 
     return (
