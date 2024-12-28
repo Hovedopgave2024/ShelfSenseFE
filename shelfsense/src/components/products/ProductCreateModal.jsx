@@ -66,12 +66,8 @@ function CreateProductModal({ open, onClose }) {
             fieldErrors.name = 'Name is required.';
             hasError = true;
         }
-        if (
-            formData.price == null ||
-            formData.price === '' ||
-            isNaN(formData.price) ||
-            formData.price <= 0
-        ) {
+        if (formData.price == null || formData.price === '' || isNaN(formData.price) || formData.price <= 0)
+        {
             fieldErrors.price = 'Valid price is required.';
             hasError = true;
         }
@@ -128,7 +124,6 @@ function CreateProductModal({ open, onClose }) {
             return;
         }
 
-        // Add the new product to the store
         addProduct({
             ...productResult,
             productComponentList: productComponentsResult,
@@ -195,6 +190,7 @@ function CreateProductModal({ open, onClose }) {
                                 fullWidth
                                 value={formData.name}
                                 onChange={handleChange}
+                                xs={12} sm={6}
                                 error={!!errors.name}
                                 helperText={errors.name}
                             />
@@ -210,8 +206,8 @@ function CreateProductModal({ open, onClose }) {
                                 value={formData.price}
                                 onChange={handleChange}
                                 type="number"
-                                error={!!errors.price}
-                                helperText={errors.price}
+                                error={!!errors.name}
+                                helperText={errors.name}
                             />
                         </Grid>
 

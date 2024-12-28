@@ -39,7 +39,7 @@ function UpdateProductModal({ open, onClose, product }) {
     useEffect(() => {
         if (product?.productComponentList) {
             const preloadedComponents = product.productComponentList.map((pc) => ({
-                id: pc.id, // Existing "product_component" ID (if your DB has it)
+                id: pc.id, // Existing "product_component" ID
                 componentId: pc.componentId, // Associated component ID
                 quantity: pc.quantity,
                 productId: pc.productId,
@@ -59,10 +59,19 @@ function UpdateProductModal({ open, onClose, product }) {
     const handleComponentChange = (index, field, value) => {
         const updatedComponents = [...selectedComponents];
 
-        updatedComponents[index] = {
-            ...updatedComponents[index],
-            [field]: value,
-        };
+        if (field === 'componentId') {
+            const selectedComponent = componentsList.find((comp) => comp.id === value);
+            updatedComponents[index] = {
+                ...updatedComponents[index],
+                [field]: value,
+                name: selectedComponent?.name || '', // Update the name
+            };
+        } else {
+            updatedComponents[index] = {
+                ...updatedComponents[index],
+                [field]: value,
+            };
+        }
 
         setSelectedComponents(updatedComponents);
     };
@@ -70,7 +79,7 @@ function UpdateProductModal({ open, onClose, product }) {
     const handleAddComponent = () => {
         setSelectedComponents((prevComponents) => [
             ...prevComponents,
-            { componentId: '', quantity: '', productId: product.id },
+            { componentId: '', quantity: '', productId: product.id }, // New component
         ]);
     };
 
@@ -129,12 +138,24 @@ function UpdateProductModal({ open, onClose, product }) {
             id: product.id,
             name: formData.name,
             price: formData.price,
-            productComponentList: selectedComponents.map((comp) => ({
-                id: comp.id, // might be undefined for new ones
-                quantity: comp.quantity,
-                componentId: comp.componentId,
-                productId: comp.productId,
-            })),
+            productComponentList: selectedComponents.map((comp) => {
+                if (comp.id) {
+                    // Existing product component
+                    return {
+                        id: comp.id,
+                        quantity: comp.quantity,
+                        componentId: comp.componentId,
+                        productId: comp.productId,
+                    };
+                } else {
+                    // New product component
+                    return {
+                        quantity: comp.quantity,
+                        componentId: comp.componentId,
+                        productId: comp.productId,
+                    };
+                }
+            }),
         };
 
         const updateProductResult = await updateProduct(payload);
@@ -223,6 +244,7 @@ function UpdateProductModal({ open, onClose, product }) {
                                 fullWidth
                                 value={formData.name}
                                 onChange={handleChange}
+                                xs={12} sm={6}
                                 error={!!errors.name}
                                 helperText={errors.name}
                             />
