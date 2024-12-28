@@ -10,6 +10,7 @@ import useApiUpdateStore from "../stores/useApiUpdateStore.js"; // Import the mo
 import calculateApiFetchTimeDif from '../util/component/calculateApiFetchTimeDif.js';
 import ConfirmDialog from "../components/confirmDialog/ConfirmDialog.jsx"
 import useSnackbarStore from "../stores/useSnackbarStore.js";
+import LoadingScreen from "../components/products/LoadingScreen.jsx";
 
 
 const ProductsPage = () => {
@@ -148,6 +149,7 @@ const ProductsPage = () => {
                 <ProductsList />
                 {/* Render the modal here */}
                 <ProductCreateModal open={openModal} onClose={toggleModal} />
+                <LoadingScreen open={loading} />
             </Box>
         </Box>
     );
