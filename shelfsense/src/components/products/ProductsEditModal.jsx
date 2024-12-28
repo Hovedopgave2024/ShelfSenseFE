@@ -6,30 +6,28 @@ import {
     Modal,
     TextField,
     Typography,
-    Select,
-    MenuItem,
-    InputLabel,
     FormControl,
     IconButton,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import {Add, Delete, Remove} from '@mui/icons-material';
+import { Add, Delete, Remove } from '@mui/icons-material';
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 import useProductsStore from "../../stores/useProductsStore.js";
-import {deleteProduct} from '../../services/product/deleteProduct.js';
-import {updateProduct} from '../../services/product/updateProduct.js'
-import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx"
+import { deleteProduct } from '../../services/product/deleteProduct.js';
+import { updateProduct } from '../../services/product/updateProduct.js';
+import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx";
 import CloseIcon from "@mui/icons-material/Close";
+import Autocomplete from '@mui/material/Autocomplete'; // <-- NEW
 
 function UpdateProductModal({ open, onClose, product }) {
     const [formData, setFormData] = useState({
         name: product?.name || '',
         price: product?.price || '',
     });
-
     const [selectedComponents, setSelectedComponents] = useState([]);
     const [errors, setErrors] = useState({});
     const [dialogOpen, setDialogOpen] = useState(false);
+
     const componentsList = useComponentsStore((state) => state.components);
     const updateProductStore = useProductsStore((state) => state.updateProduct);
     const deleteProductStore = useProductsStore((state) => state.deleteProduct);
@@ -41,7 +39,7 @@ function UpdateProductModal({ open, onClose, product }) {
     useEffect(() => {
         if (product?.productComponentList) {
             const preloadedComponents = product.productComponentList.map((pc) => ({
-                id: pc.id, // Existing component ID
+                id: pc.id, // Existing "product_component" ID
                 componentId: pc.componentId, // Associated component ID
                 quantity: pc.quantity,
                 productId: pc.productId,
@@ -100,7 +98,12 @@ function UpdateProductModal({ open, onClose, product }) {
             fieldErrors.name = 'Name is required.';
             hasError = true;
         }
-        if (formData.price == null || formData.price === '' || isNaN(formData.price) || formData.price <= 0) {
+        if (
+            formData.price == null ||
+            formData.price === '' ||
+            isNaN(formData.price) ||
+            formData.price <= 0
+        ) {
             fieldErrors.price = 'Valid price is required.';
             hasError = true;
         }
@@ -111,7 +114,11 @@ function UpdateProductModal({ open, onClose, product }) {
                 fieldErrors[`componentId_${index}`] = 'Component is required.';
                 hasError = true;
             }
-            if (!component.quantity || isNaN(component.quantity) || component.quantity <= 0) {
+            if (
+                !component.quantity ||
+                isNaN(component.quantity) ||
+                component.quantity <= 0
+            ) {
                 fieldErrors[`quantity_${index}`] = 'Valid quantity is required.';
                 hasError = true;
             }
@@ -122,7 +129,6 @@ function UpdateProductModal({ open, onClose, product }) {
     };
 
     const handleSubmit = async () => {
-
         if (!validateFields()) {
             showSnackbar('warning', 'Please fill out all required fields and try again');
             return;
@@ -152,11 +158,9 @@ function UpdateProductModal({ open, onClose, product }) {
             }),
         };
 
-        console.log(payload);
-
         const updateProductResult = await updateProduct(payload);
 
-        if (!updateProductResult){
+        if (!updateProductResult) {
             showSnackbar('error', 'Error: Product was not updated. Please try again or contact Support');
             return;
         }
@@ -167,22 +171,21 @@ function UpdateProductModal({ open, onClose, product }) {
 
     const handleDeleteProduct = async () => {
         setDialogOpen(true);
-    }
+    };
 
     const confirmDeleteProduct = async () => {
         setDialogOpen(false);
-        const payload = {
-            id: product.id
-        }
+        const payload = { id: product.id };
         const deleteProductResult = await deleteProduct(payload);
+
         if (!deleteProductResult) {
             showSnackbar('error', 'Error: Product was not deleted. Please try again or contact Support');
             return;
         }
-        deleteProductStore(product.id)
+        deleteProductStore(product.id);
         showSnackbar('success', 'Product deleted successfully.');
         onClose();
-    }
+    };
 
     return (
         <Modal open={open} onClose={onClose}>
@@ -200,6 +203,7 @@ function UpdateProductModal({ open, onClose, product }) {
                     maxWidth: 650,
                 }}
             >
+                {/* Close Button */}
                 <Button
                     onClick={onClose}
                     sx={{
@@ -211,16 +215,18 @@ function UpdateProductModal({ open, onClose, product }) {
                 >
                     <CloseIcon />
                 </Button>
+
                 <Box
                     sx={{
                         overflowY: 'auto',
                         maxHeight: '50vh',
-                        mb: 1
+                        mb: 1,
                     }}
                 >
                     <Typography variant="h6" component="h2" sx={{ ml: 5, mb: 2 }}>
                         Update Product
                     </Typography>
+
                     <Grid
                         container
                         spacing={2}
@@ -265,6 +271,7 @@ function UpdateProductModal({ open, onClose, product }) {
                                 Manage component(s)
                             </Typography>
                         </Grid>
+
                         {selectedComponents.map((comp, index) => (
                             <Grid
                                 container
@@ -274,35 +281,48 @@ function UpdateProductModal({ open, onClose, product }) {
                                 justifyContent="flex-start"
                                 direction={{ xs: 'column', sm: 'row' }}
                             >
-                                {/* Component Selection */}
+                                {/* Component Selection (Autocomplete) */}
                                 <Grid xs={12} sm={6} sx={{ minWidth: 210 }}>
-                                    <FormControl fullWidth>
-                                        <InputLabel id={`component-select-label-${index}`}>
-                                            Component
-                                        </InputLabel>
-                                        <Select
-                                            variant="outlined"
-                                            labelId={`component-select-label-${index}`}
-                                            value={comp.componentId}
-                                            label="Component"
-                                            onChange={(e) =>
-                                                handleComponentChange(index, 'componentId', e.target.value)
-                                            }
-                                        >
-                                            {componentsList
-                                                .filter((component) => !selectedComponents.some((selected) => selected.componentId === component.id && selected.componentId !== comp.componentId))
-                                                .map((component) => (
-                                                <MenuItem key={component.id} value={component.id}>
-                                                    <>
-                                                        {component.name} <br /> ({component.manufacturerPart})
-                                                    </>
-                                                </MenuItem>
-                                                ))}
-                                        </Select>
-                                        <Typography color="error" variant="caption">
-                                            {errors[`componentId_${index}`]}
-                                        </Typography>
-                                    </FormControl>
+                                    <Autocomplete
+                                        // Filter out components that are already selected (except the current one)
+                                        options={componentsList.filter((component) =>
+                                            !selectedComponents.some(
+                                                (selected) =>
+                                                    selected.componentId === component.id &&
+                                                    selected.componentId !== comp.componentId
+                                            )
+                                        )}
+                                        getOptionLabel={(option) =>
+                                            `${option.name} (${option.manufacturerPart})`
+                                        }
+                                        isOptionEqualToValue={(option, value) =>
+                                            option.id === value.id
+                                        }
+                                        // Match the selected component by ID
+                                        value={
+                                            comp.componentId
+                                                ? componentsList.find(
+                                                (c) => c.id === comp.componentId
+                                            ) || null
+                                                : null
+                                        }
+                                        onChange={(e, newValue) => {
+                                            handleComponentChange(
+                                                index,
+                                                'componentId',
+                                                newValue ? newValue.id : ''
+                                            );
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Component"
+                                                variant="outlined"
+                                                error={!!errors[`componentId_${index}`]}
+                                                helperText={errors[`componentId_${index}`]}
+                                            />
+                                        )}
+                                    />
                                 </Grid>
 
                                 {/* Quantity Input */}
@@ -335,15 +355,17 @@ function UpdateProductModal({ open, onClose, product }) {
                         ))}
                     </Grid>
                 </Box>
+
+                {/* Action Buttons */}
                 <Grid
                     container
                     xs={12}
                     sm={6}
                     alignItems="center"
                     justifyContent="space-around"
-                    direction={{ xs: 'column', sm: 'row' }} // Stacks buttons on small screens
+                    direction={{ xs: 'column', sm: 'row' }}
                 >
-                {/* Add Button */}
+                    {/* Add Component Button */}
                     <Button
                         variant="outlined"
                         color="secondary"
@@ -353,7 +375,8 @@ function UpdateProductModal({ open, onClose, product }) {
                     >
                         Add Component
                     </Button>
-                {/* Delete Button */}
+
+                    {/* Delete Product Button */}
                     <Button
                         variant="contained"
                         color="error"
@@ -363,6 +386,8 @@ function UpdateProductModal({ open, onClose, product }) {
                     >
                         Delete Product
                     </Button>
+
+                    {/* Confirm Deletion Dialog */}
                     <ConfirmDialog
                         open={dialogOpen}
                         onClose={handleCloseDialog}
@@ -375,7 +400,7 @@ function UpdateProductModal({ open, onClose, product }) {
                     />
                 </Grid>
 
-                {/* Submit Button */}
+                {/* Update Product Button */}
                 <Button
                     variant="contained"
                     color="primary"

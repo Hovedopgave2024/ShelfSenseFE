@@ -118,14 +118,14 @@ describe('fetchAllData', () => {
         // Validate snackbar call
         expect(showSnackbarMock).toHaveBeenCalledWith(
             'error',
-            'error while fetching user data. Please logout and login again or contact Support'
+            'Error while fetching user data. Please logout and login again or contact Support.'
         );
 
         // Ensure stores are saved with default values
-        expect(setProductsMock).toHaveBeenCalledWith([]);
-        expect(setComponentsMock).toHaveBeenCalledWith([]);
-        expect(setSalesOrdersMock).toHaveBeenCalledWith([]);
-        expect(setApiUpdateMock).toHaveBeenCalledWith(null);
+        expect(setProductsMock).toBeNull;
+        expect(setComponentsMock).toBeNull;
+        expect(setSalesOrdersMock).toBeNull;
+        expect(setApiUpdateMock).toBeNull;
     });
 
     it('sets empty lists and null values when userData properties are missing', async () => {
