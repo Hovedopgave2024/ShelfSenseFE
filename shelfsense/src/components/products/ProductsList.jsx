@@ -20,7 +20,7 @@ const ProductsList = () => {
                 data={products}
                 onUpdate={setFilteredProducts}
                 filterOptions={[
-                    { key: 'name', label: 'Name', values: ["Hello World"]    },
+                    { key: 'name', label: 'Name', values: ["Hello world"]    },
                 ]}
                 sortOptions={productSortParameters.map((title) => ({
                     key: title.toLowerCase(),
