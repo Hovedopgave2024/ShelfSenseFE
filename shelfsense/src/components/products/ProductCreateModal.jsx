@@ -9,16 +9,15 @@ import {
     Modal,
     TextField,
     Typography,
-    Select,
-    MenuItem,
-    InputLabel,
     FormControl,
     IconButton,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { Add, Remove } from '@mui/icons-material';
-import useSnackbarStore from "../../stores/useSnackbarStore.js";
 import CloseIcon from "@mui/icons-material/Close";
+import Autocomplete from '@mui/material/Autocomplete';
+
+import useSnackbarStore from "../../stores/useSnackbarStore.js";
 
 function CreateProductModal({ open, onClose }) {
     const [formData, setFormData] = useState({
@@ -67,7 +66,8 @@ function CreateProductModal({ open, onClose }) {
             fieldErrors.name = 'Name is required.';
             hasError = true;
         }
-        if (formData.price == null || formData.price === '' || isNaN(formData.price) || formData.price <= 0) {
+        if (formData.price == null || formData.price === '' || isNaN(formData.price) || formData.price <= 0)
+        {
             fieldErrors.price = 'Valid price is required.';
             hasError = true;
         }
@@ -88,10 +88,7 @@ function CreateProductModal({ open, onClose }) {
         return !hasError;
     };
 
-
-
     const handleSubmit = async () => {
-
         if (!validateFields()) {
             showSnackbar('warning', 'Please fill out all required fields and try again');
             return;
@@ -105,7 +102,7 @@ function CreateProductModal({ open, onClose }) {
 
         const productResult = await createProduct(productData);
 
-        if (!productResult){
+        if (!productResult) {
             showSnackbar('error', 'Error: Product was not created. Please try again or contact Support');
             return;
         }
@@ -122,13 +119,18 @@ function CreateProductModal({ open, onClose }) {
         // Step d: Send ProductComponents to backend
         const productComponentsResult = await createProductComponents(productComponentsData);
 
-        if (!productComponentsResult){
+        if (!productComponentsResult) {
             showSnackbar('error', 'Error: Failed to associate components with the product. Please try again or contact Support');
             return;
         }
-        addProduct({ ...productResult, productComponentList: productComponentsResult });
+
+        addProduct({
+            ...productResult,
+            productComponentList: productComponentsResult,
+        });
+
         showSnackbar('success', 'Product created successfully.');
-        setFormData({name: '', price: ''});
+        setFormData({ name: '', price: '' });
         setSelectedComponents([]);
         setErrors({});
         onClose();
@@ -211,9 +213,9 @@ function CreateProductModal({ open, onClose }) {
 
                         {/* Components Section */}
                         <Grid xs={12} sx={{ width: '100%' }}>
-                                <Typography variant="subtitle1" component="p" sx={{ width: '100%' }}>
-                                    Add component(s)
-                                </Typography>
+                            <Typography variant="subtitle1" component="p" sx={{ width: '100%' }}>
+                                Add component(s)
+                            </Typography>
                         </Grid>
                         {selectedComponents.map((comp, index) => (
                             <Grid
@@ -224,34 +226,50 @@ function CreateProductModal({ open, onClose }) {
                                 justifyContent="flex-start"
                                 direction={{ xs: 'column', sm: 'row' }}
                             >
-                                {/* Component Selection */}
+                                {/* Component Selection*/}
                                 <Grid xs={12} sm={6} sx={{ minWidth: 210 }}>
                                     <FormControl fullWidth>
-                                        <InputLabel id={`component-select-label-${index}`}>
-                                            Component
-                                        </InputLabel>
-                                        <Select
-                                            variant="outlined"
-                                            labelId={`component-select-label-${index}`}
-                                            value={comp.component_id}
-                                            label="Component"
-                                            onChange={(e) =>
-                                                handleComponentChange(index, 'component_id', e.target.value)
+                                        <Autocomplete
+                                            options={componentsList.filter((component) =>
+                                                !selectedComponents.some(
+                                                    (selected) =>
+                                                        selected.component_id === component.id &&
+                                                        selected.component_id !== comp.component_id
+                                                )
+                                            )}
+                                            // How each option is displayed
+                                            getOptionLabel={(option) =>
+                                                `${option.name} (${option.manufacturerPart})`
                                             }
-                                        >
-                                            {componentsList
-                                                .filter((component) => !selectedComponents.some((selected) => selected.component_id === component.id && selected.component_id !== comp.component_id))
-                                                .map((component) => (
-                                                <MenuItem key={component.id} value={component.id}>
-                                                    <>
-                                                        {component.name} <br /> ({component.manufacturerPart})
-                                                    </>
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                        <Typography color="error" variant="caption">
-                                            {errors[`component_id_${index}`]}
-                                        </Typography>
+                                            // Match the selected component by ID
+                                            value={
+                                                comp.component_id
+                                                    ? componentsList.find(
+                                                    (c) => c.id === comp.component_id
+                                                ) || null
+                                                    : null
+                                            }
+                                            // Ensure correct matching of option/value
+                                            isOptionEqualToValue={(option, value) =>
+                                                option.id === value.id
+                                            }
+                                            onChange={(e, newValue) => {
+                                                handleComponentChange(
+                                                    index,
+                                                    'component_id',
+                                                    newValue ? newValue.id : ''
+                                                );
+                                            }}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Component"
+                                                    variant="outlined"
+                                                    error={!!errors[`component_id_${index}`]}
+                                                    helperText={errors[`component_id_${index}`]}
+                                                />
+                                            )}
+                                        />
                                     </FormControl>
                                 </Grid>
 
@@ -264,7 +282,11 @@ function CreateProductModal({ open, onClose }) {
                                         fullWidth
                                         value={comp.quantity}
                                         onChange={(e) =>
-                                            handleComponentChange(index, 'quantity', e.target.value)
+                                            handleComponentChange(
+                                                index,
+                                                'quantity',
+                                                e.target.value
+                                            )
                                         }
                                         type="number"
                                         error={!!errors[`quantity_${index}`]}
@@ -285,12 +307,13 @@ function CreateProductModal({ open, onClose }) {
                         ))}
                     </Grid>
                 </Box>
+
                 {/* Add Button */}
                 <Button
                     variant="outlined"
                     startIcon={<Add />}
                     onClick={handleAddComponent}
-                    sx={{mt: 1, ml: 5, px: 4}}
+                    sx={{ mt: 1, ml: 5, px: 4 }}
                 >
                     Add Component
                 </Button>
