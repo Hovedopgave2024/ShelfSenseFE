@@ -12,6 +12,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import {createSalesOrder} from "../../services/salesOrder/createSalesOrder.js";
 import useSalesOrdersStore from "../../stores/useSalesOrdersStore.js";
 import useComponentsStore from "../../stores/useComponentsStore.js";
+import calculateStatus from "../../util/component/calculateStockStatus.js";
 
 
 const SalesOrdersCreateCard = () => {
@@ -126,8 +127,10 @@ const SalesOrdersCreateCard = () => {
                 const updatedStock = parseInt(component.stock) - requiredQuantity;
 
                 updateComponent({
+                    ...component,
                     id: component.id,
-                    stock: updatedStock
+                    stock: updatedStock,
+                    stockStatus: calculateStatus(updatedStock)
                 });
             });
         }
