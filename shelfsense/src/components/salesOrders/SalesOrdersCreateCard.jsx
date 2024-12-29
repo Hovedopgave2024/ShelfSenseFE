@@ -11,6 +11,7 @@ import useProductsStore from "../../stores/useProductsStore.js";
 import Autocomplete from "@mui/material/Autocomplete";
 import {createSalesOrder} from "../../services/salesOrder/createSalesOrder.js";
 import useSalesOrdersStore from "../../stores/useSalesOrdersStore.js";
+import useComponentsStore from "../../stores/useComponentsStore.js";
 
 
 const SalesOrdersCreateCard = () => {
@@ -34,6 +35,8 @@ const SalesOrdersCreateCard = () => {
     const addSalesOrder = useSalesOrdersStore((state) => state.addSalesOrder);
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
     const products = useProductsStore((state) => state.products);
+    const components = useComponentsStore(state => state.components)
+    const updateComponent = useComponentsStore(state => state.updateComponent);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -96,10 +99,6 @@ const SalesOrdersCreateCard = () => {
     const handleSubmit = async () => {
         if (!validateForm()) return;
 
-        console.log("triggered handle submit")
-
-        console.log("created sales order: ", formData);
-
         const result = await createSalesOrder(formData);
 
         if (!result) {
@@ -107,7 +106,7 @@ const SalesOrdersCreateCard = () => {
             return;
         }
 
-        const newStoreOrder = {
+        const newSalesOrder = {
             id: result.id,
             productId: result.productId,
             productName: result.productName,
@@ -116,8 +115,23 @@ const SalesOrdersCreateCard = () => {
             createdDate: result.createdDate,
         };
 
-        addSalesOrder(newStoreOrder);
-        console.log("add sales order: ", newStoreOrder);
+        addSalesOrder(newSalesOrder);
+
+        const product = products.find((product) => product.id === newSalesOrder.productId);
+
+        if (product && product.productComponentList.length !== 0) {
+            product.productComponentList.forEach((pc) => {
+                const component = components.find((component) => component.id === pc.componentId);
+                const requiredQuantity = parseInt(pc.quantity) * parseInt(newSalesOrder.quantity);
+                const updatedStock = parseInt(component.stock) - requiredQuantity;
+
+                updateComponent({
+                    id: component.id,
+                    stock: updatedStock
+                });
+            });
+        }
+
         showSnackbar('success', 'Sales order created successfully');
         setFormData(initialFormData);
         setErrors({});

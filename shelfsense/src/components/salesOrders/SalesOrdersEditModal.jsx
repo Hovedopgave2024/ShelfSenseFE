@@ -109,10 +109,6 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
 
         if (!validateForm()) return;
 
-        console.log("triggered handle submit update salesOrder")
-
-        console.log(formData);
-
         const result = await updateSalesOrder(formData);
 
         if (!result) {
@@ -200,43 +196,15 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
                             pb: 3,
                         }}>
                         <Grid xs={12} lg={3}>
-                            <Autocomplete
-                                sx={{ width: 195 }}
-                                options={products}
-                                // Use productName from salesOrder to display in the field
-                                getOptionLabel={(option) => option.name || 'Unknown Product'}
-                                value={
-                                    formData.productId
-                                        ? { id: formData.productId, name: formData.productName }
-                                        : { id: salesOrder.productId, name: salesOrder.productName }
-                                }
-                                onChange={(e, newValue) => {
-                                    setFormData((prevData) => ({
-                                        ...prevData,
-                                        productId: newValue?.id || '',
-                                        productName: newValue?.name || '',
-                                    }));
-                                    if (errors.productId) {
-                                        setErrors((prevErrors) => ({
-                                            ...prevErrors,
-                                            productId: null,
-                                        }));
-                                    }
-                                }}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="Product"
-                                        name="productId"
-                                        variant="outlined"
-                                        error={!!errors.productId}
-                                        helperText={errors.productId || ''}
-                                    />
-                                )}
+                            <TextField
+                                disabled
+                                name='product'
+                                value={salesOrder.productName}
                             />
                         </Grid>
                         <Grid xs={12} lg={3} >
                             <TextField
+                                disabled
                                 label={requiredFields.includes('quantity')
                                     ? `quantity *`
                                     : 'quantity'}

@@ -21,9 +21,7 @@ export const createProduct = async (productData) => {
             return null;
         }
 
-        const data = await response.json();
-        console.log('Created product:', data); // Log the response entity
-        return data;
+        return await response.json();
 
     } catch (error) {
         console.error('Error occurred while creating product:', error);

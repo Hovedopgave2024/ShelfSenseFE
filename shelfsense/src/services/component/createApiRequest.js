@@ -12,8 +12,6 @@ export const createApiRequest = async () => {
         apiKey: import.meta.env.VITE_API_KEY,
     };
 
-    console.log(sendApiRequest);
-
     try{
         const response = await fetch(`${BASE_URL}`, {
             method: "POST",
@@ -39,10 +37,6 @@ export const createApiRequest = async () => {
 
         useApiUpdateStore.getState().setApiUpdate({ lastUpdated: getLocalDateTime() });
 
-        console.log(getLocalDateTime());
-
-        console.log("Last Updated: ", useApiUpdateStore.getState().apiUpdate);
-        console.log("Time now: ", getLocalDateTime());
         return await response.json();
     } catch (error) {
         console.error('Error occurred while creating component:', error);
