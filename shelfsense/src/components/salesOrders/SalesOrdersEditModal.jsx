@@ -9,11 +9,12 @@ import Grid from "@mui/material/Grid2";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx";
 import {updateSalesOrder} from "../../services/salesOrder/updateSalesOrder.js";
-import Autocomplete from "@mui/material/Autocomplete";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import {deleteSalesOrder} from "../../services/salesOrder/deleteSalesOrder.js";
+import calculateStatus from "../../util/component/calculateStockStatus.js";
+import useComponentsStore from "../../stores/useComponentsStore.js";
 
 
 const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
@@ -30,6 +31,8 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
     const deleteSalesOrderInStore = useSalesOrdersStore(state => state.deleteSalesOrder);
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
     const products = useProductsStore((state) => state.products);
+    const components = useComponentsStore(state => state.components)
+    const updateComponent = useComponentsStore(state => state.updateComponent);
 
     const handleCloseDialog = () => setDialogOpen(false);
 
@@ -109,10 +112,6 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
 
         if (!validateForm()) return;
 
-        console.log("triggered handle submit update salesOrder")
-
-        console.log(formData);
-
         const result = await updateSalesOrder(formData);
 
         if (!result) {
@@ -146,6 +145,26 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
             return;
         }
         deleteSalesOrderInStore(salesOrder.id)
+
+        const product = products.find((product) => product.id === salesOrder.productId);
+
+        if (product && product.productComponentList.length !== 0) {
+            product.productComponentList.forEach((pc) => {
+                const component = components.find((component) => component.id === pc.componentId);
+                const requiredQuantity = parseInt(pc.quantity) * parseInt(salesOrder.quantity);
+                const updatedStock = parseInt(component.stock) + requiredQuantity;
+
+                updateComponent({
+                    ...component,
+                    id: component.id,
+                    stock: updatedStock,
+                    stockStatus: calculateStatus(updatedStock, component.safetyStock, component.safetyStockRop)
+                });
+            });
+        }
+
+
+
         showSnackbar('success', 'Sales order deleted successfully.');
         onClose();
     }
@@ -200,43 +219,15 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
                             pb: 3,
                         }}>
                         <Grid xs={12} lg={3}>
-                            <Autocomplete
-                                sx={{ width: 195 }}
-                                options={products}
-                                // Use productName from salesOrder to display in the field
-                                getOptionLabel={(option) => option.name || 'Unknown Product'}
-                                value={
-                                    formData.productId
-                                        ? { id: formData.productId, name: formData.productName }
-                                        : { id: salesOrder.productId, name: salesOrder.productName }
-                                }
-                                onChange={(e, newValue) => {
-                                    setFormData((prevData) => ({
-                                        ...prevData,
-                                        productId: newValue?.id || '',
-                                        productName: newValue?.name || '',
-                                    }));
-                                    if (errors.productId) {
-                                        setErrors((prevErrors) => ({
-                                            ...prevErrors,
-                                            productId: null,
-                                        }));
-                                    }
-                                }}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="Product"
-                                        name="productId"
-                                        variant="outlined"
-                                        error={!!errors.productId}
-                                        helperText={errors.productId || ''}
-                                    />
-                                )}
+                            <TextField
+                                disabled
+                                name='product'
+                                value={salesOrder.productName}
                             />
                         </Grid>
                         <Grid xs={12} lg={3} >
                             <TextField
+                                disabled
                                 label={requiredFields.includes('quantity')
                                     ? `quantity *`
                                     : 'quantity'}

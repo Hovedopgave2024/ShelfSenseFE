@@ -22,8 +22,6 @@ const ComponentsTable = ({ onEdit, onAddStock, productComponentIds }) => {
         setPage(newPage);
     };
 
-    console.log("he");
-
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);

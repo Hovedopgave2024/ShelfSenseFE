@@ -29,8 +29,6 @@ export const updateSalesOrder = async (salesOrderData) => {
             return null;
         }
 
-        console.log(salesOrderData);
-
         return await response.json();
     } catch (error) {
         console.error('Error while updating sales order:', error);

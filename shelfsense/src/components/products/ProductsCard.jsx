@@ -19,7 +19,6 @@ const ProductsCard = ({ product }) => {
     };
 
     const toggleModal = () => {
-        console.log('toggleModal');
         setOpenModal((prevOpen) => !prevOpen);
     }
 
