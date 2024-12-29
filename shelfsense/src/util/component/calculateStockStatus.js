@@ -1,13 +1,13 @@
-const calculateStatus = (stock, safetyStock, stockROP) => {
-    const median = Math.floor((safetyStock + stockROP) / 2); // Calculate the median
+const calculateStatus = (stock, safetyStock, safetyStockROP) => {
+    const median = (safetyStock + safetyStockROP) / 2;
 
-    if (stock > stockROP) {
+    if (stock > safetyStockROP) {
         return 4;
     } else if (stock <= safetyStock) {
         return 1;
-    } else if (stock <= median) { // stock > safetyStock is implied
+    } else if (stock <= median) {
         return 2;
-    } else { // stock > median && stock <= stockROP
+    } else {
         return 3;
     }
 };

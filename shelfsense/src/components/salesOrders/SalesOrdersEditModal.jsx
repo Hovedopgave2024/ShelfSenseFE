@@ -9,11 +9,12 @@ import Grid from "@mui/material/Grid2";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx";
 import {updateSalesOrder} from "../../services/salesOrder/updateSalesOrder.js";
-import Autocomplete from "@mui/material/Autocomplete";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import {deleteSalesOrder} from "../../services/salesOrder/deleteSalesOrder.js";
+import calculateStatus from "../../util/component/calculateStockStatus.js";
+import useComponentsStore from "../../stores/useComponentsStore.js";
 
 
 const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
@@ -30,6 +31,8 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
     const deleteSalesOrderInStore = useSalesOrdersStore(state => state.deleteSalesOrder);
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
     const products = useProductsStore((state) => state.products);
+    const components = useComponentsStore(state => state.components)
+    const updateComponent = useComponentsStore(state => state.updateComponent);
 
     const handleCloseDialog = () => setDialogOpen(false);
 
@@ -142,6 +145,26 @@ const SaleOrdersEditModal = ({ open, onClose, salesOrder}) => {
             return;
         }
         deleteSalesOrderInStore(salesOrder.id)
+
+        const product = products.find((product) => product.id === salesOrder.productId);
+
+        if (product && product.productComponentList.length !== 0) {
+            product.productComponentList.forEach((pc) => {
+                const component = components.find((component) => component.id === pc.componentId);
+                const requiredQuantity = parseInt(pc.quantity) * parseInt(salesOrder.quantity);
+                const updatedStock = parseInt(component.stock) + requiredQuantity;
+
+                updateComponent({
+                    ...component,
+                    id: component.id,
+                    stock: updatedStock,
+                    stockStatus: calculateStatus(updatedStock, component.safetyStock, component.safetyStockRop)
+                });
+            });
+        }
+
+
+
         showSnackbar('success', 'Sales order deleted successfully.');
         onClose();
     }
