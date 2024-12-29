@@ -15,7 +15,7 @@ export const deleteComponent = async (id) => {
         }
 
         if (!response.ok) {
-            console.log('Cannot delete component as it is associated with a product.');
+            console.error('Cannot delete component as it is associated with a product.');
             return false;
         }
 

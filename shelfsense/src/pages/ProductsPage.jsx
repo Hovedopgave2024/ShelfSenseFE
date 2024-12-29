@@ -66,10 +66,6 @@ const ProductsPage = () => {
                         supplierIncomingStock: apiComponent.supplierIncomingStock,
                         supplierIncomingDate: apiComponent.supplierIncomingDate,
                     });
-                    console.log("Updated component via the API:", apiComponent);
-                    console.log("Updated Zustand components state:", components);
-                } else {
-                    console.log("Component didn't update via the API");
                 }
             });
         } catch (err) {

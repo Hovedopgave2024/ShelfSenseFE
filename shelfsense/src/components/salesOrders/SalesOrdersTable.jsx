@@ -28,8 +28,6 @@ const SalesOrdersTable = ({ onEdit }) => {
         setPage(newPage);
     };
 
-    console.log(salesOrders);
-
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
@@ -104,7 +102,7 @@ const SalesOrdersTable = ({ onEdit }) => {
                     </Table>
                 </TableContainer>
                 {(!filteredSalesOrders || filteredSalesOrders.length === 0) && (
-                    <Typography align="center">No components available</Typography>
+                    <Typography align="center">No sales orders available</Typography>
                 )}
             </Paper>
             <Box
