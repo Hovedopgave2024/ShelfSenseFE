@@ -10,6 +10,9 @@ import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Box from '@mui/material/Box';
+import Logo from './Logo.png';
+import LogoDark from './LogoDark.png'
+
 
 import { Inventory2Outlined, AddShoppingCartOutlined, InfoOutlined, InventoryOutlined, ExtensionOutlined, BarChartOutlined, AccountCircleOutlined, LogoutOutlined } from '@mui/icons-material';
 
@@ -92,6 +95,39 @@ export const Sidebar = () => {
                     },
                 }}
             >
+                <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent={isOpen ? 'flex-start' : 'center'}
+                    p={1}
+                    sx={{
+                        height: 60, // Adjust height as needed
+                        overflow: 'hidden',
+                    }}
+                >
+                    <img
+                        src={mode === "dark" ? LogoDark : Logo}
+                        alt="Logo"
+                        style={{
+                            width: 40, // Fixed size for the logo
+                            height: 40, // Adjust height if needed
+                            marginRight: isOpen ? 10 : 0, // Add spacing when text is visible
+                            transition: 'margin-right 0.3s',
+                        }}
+                    />
+                    {isOpen && (
+                        <Box
+                            component="span"
+                            sx={{
+                                fontSize: '1.0rem',
+                                ml: 1, // Add spacing between the logo and the text
+                            }}
+                        >
+                            ShelfSense
+                        </Box>
+                    )}
+                </Box>
+                <Divider />
                 <Box display="flex" justifyContent="center" p={1}>
                     <IconButton onClick={toggleSidebar}>
                         {isOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
