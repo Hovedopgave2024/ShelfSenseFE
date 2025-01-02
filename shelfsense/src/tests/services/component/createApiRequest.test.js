@@ -87,11 +87,12 @@ describe('createApiRequest', () => {
 
         const result = await createApiRequest();
 
-        // Validate that clearStoresAndLogout was called
         expect(clearStoresAndLogout).toHaveBeenCalled();
 
-        // Validate the function returns null
         expect(result).toBeNull();
+
+        const setApiUpdateMock = useApiUpdateStore.getState().setApiUpdate;
+        expect(setApiUpdateMock).not.toHaveBeenCalled();
     });
 
     it('logs error and returns null for any non-200 backend error', async () => {
