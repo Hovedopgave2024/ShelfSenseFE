@@ -87,7 +87,7 @@ describe('createApiRequest', () => {
 
         const result = await createApiRequest();
 
-        expect(clearStoresAndLogout).toHaveBeenCalled();
+        expect(clearStoresAndLogout).toHaveBeenCalledTimes(1);
 
         expect(result).toBeNull();
 
