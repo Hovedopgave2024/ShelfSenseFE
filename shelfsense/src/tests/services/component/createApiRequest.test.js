@@ -45,7 +45,7 @@ describe('createApiRequest', () => {
     });
 
     it('sends the API request and updates the store on success', async () => {
-        const mockResponseData = { success: true, data: { id: 1, name: 'Component 1' } };
+        const mockResponseData = { success: true, data: [{ id: 1, name: 'Component 1' }, {id: 2, name: "Component 2"}] };
 
         global.fetch.mockResolvedValueOnce({
             ok: true,
