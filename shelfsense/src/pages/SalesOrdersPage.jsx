@@ -22,29 +22,41 @@ const SalesOrdersPage = () => {
     return (
         <Box sx={{ display: 'flex' }}>
             <Sidebar open={open} toggleDrawer={toggleDrawer} />
-            <Box sx={{
-                flex: 1,
-                display: "flex",
-                flexDirection: { xs: 'column', md: 'column', lg: 'row' },
-            }}>
-                <Box overflow="auto"
-                     sx={{
-                         pt: 4,
-                         px: { xs: 2, sm: 3, md: 4, lg: 5 },
-                     }}
+            <Box
+                sx={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: { xs: 'column', md: 'column', lg: 'row' },
+                    justifyContent: 'space-between',
+                }}
+            >
+                {/* Table Section with Scrollable Height */}
+                <Box
+                    sx={{
+                        flex: 1,
+                        overflow: 'auto',
+                        pt: 4,
+                        px: { xs: 2, sm: 3, md: 4, lg: 5 },
+                    }}
                 >
-                    <Box
-                        sx={{
-                            flex: 1,
-                            minWidth: 0,
-                        }}
-                    >
-                        <SalesOrdersTable onEdit={handleEdit} />
-                    </Box>
+                    <SalesOrdersTable onEdit={handleEdit} />
                 </Box>
-                <Box sx={{ display: "flex", justifyContent: "center", mx: 5}}>
+
+                {/* Create Sales Order Section */}
+                <Box
+                    sx={{
+                        mt: 2,
+                        mx: { xs: 2, sm: 3, md: 4, lg: 5 },
+                        p: 2,
+                        backgroundColor: 'background.paper', // Optional styling for distinction
+                        boxShadow: 3,
+                        borderRadius: 2,
+                    }}
+                >
                     <SalesOrdersCreateCard />
                 </Box>
+
+                {/* Edit Modal */}
                 {salesOrderToEdit && (
                     <SalesOrdersEditModal
                         open={EditModal}
