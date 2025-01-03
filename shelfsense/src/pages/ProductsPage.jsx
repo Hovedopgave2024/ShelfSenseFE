@@ -45,7 +45,7 @@ const ProductsPage = () => {
             const apiInfo = await createApiRequest();
 
             if (!apiInfo) {
-                showSnackbar('error', 'API call to update supplier info failed, please try again or contact Support.');
+                showSnackbar('error', 'API call to update supplier info failed. The server might still be loading your data. Please try again later or contact Support.');
                 setLoading(false);
                 return;
             }

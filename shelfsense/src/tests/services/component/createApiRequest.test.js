@@ -45,7 +45,12 @@ describe('createApiRequest', () => {
     });
 
     it('sends the API request and updates the store on success', async () => {
-        const mockResponseData = { success: true, data: { id: 1, name: 'Component 1' } };
+        const mockResponseData = {
+            success: true, data: [
+                {id: 1, name: 'Component 1' },
+                {id: 2, name: "Component 2"}
+            ]
+        };
 
         global.fetch.mockResolvedValueOnce({
             ok: true,
@@ -82,11 +87,12 @@ describe('createApiRequest', () => {
 
         const result = await createApiRequest();
 
-        // Validate that clearStoresAndLogout was called
-        expect(clearStoresAndLogout).toHaveBeenCalled();
+        expect(clearStoresAndLogout).toHaveBeenCalledTimes(1);
 
-        // Validate the function returns null
         expect(result).toBeNull();
+
+        const setApiUpdateMock = useApiUpdateStore.getState().setApiUpdate;
+        expect(setApiUpdateMock).not.toHaveBeenCalled();
     });
 
     it('logs error and returns null for any non-200 backend error', async () => {

@@ -245,9 +245,10 @@ export const Sidebar = () => {
                                     justifyContent: 'center',
                                 }}
                             >
-                                {mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
+                                {mode === 'dark' ? <Brightness4 /> : <Brightness7 />}
                             </ListItemIcon>
-                            {isOpen && <ListItemText primary="Dark Mode" sx={{ opacity: isOpen ? 1 : 0, transition: 'opacity 0.3s' }} />}
+                            {isOpen &&
+                                <ListItemText primary={mode === 'dark' ? 'Light Mode' : 'Dark Mode'} sx={{ opacity: isOpen ? 1 : 0, transition: 'opacity 0.3s' }} />}
                         </ListItemButton>
                     </ListItem>
                 </List>
