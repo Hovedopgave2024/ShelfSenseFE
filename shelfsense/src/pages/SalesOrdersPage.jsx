@@ -48,7 +48,6 @@ const SalesOrdersPage = () => {
                         mt: 2,
                         mx: { xs: 2, sm: 3, md: 4, lg: 5 },
                         p: 2,
-                        backgroundColor: 'background.paper', // Optional styling for distinction
                         boxShadow: 3,
                         borderRadius: 2,
                     }}
