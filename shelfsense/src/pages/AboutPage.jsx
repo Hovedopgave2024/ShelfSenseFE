@@ -195,6 +195,53 @@ const AboutPage = () => {
                         </Box>
                     </AccordionDetails>
                 </Accordion>
+
+                <Accordion
+                    square
+                    elevation={0}
+                    sx={{
+                        backgroundColor: theme.palette.background.paper,
+                        border: `1px solid ${theme.palette.divider}`,
+                        borderRadius: 2,
+                        mt: 4, // Adds space between this and the previous accordion
+                    }}
+                >
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <Typography variant="h5" sx={{ color: theme.palette.text.primary }}>
+                            Support and Contact
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Box sx={{ p: 2, borderRadius: 2, backgroundColor: theme.palette.background.paper }}>
+                            <Typography variant="body1" paragraph>
+                                If you need assistance or have questions regarding the system, our support team is here to help you.
+                            </Typography>
+
+                            <Typography variant="body1" sx={{ mt: 2, fontWeight: 'bold' }}>
+                                Support Email:
+                            </Typography>
+                            <Typography variant="body1" paragraph>
+                                <a href="mailto:support@shelfsense.com" style={{ color: theme.palette.primary.main }}>
+                                    support@shelfsense.com
+                                </a>
+                            </Typography>
+
+                            <Typography variant="body1" sx={{ mt: 2, fontWeight: 'bold' }}>
+                                General Inquiries:
+                            </Typography>
+                            <Typography variant="body1" paragraph>
+                                <a href="mailto:contact@shelfsense.com" style={{ color: theme.palette.primary.main }}>
+                                    contact@shelfsense.com
+                                </a>
+                            </Typography>
+
+                            <Typography variant="body1" paragraph>
+                                Please include a brief description of your issue or question, and our team will get back to you as soon as possible.
+                            </Typography>
+                        </Box>
+                    </AccordionDetails>
+                </Accordion>
+
             </Box>
         </Box>
     );
