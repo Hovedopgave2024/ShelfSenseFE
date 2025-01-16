@@ -45,7 +45,7 @@ export const Sidebar = () => {
         { text: 'Sales Orders', icon: <AddShoppingCartOutlined />, path: '/salesorders' },
         { text: 'Products', icon: <Inventory2Outlined />, path: '/products' },
         { text: 'Components', icon: <ExtensionOutlined />, path: '/components' },
-        { text: 'About', icon: <InfoOutlined />, path: '/about' },
+        { text: 'Help Center', icon: <InfoOutlined />, path: '/about' },
     ];
 
     const logoutItem = { text: "Logout", icon: <LogoutOutlined /> };
