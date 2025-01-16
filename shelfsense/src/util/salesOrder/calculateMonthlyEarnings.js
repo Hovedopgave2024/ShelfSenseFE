@@ -17,7 +17,7 @@ export const calculateMonthlyEarnings = (data, selectedProducts, startDate, endD
             (endDate === null || date <= endDate)
         ) {
 
-            const monthYearKey = `${date.getFullYear()}-${date.getMonth()}`;
+            const monthYearKey = date.getFullYear() + '-' + date.getMonth();
             const revenue = salesOrder.price * salesOrder.quantity;
             if (!earningsByMonthYear[monthYearKey]) {
                 earningsByMonthYear[monthYearKey] = 0;

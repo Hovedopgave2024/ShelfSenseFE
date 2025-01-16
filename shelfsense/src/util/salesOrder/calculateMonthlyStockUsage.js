@@ -9,14 +9,15 @@ export const calculateMonthlyStockUsage = (
     const usageByMonthYear = {};
 
     salesOrders.forEach((salesOrder) => {
-        const orderDate = new Date(salesOrder.createdDate);
+        const date = new Date(salesOrder.createdDate);
 
         // Filter by date range if provided
         if (
-            (startDate === null || orderDate >= startDate) &&
-            (endDate === null || orderDate <= endDate)
+            (startDate === null || date >= startDate) &&
+            (endDate === null || date <= endDate)
         ) {
-            const monthYearKey = `${orderDate.getFullYear()}-${orderDate.getMonth()}`;
+
+            const monthYearKey = date.getFullYear() + '-' + date.getMonth()
 
             // Get the product associated with the sales order
             const product = products.find((p) => p.id === salesOrder.productId);
@@ -34,7 +35,6 @@ export const calculateMonthlyStockUsage = (
                     if (isComponentSelected) {
                         // Calculate the usage
                         const componentUsage = salesOrder.quantity * pc.quantity;
-
                         // Initialize the usage for this month if not already
                         if (!usageByMonthYear[monthYearKey]) {
                             usageByMonthYear[monthYearKey] = 0;
