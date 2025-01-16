@@ -6,7 +6,7 @@ export const calculateMonthlyStockUsage = (
     startDate,
     endDate
 ) => {
-    const usageByMonth = {}; // Object to store usage per month
+    const usageByMonthYear = {};
 
     salesOrders.forEach((salesOrder) => {
         const orderDate = new Date(salesOrder.createdDate);
@@ -16,7 +16,7 @@ export const calculateMonthlyStockUsage = (
             (startDate === null || orderDate >= startDate) &&
             (endDate === null || orderDate <= endDate)
         ) {
-            const monthKey = `${orderDate.getFullYear()}-${orderDate.getMonth()}`; // e.g., '2023-7' for August 2023
+            const monthYearKey = `${orderDate.getFullYear()}-${orderDate.getMonth()}`;
 
             // Get the product associated with the sales order
             const product = products.find((p) => p.id === salesOrder.productId);
@@ -36,25 +36,25 @@ export const calculateMonthlyStockUsage = (
                         const componentUsage = salesOrder.quantity * pc.quantity;
 
                         // Initialize the usage for this month if not already
-                        if (!usageByMonth[monthKey]) {
-                            usageByMonth[monthKey] = 0;
+                        if (!usageByMonthYear[monthYearKey]) {
+                            usageByMonthYear[monthYearKey] = 0;
                         }
                         // Accumulate the usage
-                        usageByMonth[monthKey] += componentUsage;
+                        usageByMonthYear[monthYearKey] += componentUsage;
                     }
                 });
             }
         }
     });
 
-    // Convert usageByMonth object into an array, sort by month
-    const usageArray = Object.keys(usageByMonth).map((monthKey) => {
-        const [year, month] = monthKey.split('-').map(Number);
+    // Convert usageByMonthYear object into an array, sort by month-year
+    const usageArray = Object.keys(usageByMonthYear).map((monthYearKey) => {
+        const [year, month] = monthYearKey.split('-').map(Number);
         const date = new Date(year, month);
-        const monthName = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+        const monthYearName = date.toLocaleString('default', { month: 'long', year: 'numeric' });
         return {
-            month: monthName,
-            usage: usageByMonth[monthKey],
+            month: monthYearName,
+            usage: usageByMonthYear[monthYearKey],
         };
     });
 
@@ -63,3 +63,4 @@ export const calculateMonthlyStockUsage = (
 
     return usageArray;
 };
+

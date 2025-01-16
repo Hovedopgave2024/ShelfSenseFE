@@ -180,7 +180,7 @@ const SalesOrdersCreateCard = () => {
                                     setFormData((prevData) => ({
                                         ...prevData,
                                         productId: newValue?.id || '',
-                                        productName: newValue.name || '',
+                                        productName: newValue?.name || '',
                                     }));
                                     if (errors.productId) {
                                         setErrors((prevErrors) => ({
