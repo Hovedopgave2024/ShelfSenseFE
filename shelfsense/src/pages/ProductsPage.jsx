@@ -74,8 +74,8 @@ const ProductsPage = () => {
                                 }
                                 onAccept={handleCloseDialog}
                                 onDecline={handleCloseDialog}
-                                acceptText="Fetch API"
-                                declineText="Cancel"
+                                acceptText="Understood"
+                                declineText="Understood"
                                 color="info"
                             />
                         </span>
