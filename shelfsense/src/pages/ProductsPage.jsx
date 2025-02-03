@@ -1,27 +1,18 @@
 // ProductsPage.js
 import { useState } from 'react';
-import {Button, Box, CircularProgress, Tooltip} from '@mui/material';
+import {Button, Box, Tooltip} from '@mui/material';
 import ProductsList from '../components/products/ProductsList';
 import { Sidebar } from '../components/sidebar/sidebar.jsx';
 import ProductCreateModal from '../components/products/ProductCreateModal.jsx';
-import {createApiRequest} from "../services/component/createApiRequest.js";
-import useComponentsStore from "../stores/useComponentsStore.js";
 import useApiUpdateStore from "../stores/useApiUpdateStore.js"; // Import the modal
 import calculateApiFetchTimeDif from '../util/component/calculateApiFetchTimeDif.js';
 import ConfirmDialog from "../components/confirmDialog/ConfirmDialog.jsx"
-import useSnackbarStore from "../stores/useSnackbarStore.js";
-import LoadingScreen from "../components/products/LoadingScreen.jsx";
-
 
 const ProductsPage = () => {
     const [openSideBar, setOpenSideBar] = useState(false);
     const [openModal, setOpenModal] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const components = useComponentsStore((state) => state.components);
-    const updateComponent = useComponentsStore((state) => state.updateComponent);
     const apiUpdate = useApiUpdateStore((state) => state.apiUpdate);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
 
     const handleCloseDialog = () => setDialogOpen(false);
 
@@ -35,45 +26,6 @@ const ProductsPage = () => {
 
     const toggleConfirmFetchApiDialog = async () => {
         setDialogOpen(true);
-    }
-
-    const handleUpdateSupplierInfo = async () => {
-        setDialogOpen(false);
-        setLoading(true);
-
-        try {
-            const apiInfo = await createApiRequest();
-
-            if (!apiInfo) {
-                showSnackbar('error', 'API call to update supplier info failed. The server might still be loading your data. Please try again later or contact Support.');
-                setLoading(false);
-                return;
-            }
-            showSnackbar('success', 'API call to update supplier info was successful.');
-
-            apiInfo.forEach((apiComponent) => {
-                const componentInStore = components.find(
-                    (comp) => comp.id === apiComponent.id
-                );
-
-                if (componentInStore) {
-                    updateComponent({
-                        id: apiComponent.id,
-                        supplierStock: apiComponent.supplierStock,
-                        supplierStockStatus: apiComponent.supplierStockStatus,
-                        manufacturer: apiComponent.manufacturer,
-                        manufacturerPart: apiComponent.manufacturerPart,
-                        supplierIncomingStock: apiComponent.supplierIncomingStock,
-                        supplierIncomingDate: apiComponent.supplierIncomingDate,
-                    });
-                }
-            });
-        } catch (err) {
-            console.error("API call to update components failed", err);
-            showSnackbar('error', 'API call to update supplier info failed, please try again or contact Support.');
-        } finally {
-            setLoading(false);
-        }
     }
 
     return (
@@ -114,38 +66,32 @@ const ProductsPage = () => {
                                 headline="Confirm Fetch API"
                                 text={
                                     <>
-                                        Are you sure you want to fetch API, updating supplier info? <br />
+                                        Supplier info for your Mouser components now updates automatically in the background every day at 2 AM (Copenhagen time). <br />
                                         {apiUpdate?.lastUpdated
                                             ? `API last fetched ${calculateApiFetchTimeDif(apiUpdate.lastUpdated)}.`
                                             : 'API not fetched yet.'}
                                     </>
                                 }
-                                onAccept={handleUpdateSupplierInfo}
+                                onAccept={handleCloseDialog}
                                 onDecline={handleCloseDialog}
-                                acceptText="Fetch API"
-                                declineText="Cancel"
+                                acceptText="Understood"
+                                declineText="Understood"
                                 color="info"
                             />
                         </span>
                     </Tooltip>
                 </>
-                {loading ? (
-                    <CircularProgress sx={{ ml: 2 }} />
-                ) : (
-                    <Tooltip arrow title={`API fetched ${calculateApiFetchTimeDif(apiUpdate?.lastUpdated)}`}>
-                        <span>
-                            <Button sx={{ mb: 3 }} disabled>
-                                {apiUpdate?.lastUpdated
-                                    ? calculateApiFetchTimeDif(apiUpdate.lastUpdated)
-                                    : 'API not fetched yet'}
-                            </Button>
-                        </span>
-                    </Tooltip>
-                )}
+                <Tooltip arrow title={`API fetched ${calculateApiFetchTimeDif(apiUpdate?.lastUpdated)}`}>
+                    <span>
+                        <Button sx={{ mb: 3 }} disabled>
+                            {apiUpdate?.lastUpdated
+                                ? calculateApiFetchTimeDif(apiUpdate.lastUpdated)
+                                : 'API not fetched yet'}
+                        </Button>
+                    </span>
+                </Tooltip>
                 <ProductsList />
-                {/* Render the modal here */}
                 <ProductCreateModal open={openModal} onClose={toggleModal} />
-                <LoadingScreen open={loading} />
             </Box>
         </Box>
     );
