@@ -36,7 +36,7 @@ export const fetchAllData = async () => {
                     )
                     : null
             })
-        ) || [];
+        ) || null;
 
         const products = userData.productList ? [...userData.productList] : [];
         const salesOrders = userData.salesOrderList ? [...userData.salesOrderList] : [];
