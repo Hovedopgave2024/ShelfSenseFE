@@ -30,7 +30,7 @@ export const logout = async () => {
         localStorage.removeItem('user-session');
         localStorage.removeItem('theme-storage');
 
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         window.location.href = '/';
     }
 };

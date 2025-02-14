@@ -13,7 +13,7 @@ export const clearStoresAndLogout = async () => {
         localStorage.removeItem('theme-storage');
         localStorage.removeItem('sidebar-store');
 
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
     } catch (error) {
         console.error('Error during unauthorized logout and store cleanup or redirection:', error);
     }
