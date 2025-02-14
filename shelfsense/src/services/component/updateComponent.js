@@ -11,8 +11,14 @@ export const updateComponent = async (id, updatedData) => {
             credentials: "include",
             body: JSON.stringify({
                 ...updatedData,
-                stockStatus: calculateStatus(updatedData.stock, updatedData.safetyStock, updatedData.safetyStockRop),
-                supplierStockStatus: calculateStatus(updatedData.supplierStock, updatedData.supplierSafetyStock, updatedData.supplierSafetyStockRop)
+                stockStatus: calculateStatus(parseInt(updatedData.stock), parseInt(updatedData.safetyStock), parseInt(updatedData.safetyStockRop)),
+                supplierStockStatus: updatedData.supplierStock != null
+                    ? calculateStatus(
+                        parseInt(updatedData.supplierStock),
+                        parseInt(updatedData.supplierSafetyStock),
+                        parseInt(updatedData.supplierSafetyStockRop)
+                    )
+                    : null
             }),
         });
 

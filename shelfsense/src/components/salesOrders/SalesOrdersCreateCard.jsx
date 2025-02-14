@@ -129,8 +129,8 @@ const SalesOrdersCreateCard = () => {
                 updateComponent({
                     ...component,
                     id: component.id,
-                    stock: updatedStock,
-                    stockStatus: calculateStatus(updatedStock, component.safetyStock, component.safetyStockRop)
+                    stock: Number(updatedStock),
+                    stockStatus: calculateStatus(Number(updatedStock), Number(component.safetyStock), Number(component.safetyStockRop))
                 });
             });
         }

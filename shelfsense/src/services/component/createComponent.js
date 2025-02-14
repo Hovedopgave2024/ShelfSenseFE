@@ -6,13 +6,19 @@ export const createComponent = async (componentData) => {
 
     const BASE_URL = `${import.meta.env.VITE_API_URL}/components`;
     try {
+
+        console.log("stock:", componentData.stock);
+        console.log("safetyStock:", componentData.safetyStock);
+        console.log("safetyStockRop:", componentData.safetyStockRop);
+        console.log("Calculated Stock Status:", calculateStatus(parseInt(componentData.stock), parseInt(componentData.safetyStock), parseInt(componentData.safetyStockRop)));
+
         const response = await fetch(BASE_URL, {
             method: "POST",
             headers: {"Content-Type": "application/json",},
             credentials: "include",
             body: JSON.stringify({
                 ...componentData,
-                stockStatus: calculateStatus(componentData.stock, componentData.safetyStock, componentData.safetyStockRop),
+                stockStatus: calculateStatus(parseInt(componentData.stock), parseInt(componentData.safetyStock), parseInt(componentData.safetyStockRop)),
                 supplierStockStatus: null
             }),
         });
@@ -26,7 +32,9 @@ export const createComponent = async (componentData) => {
             console.error('Failed to create component:', response.status);
             return null;
         }
-        return await response.json();
+        const jResponse = await response.json();
+        console.log(jResponse);
+        return jResponse;
     } catch (error) {
         console.error('Error occurred while creating component:', error);
         return null;

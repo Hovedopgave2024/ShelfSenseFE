@@ -30,7 +30,7 @@ const ComponentsPage = () => {
 
     const toggleCloseCreateModal = () => {
         setCreateModal((prevOpen) => !prevOpen);
-        navigate(0);
+        //navigate(0);
     };
 
     const handleEdit = (component) => {

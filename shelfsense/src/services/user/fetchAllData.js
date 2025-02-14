@@ -27,8 +27,14 @@ export const fetchAllData = async () => {
         const components = userData.componentList?.map(
             component => ({
             ...component,
-            stockStatus: calculateStatus(component.stock, component.safetyStock, component.safetyStockRop),
-            supplierStockStatus: calculateStatus(component.supplierStock, component.supplierSafetyStock, component.supplierSafetyStockRop)
+            stockStatus: calculateStatus(parseInt(component.stock), parseInt(component.safetyStock), parseInt(component.safetyStockRop)),
+                supplierStockStatus: component.supplierStock != null
+                    ? calculateStatus(
+                        parseInt(component.supplierStock),
+                        parseInt(component.supplierSafetyStock),
+                        parseInt(component.supplierSafetyStockRop)
+                    )
+                    : null
             })
         ) || [];
 
