@@ -5,6 +5,7 @@ import useProductsStore from "../../stores/useProductsStore.js";
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import useSalesOrdersStore from "../../stores/useSalesOrdersStore.js";
 import useApiUpdateStore from "../../stores/useApiUpdateStore.js";
+import calculateStatus from "../../util/component/calculateStockStatus.js";
 
 export const fetchAllData = async () => {
     const userId = useSessionStore.getState().user?.id;
@@ -23,8 +24,21 @@ export const fetchAllData = async () => {
             return false;
         }
 
+        const components = userData.componentList?.map(
+            component => ({
+            ...component,
+            stockStatus: calculateStatus(parseInt(component.stock), parseInt(component.safetyStock), parseInt(component.safetyStockRop)),
+                supplierStockStatus: component.supplierStock != null
+                    ? calculateStatus(
+                        parseInt(component.supplierStock),
+                        parseInt(component.supplierSafetyStock),
+                        parseInt(component.supplierSafetyStockRop)
+                    )
+                    : null
+            })
+        ) || null;
+
         const products = userData.productList ? [...userData.productList] : [];
-        const components = userData.componentList ? [...userData.componentList] : [];
         const salesOrders = userData.salesOrderList ? [...userData.salesOrderList] : [];
         const apiUpdate = userData.apiUpdate || null;
 

@@ -94,7 +94,7 @@ describe('fetchAllData', () => {
     it('fetches and sets data correctly when userData is valid', async () => {
         const mockUserData = {
             productList: [{ id: 1, name: 'Product 1' }],
-            componentList: [{ id: 1, name: 'Component 1' }],
+            componentList: [{ id: 1, name: 'Component 1', stockStatus: 3, supplierStockStatus: null }],
             salesOrderList: [{ id: 1, quantity: 100 }],
             apiUpdate: { lastUpdate: '2023-12-01T12:00:00Z' },
         };
@@ -105,7 +105,7 @@ describe('fetchAllData', () => {
 
         // Validate that stores are updated correctly
         expect(setProductsMock).toHaveBeenCalledWith([{ id: 1, name: 'Product 1' }]);
-        expect(setComponentsMock).toHaveBeenCalledWith([{ id: 1, name: 'Component 1' }]);
+        expect(setComponentsMock).toHaveBeenCalledWith([{ id: 1, name: 'Component 1', stockStatus: 3, supplierStockStatus: null }]);
         expect(setSalesOrdersMock).toHaveBeenCalledWith([{ id: 1, quantity: 100 }]);
         expect(setApiUpdateMock).toHaveBeenCalledWith({ lastUpdate: '2023-12-01T12:00:00Z' });
     });
@@ -132,7 +132,7 @@ describe('fetchAllData', () => {
 
         // Simulating a userData object with empty or missing properties
         const mockUserData = {
-            componentList: [{ id: 'c1', name: 'Component 1' }],
+            componentList: [{ id: 1, name: 'Component 1', stockStatus: 3, supplierStockStatus: null }],
             productsList: [{}],
         };
 
@@ -142,7 +142,7 @@ describe('fetchAllData', () => {
 
         // Validate stores are updated with default values
         expect(setProductsMock).toHaveBeenCalledWith([]);
-        expect(setComponentsMock).toHaveBeenCalledWith([{ id: 'c1', name: 'Component 1' }]);
+        expect(setComponentsMock).toHaveBeenCalledWith([{ id: 1, name: 'Component 1', stockStatus: 3, supplierStockStatus: null }]);
         expect(setSalesOrdersMock).toHaveBeenCalledWith([]);
         expect(setApiUpdateMock).toHaveBeenCalledWith(null);
     });

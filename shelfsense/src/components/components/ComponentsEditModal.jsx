@@ -79,7 +79,12 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
             return;
         }
 
-        const result = await updateComponent(formData.id, formData);
+        const updatedComponent = {
+            ...formData,
+            supplierStock: component.supplierStock
+        }
+
+        const result = await updateComponent(formData.id, updatedComponent);
 
         if (!result) {
             showSnackbar('error', 'Error: Component was not updated. Please try again or contact Support.');

@@ -1,4 +1,5 @@
 import {clearStoresAndLogout} from "../../util/user/clearStoresAndLogout.js";
+import calculateStatus from "../../util/component/calculateStockStatus.js";
 
 export const updateComponent = async (id, updatedData) => {
     const BASE_URL = `${import.meta.env.VITE_API_URL}/components/${id}`;
@@ -8,7 +9,17 @@ export const updateComponent = async (id, updatedData) => {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify(updatedData),
+            body: JSON.stringify({
+                ...updatedData,
+                stockStatus: calculateStatus(parseInt(updatedData.stock), parseInt(updatedData.safetyStock), parseInt(updatedData.safetyStockRop)),
+                supplierStockStatus: updatedData.supplierStock != null
+                    ? calculateStatus(
+                        parseInt(updatedData.supplierStock),
+                        parseInt(updatedData.supplierSafetyStock),
+                        parseInt(updatedData.supplierSafetyStockRop)
+                    )
+                    : null
+            }),
         });
 
         if (response.status === 401) {
