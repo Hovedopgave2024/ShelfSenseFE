@@ -17,21 +17,17 @@ import calculateStatus from "../../util/component/calculateStockStatus.js";
 
 const SalesOrdersCreateCard = () => {
     const initialFormData = {
-        productId: '',
-        productName: '',
-        quantity: '',
         price: '',
         createdDate: dayjs().format('YYYY-MM-DD'),
     };
 
     const requiredFields = [
-        "productId",
-        'quantity',
         'price',
         'createdDate',
     ];
 
     const [formData, setFormData] = useState(initialFormData);
+    const [selectedProducts, setSelectedProducts] = useState([]);
     const [errors, setErrors] = useState({});
     const addSalesOrder = useSalesOrdersStore((state) => state.addSalesOrder);
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
@@ -67,6 +63,17 @@ const SalesOrdersCreateCard = () => {
         }
     };
 
+    const handleAddProduct = (event, newValue) => {
+        if (newValue && !selectedProducts.some(p => p.productId === newValue.id)) {
+            setSelectedProducts([...selectedProducts, {
+                productId: newValue.id,
+                name: newValue.name,
+                checked: true,
+                quantity: 1  // Default quantity to 1
+            }]);
+        }
+    };
+
     const validateForm = () => {
         const newErrors = {};
         requiredFields.forEach((field) => {
@@ -74,7 +81,7 @@ const SalesOrdersCreateCard = () => {
                 newErrors[field] = `Required`;
             }
 
-            if (['quantity', 'price', 'productId'].includes(field)) {
+            if (['price'].includes(field)) {
                 if (isNaN(formData[field]) || formData[field] <= 0) {
                     newErrors[field] = 'Must be a valid positive number';
                 }
@@ -90,6 +97,10 @@ const SalesOrdersCreateCard = () => {
                 }
             }
         });
+
+        if (selectedProducts.length === 0) {
+            newErrors.products = 'At least one product must be selected';
+        }
 
         setErrors(newErrors);
         showSnackbar('warning', 'Please fill out all fields correctly and try again');

@@ -1,22 +1,14 @@
 import {Box} from '@mui/material';
 import {useState} from "react";
 import {Sidebar} from "../components/sidebar/sidebar.jsx";
-import SalesOrdersEditModal from "../components/salesOrders/SalesOrdersEditModal.jsx";
 import SalesOrdersTable from "../components/salesOrders/SalesOrdersTable.jsx";
 import SalesOrdersCreateCard from "../components/salesOrders/SalesOrdersCreateCard.jsx";
 
 const SalesOrdersPage = () => {
     const [open, setOpen] = useState(false);
-    const [EditModal, setEditModal] = useState(false);
-    const [salesOrderToEdit, setSalesOrderToEdit] = useState(null);
 
     const toggleDrawer = () => {
         setOpen((prevOpen) => !prevOpen);
-    };
-
-    const handleEdit = (salesOrder) => {
-        setSalesOrderToEdit(salesOrder);
-        setEditModal(true);
     };
 
     return (
@@ -39,7 +31,7 @@ const SalesOrdersPage = () => {
                         px: { xs: 2, sm: 3, md: 4, lg: 5 },
                     }}
                 >
-                    <SalesOrdersTable onEdit={handleEdit} />
+                    <SalesOrdersTable onEdit={null} />
                 </Box>
 
                 {/* Create Sales Order Section */}
@@ -54,15 +46,6 @@ const SalesOrdersPage = () => {
                 >
                     <SalesOrdersCreateCard />
                 </Box>
-
-                {/* Edit Modal */}
-                {salesOrderToEdit && (
-                    <SalesOrdersEditModal
-                        open={EditModal}
-                        onClose={() => setEditModal(false)}
-                        salesOrder={salesOrderToEdit}
-                    />
-                )}
             </Box>
         </Box>
     );
