@@ -49,22 +49,40 @@ const SalesOrdersPage = () => {
 
         deleteSalesOrderInStore(selectedSalesOrder.id);
 
-        const product = products.find((product) => product.id === selectedSalesOrder.productId);
-        if (product && product.productComponentList.length !== 0) {
-            product.productComponentList.forEach((pc) => {
-                const component = components.find((component) => component.id === pc.componentId);
-                if (component) {
-                    const requiredQuantity = parseInt(pc.quantity) * parseInt(selectedSalesOrder.quantity);
-                    const updatedStock = parseInt(component.stock) + requiredQuantity;
+        const updatedComponents = new Map();
+        selectedSalesOrder.salesOrderProducts?.forEach((sop) => {
 
-                    updateComponent({
-                        ...component,
-                        stock: Number(updatedStock),
-                        stockStatus: calculateStatus(Number(updatedStock), Number(component.safetyStock), Number(component.safetyStockRop)),
-                    });
-                }
+            const selectedProduct = products.find((p) => p.id === sop.productId);
+
+            if (selectedProduct && selectedProduct.productComponentList.length !== 0) {
+                selectedProduct.productComponentList.forEach((pc) => {
+
+                    const componentId = pc.componentId;
+
+                    let currentStock = updatedComponents.has(componentId)
+                        ? updatedComponents.get(componentId)
+                        : components.find((component) => component.id === pc.componentId).stock;
+
+                    const requiredQuantity = parseInt(pc.quantity) * parseInt(sop.quantity);
+                    updatedComponents.set(componentId, currentStock + requiredQuantity);
+                });
+            }
+        });
+
+        updatedComponents.forEach((newStock, componentId) => {
+            const component = useComponentsStore.getState().components.find(comp => comp.id === componentId);
+
+            if (!component) {
+                console.warn(`Component not found in Zustand state: ${componentId}`);
+                return;
+            }
+
+            updateComponent({
+                ...component,
+                stock: Number(newStock),
+                stockStatus: calculateStatus(Number(newStock), Number(component.safetyStock), Number(component.safetyStockRop)),
             });
-        }
+        });
 
         showSnackbar('success', 'Sales order deleted successfully.');
         setSelectedSalesOrder(null);
