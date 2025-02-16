@@ -180,6 +180,7 @@ const SalesOrdersCreateCard = () => {
         showSnackbar('success', 'Sales order created successfully');
         setFormData(initialFormData);
         setErrors({});
+        setSelectedProducts([]);
     };
 
     // Reset form data and errors when the modal opens
