@@ -15,7 +15,7 @@ import { useTheme } from "@mui/material";
 import useSalesOrdersStore from "../../stores/useSalesOrdersStore.js";
 import SalesOrdersTableRow from "./SalesOrdersTableRow.jsx";
 
-const SalesOrdersTable = ({ onEdit }) => {
+const SalesOrdersTable = ({ onDelete }) => {
     const salesOrders = useSalesOrdersStore((state) => state.salesOrders);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -86,7 +86,7 @@ const SalesOrdersTable = ({ onEdit }) => {
                                         <SalesOrdersTableRow
                                             key={data.id}
                                             salesOrder={data}
-                                            onEdit={onEdit}
+                                            onDelete={onDelete}
                                         />
                                     ))
                             ) : (

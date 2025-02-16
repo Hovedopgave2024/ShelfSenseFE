@@ -1,6 +1,6 @@
 import {TableRow, TableCell, Button, Box} from '@mui/material';
 
-const SalesOrdersTableRow = ({ salesOrder, onEdit }) => (
+const SalesOrdersTableRow = ({ salesOrder, onDelete }) => (
     <TableRow hover key={salesOrder.id}>
         <TableCell align="left">{salesOrder.createdDate}</TableCell>
         <TableCell align="left">{salesOrder.productName}</TableCell>
@@ -11,9 +11,9 @@ const SalesOrdersTableRow = ({ salesOrder, onEdit }) => (
                 <Button
                     variant="outlined"
                     size="small"
-                    onClick={() => onEdit(salesOrder)} // Callback for editing
+                    onClick={() => onDelete(salesOrder)}
                 >
-                    Edit
+                    Delete
                 </Button>
             </Box>
         </TableCell>
