@@ -29,6 +29,7 @@ const SalesOrdersCreateCard = () => {
 
     const [formData, setFormData] = useState(initialFormData);
     const [selectedProducts, setSelectedProducts] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
     const [errors, setErrors] = useState({});
     const addSalesOrder = useSalesOrdersStore((state) => state.addSalesOrder);
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
@@ -146,6 +147,7 @@ const SalesOrdersCreateCard = () => {
         result.salesOrderProducts?.forEach((sop) => {
 
             const selectedProduct = products.find((p) => p.id === sop.productId);
+            setTotalPrice(totalPrice + (parseFloat(selectedProduct.price) * parseInt(sop.quantity)));
 
             if (selectedProduct && selectedProduct.productComponentList.length !== 0) {
                 selectedProduct.productComponentList.forEach((pc) => {
@@ -220,20 +222,29 @@ const SalesOrdersCreateCard = () => {
                         mb: 1
                     }}
                     >
-                    {/* Price Input */}
-                    <Grid item sx={{width: "100%"}}>
-                        <TextField
-                            label={requiredFields.includes('price') ? `Price *` : 'Price'}
-                            name="price"
-                            variant="outlined"
-                            fullWidth
-                            value={formData.price}
-                            onChange={handleChange}
-                            error={!!errors['price']}
-                            helperText={errors['price'] || ''}
-                            type="number"
-                        />
-                    </Grid>
+                        {/* Price Input with Total Price */}
+                        <Grid item sx={{ width: "100%" }}>
+                            <Grid container spacing={2} alignItems="center">
+                                <Grid item xs={8}>
+                                    <TextField
+                                        label={requiredFields.includes('price') ? `Price *` : 'Price'}
+                                        name="price"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.price}
+                                        onChange={handleChange}
+                                        error={!!errors['price']}
+                                        helperText={errors['price'] || ''}
+                                        type="number"
+                                    />
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Typography sx={{ fontWeight: 'bold' }}>
+                                        Akk Price: {totalPrice ? totalPrice : 0.00}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        </Grid>
 
                     {/* Date Picker */}
                     <Grid item sx={{width: "100%"}}>
