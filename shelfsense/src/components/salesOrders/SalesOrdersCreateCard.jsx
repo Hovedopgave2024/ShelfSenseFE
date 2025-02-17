@@ -29,7 +29,7 @@ const SalesOrdersCreateCard = () => {
 
     const [formData, setFormData] = useState(initialFormData);
     const [selectedProducts, setSelectedProducts] = useState([]);
-    const [totalPrice, setTotalPrice] = useState(0);
+    const [totalPrice, setTotalPrice] = useState();
     const [errors, setErrors] = useState({});
     const addSalesOrder = useSalesOrdersStore((state) => state.addSalesOrder);
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
@@ -71,16 +71,36 @@ const SalesOrdersCreateCard = () => {
             ...updatedProducts[index],
             [field]: value };
         setSelectedProducts(updatedProducts);
+        calculateTotalPrice(updatedProducts);
     };
 
     const handleAddProduct = () => {
-        setSelectedProducts([...selectedProducts, { productId: '', quantity: '' }]);
+        const updatedProducts = [...selectedProducts, { productId: '', quantity: '' }];
+        setSelectedProducts(updatedProducts);
+        calculateTotalPrice(updatedProducts);
     };
+
 
     const handleRemoveProduct = (index) => {
         const updatedProducts = [...selectedProducts];
         updatedProducts.splice(index, 1);
         setSelectedProducts(updatedProducts);
+        calculateTotalPrice(updatedProducts);
+    };
+
+
+    const calculateTotalPrice = (selectedProducts) => {
+        let total = 0;
+
+        selectedProducts ? selectedProducts.forEach((product) => {
+            const selectedProduct = products.find((p) => p.id === product.productId);
+            if (selectedProduct) {
+                total += (parseFloat(selectedProduct.price) || 0) * (parseInt(product.quantity) || 0);
+            }
+        }) : null;
+
+        console.log("total:", total);
+        setTotalPrice(total);
     };
 
     const validateForm = () => {
@@ -147,7 +167,6 @@ const SalesOrdersCreateCard = () => {
         result.salesOrderProducts?.forEach((sop) => {
 
             const selectedProduct = products.find((p) => p.id === sop.productId);
-            setTotalPrice(totalPrice + (parseFloat(selectedProduct.price) * parseInt(sop.quantity)));
 
             if (selectedProduct && selectedProduct.productComponentList.length !== 0) {
                 selectedProduct.productComponentList.forEach((pc) => {
@@ -223,30 +242,34 @@ const SalesOrdersCreateCard = () => {
                     }}
                     >
                         {/* Price Input with Total Price */}
-                        <Grid item sx={{ width: "100%" }}>
-                            <Grid container spacing={2} alignItems="center">
-                                <Grid item xs={8}>
-                                    <TextField
-                                        label={requiredFields.includes('price') ? `Price *` : 'Price'}
-                                        name="price"
-                                        variant="outlined"
-                                        fullWidth
-                                        value={formData.price}
-                                        onChange={handleChange}
-                                        error={!!errors['price']}
-                                        helperText={errors['price'] || ''}
-                                        type="number"
-                                    />
-                                </Grid>
-                                <Grid item xs={4}>
-                                    <Typography sx={{ fontWeight: 'bold' }}>
-                                        Akk Price: {totalPrice ? totalPrice : 0.00}
-                                    </Typography>
-                                </Grid>
+                        <Grid container spacing={2} alignItems="center" mt={1}>
+                            <Grid item sx={{ width: "40%" }}>
+                                <TextField
+                                    label={requiredFields.includes('price') ? `Price *` : 'Price'}
+                                    name="price"
+                                    variant="outlined"
+                                    value={formData.price}
+                                    onChange={handleChange}
+                                    error={!!errors['price']}
+                                    helperText={errors['price'] || ''}
+                                    type="number"
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid item sx={{ width: "55%" }}>
+                                <TextField
+                                    label="Calculated Price"
+                                    variant="outlined"
+                                    name="calculatedPrice"
+                                    value={totalPrice ?? ''}
+                                    type="number"
+                                    disabled
+                                    fullWidth
+                                />
                             </Grid>
                         </Grid>
 
-                    {/* Date Picker */}
+                        {/* Date Picker */}
                     <Grid item sx={{width: "100%"}}>
                         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="da">
                             <DatePicker
