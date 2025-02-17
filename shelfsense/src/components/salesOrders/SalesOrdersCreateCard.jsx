@@ -202,6 +202,7 @@ const SalesOrdersCreateCard = () => {
         setFormData(initialFormData);
         setErrors({});
         setSelectedProducts([]);
+        setTotalPrice();
     };
 
     // Reset form data and errors when the modal opens
