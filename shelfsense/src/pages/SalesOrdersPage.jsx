@@ -118,8 +118,6 @@ const SalesOrdersPage = () => {
                         mt: 2,
                         mx: { xs: 2, sm: 3, md: 4, lg: 5 },
                         p: 2,
-                        boxShadow: 3,
-                        borderRadius: 2,
                     }}
                 >
                     <SalesOrdersCreateCard />

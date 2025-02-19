@@ -296,11 +296,12 @@ const SalesOrdersCreateCard = () => {
                     {selectedProducts.map((product, index) => (
                         <Grid
                             container
+                            spacing={1}
+                            justifyConent="space-evenly"
                             key={index}
-                            direction="row"
                         >
                             {/* Product Selection */}
-                            <Grid item sx={{ width: '100%' }}>
+                            <Grid item sx={{ width: '55%' }}>
                                 <FormControl fullWidth>
                                     <Autocomplete
                                         options={products.filter(
@@ -334,7 +335,7 @@ const SalesOrdersCreateCard = () => {
                                 </FormControl>
                             </Grid>
 
-                            <Grid item sx={{ width: '100%' }}>
+                            <Grid item sx={{ width: '40%', display: 'flex' }}>
                                 {/* Quantity Input */}
                                 <TextField
                                     label="Quantity"
@@ -348,7 +349,10 @@ const SalesOrdersCreateCard = () => {
                                     helperText={errors[`quantity_${index}`]}
                                 />
                                 {/* Remove Button */}
-                                <IconButton color="error" onClick={() => handleRemoveProduct(index)} sx={{pt: 2}} >
+                                <IconButton
+                                    color="error"
+                                    onClick={() => handleRemoveProduct(index)}
+                                >
                                     <Remove />
                                 </IconButton>
                             </Grid>
