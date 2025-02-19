@@ -1,4 +1,4 @@
-import {  Box, TextField, Autocomplete, Card, CardContent, Typography} from '@mui/material';
+import {Box, TextField, Autocomplete, Card, CardContent, Typography, Button} from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -235,6 +235,21 @@ const StatisticsPage = () => {
                                     />
                                 )}
                             />
+                            <Button
+                                variant="outlined"
+                                color="secondary"
+                                onClick={() => {
+                                    setStartDate(null);
+                                    setEndDate(null);
+                                }}
+                                sx={{
+                                    width: '39%',
+                                    height: '40px',
+                                    fontSize: '1rem',
+                                }}
+                            >
+                                Clear Dates
+                            </Button>
                         </Box>
 
                         {/* Right Side (Pie Chart) */}
