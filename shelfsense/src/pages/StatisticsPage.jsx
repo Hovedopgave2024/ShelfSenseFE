@@ -238,7 +238,13 @@ const StatisticsPage = () => {
                         </Box>
 
                         {/* Right Side (Pie Chart) */}
-                        <Box sx={{ width: '50%', display: 'flex', justifyContent: 'center' }}>
+                        <Box sx={{ width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            {/* Headline */}
+                            <Typography variant="h6" sx={{ marginBottom: 2, fontWeight: 'bold', mr: 10 }}>
+                                Yearly Product Usage
+                            </Typography>
+
+                            {/* Pie Chart */}
                             <PieChart
                                 series={[
                                     {
@@ -248,11 +254,11 @@ const StatisticsPage = () => {
                                         paddingAngle: 1,
                                         cornerRadius: 6,
                                         highlightScope: { fade: 'global', highlight: 'item' },
-                                        faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' }
+                                        faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
                                     },
                                 ]}
                                 height={300}
-                            />;
+                            />
                         </Box>
                     </Box>
 
@@ -270,7 +276,7 @@ const StatisticsPage = () => {
                         />
                     </Box>
                     <Box>
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '90%' }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                             <Autocomplete
                                 multiple
                                 options={components}
