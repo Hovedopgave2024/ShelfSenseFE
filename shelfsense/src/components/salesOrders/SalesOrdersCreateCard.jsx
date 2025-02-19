@@ -281,6 +281,7 @@ const SalesOrdersCreateCard = () => {
                     <Grid
                         container
                         spacing={2}
+                        justifyContent="center"
                         sx={{
                         overflowY: 'auto',
                         maxHeight: '40vh',
@@ -297,7 +298,7 @@ const SalesOrdersCreateCard = () => {
                         <Grid
                             container
                             spacing={1}
-                            justifyConent="space-evenly"
+                            justifyConent="center"
                             key={index}
                         >
                             {/* Product Selection */}
