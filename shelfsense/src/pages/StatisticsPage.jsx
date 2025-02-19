@@ -298,11 +298,15 @@ const StatisticsPage = () => {
                         >
                             <LineChart
                                 xAxis={[{ dataKey: 'month', scaleType: 'band' }]}
-                                series={[{ dataKey: 'usage', label: 'Monthly Stock Usage' }]}
+                                series={[
+                                    { dataKey: 'componentUsage', label: 'Monthly Component Usage', color: '#1976d2' }, // Blue
+                                    { dataKey: 'productUsage', label: 'Monthly Product Usage', color: '#d32f2f' }, // Red
+                                ]}
                                 height={400}
                                 dataset={stockUsageData}
                                 margin={{ left: 80 }}
                             />
+
                         </Box>
                     </Box>
                 </Box>

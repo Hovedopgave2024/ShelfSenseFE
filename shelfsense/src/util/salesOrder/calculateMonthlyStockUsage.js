@@ -6,20 +6,25 @@ export const calculateMonthlyStockUsage = (
     startDate,
     endDate
 ) => {
-    const usageByMonthYear = {};
+    const usageByMonthYear = {}; // Store component usage per month
+    const productUsageByMonthYear = {}; // Store product usage per month
 
     salesOrders?.forEach((salesOrder) => {
         const date = new Date(salesOrder.createdDate);
+        const monthYearKey = `${date.getFullYear()}-${date.getMonth()}`;
 
         // Filter by date range if provided
-        if (
-            (startDate === null || date >= startDate) &&
-            (endDate === null || date <= endDate)
-        ) {
-
-            const monthYearKey = date.getFullYear() + '-' + date.getMonth()
+        if ((startDate === null || date >= startDate) && (endDate === null || date <= endDate)) {
+            if (!usageByMonthYear[monthYearKey]) {
+                usageByMonthYear[monthYearKey] = 0;
+            }
+            if (!productUsageByMonthYear[monthYearKey]) {
+                productUsageByMonthYear[monthYearKey] = 0;
+            }
 
             salesOrder.salesOrderProducts?.forEach((sop) => {
+                // Count total product usage
+                productUsageByMonthYear[monthYearKey] += sop.quantity;
 
                 // Get the product associated with the sales order
                 const product = products.find((p) => p.id === sop.productId);
@@ -35,36 +40,27 @@ export const calculateMonthlyStockUsage = (
                             selectedComponentIds.some((component) => component.id === pc.componentId);
 
                         if (isComponentSelected) {
-                            // Calculate the usage
+                            // Calculate the component usage
                             const componentUsage = sop.quantity * pc.quantity;
-                            // Initialize the usage for this month if not already
-                            if (!usageByMonthYear[monthYearKey]) {
-                                usageByMonthYear[monthYearKey] = 0;
-                            }
-                            // Accumulate the usage
                             usageByMonthYear[monthYearKey] += componentUsage;
                         }
                     });
                 }
-
-            })
+            });
         }
     });
 
-    // Convert usageByMonthYear object into an array, sort by month-year
-    const usageArray = Object.keys(usageByMonthYear).map((monthYearKey) => {
-        const [year, month] = monthYearKey.split('-').map(Number);
-        const date = new Date(year, month);
-        const monthYearName = date.toLocaleString('default', { month: 'long', year: 'numeric' });
-        return {
-            month: monthYearName,
-            usage: usageByMonthYear[monthYearKey],
-        };
-    });
-
-    // Sort the array by date
-    usageArray.sort((a, b) => new Date(a.month) - new Date(b.month));
-
-    return usageArray;
+    // Convert data to an array and sort by month-year
+    return Object.keys(usageByMonthYear)
+        .map((monthYearKey) => {
+            const [year, month] = monthYearKey.split('-').map(Number);
+            return {
+                date: new Date(year, month), // ✅ Store actual Date object for sorting
+                month: new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' }),
+                componentUsage: usageByMonthYear[monthYearKey],
+                productUsage: productUsageByMonthYear[monthYearKey],
+            };
+        })
+        .sort((a, b) => a.date - b.date) // ✅ Correct sorting by Date
+        .map(({ date, ...rest }) => rest); // ✅ Remove `date` field after sorting
 };
-
