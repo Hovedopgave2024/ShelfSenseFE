@@ -1,30 +1,22 @@
-
-export const calculateMonthlyEarnings = (data, selectedProducts, startDate, endDate) => {
-    const earningsByMonthYear = {}; // Object to store earnings per month and now year
-
+export const calculateMonthlyEarnings = (data, startDate, endDate) => {
+    const earningsByMonthYear = {}; // Store earnings per month & year
 
     data.forEach((salesOrder) => {
         const date = new Date(salesOrder.createdDate);
 
-        // Filter by selected products and date range if provided
-        const isProductSelected =
-            selectedProducts.length === 0 ||
-            selectedProducts.some((product) => product.id === salesOrder.productId);
-
+        // Only filter by date range
         if (
-            isProductSelected &&
             (startDate === null || date >= startDate) &&
             (endDate === null || date <= endDate)
         ) {
-
             const monthYearKey = date.getFullYear() + '-' + date.getMonth();
-            const revenue = salesOrder.price * salesOrder.quantity;
+
             if (!earningsByMonthYear[monthYearKey]) {
                 earningsByMonthYear[monthYearKey] = 0;
             }
-            earningsByMonthYear[monthYearKey] += revenue;        }
 
-
+            earningsByMonthYear[monthYearKey] += salesOrder.price; // ✅ Only sales order price
+        }
     });
 
     // Convert earningsByMonthYear object into an array, sort by date

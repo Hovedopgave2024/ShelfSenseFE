@@ -8,7 +8,7 @@ export const calculateMonthlyStockUsage = (
 ) => {
     const usageByMonthYear = {};
 
-    salesOrders.forEach((salesOrder) => {
+    salesOrders?.forEach((salesOrder) => {
         const date = new Date(salesOrder.createdDate);
 
         // Filter by date range if provided
@@ -19,31 +19,35 @@ export const calculateMonthlyStockUsage = (
 
             const monthYearKey = date.getFullYear() + '-' + date.getMonth()
 
-            // Get the product associated with the sales order
-            const product = products.find((p) => p.id === salesOrder.productId);
+            salesOrder.salesOrderProducts?.forEach((sop) => {
 
-            if (product) {
-                // Get the components associated with the product
-                const productComponents = product.productComponentList;
+                // Get the product associated with the sales order
+                const product = products.find((p) => p.id === sop.productId);
 
-                productComponents.forEach((pc) => {
-                    // If selectedComponentIds are provided, filter on them
-                    const isComponentSelected =
-                        selectedComponentIds.length === 0 ||
-                        selectedComponentIds.some((component) => component.id === pc.componentId);
+                if (product) {
+                    // Get the components associated with the product
+                    const productComponents = product.productComponentList;
 
-                    if (isComponentSelected) {
-                        // Calculate the usage
-                        const componentUsage = salesOrder.quantity * pc.quantity;
-                        // Initialize the usage for this month if not already
-                        if (!usageByMonthYear[monthYearKey]) {
-                            usageByMonthYear[monthYearKey] = 0;
+                    productComponents.forEach((pc) => {
+                        // If selectedComponentIds are provided, filter on them
+                        const isComponentSelected =
+                            selectedComponentIds.length === 0 ||
+                            selectedComponentIds.some((component) => component.id === pc.componentId);
+
+                        if (isComponentSelected) {
+                            // Calculate the usage
+                            const componentUsage = sop.quantity * pc.quantity;
+                            // Initialize the usage for this month if not already
+                            if (!usageByMonthYear[monthYearKey]) {
+                                usageByMonthYear[monthYearKey] = 0;
+                            }
+                            // Accumulate the usage
+                            usageByMonthYear[monthYearKey] += componentUsage;
                         }
-                        // Accumulate the usage
-                        usageByMonthYear[monthYearKey] += componentUsage;
-                    }
-                });
-            }
+                    });
+                }
+
+            })
         }
     });
 
