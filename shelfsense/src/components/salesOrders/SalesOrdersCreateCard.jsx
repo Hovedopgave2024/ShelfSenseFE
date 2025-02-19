@@ -219,7 +219,7 @@ const SalesOrdersCreateCard = () => {
                 pt: 2,
                 px: 2,
                 borderRadius: 5,
-                mt: { lg: 9, md: 5 },
+                mt: { lg: 2, md: 2 },
                 mb: 2,
             }}
         >
@@ -227,50 +227,13 @@ const SalesOrdersCreateCard = () => {
             <CardContent>
                 <Grid
                     container
-                    spacing={2}
+                    spacing={1}
                     direction="column"
                     alignItems="center"
                     justifyContent="center"
                     sx={{ pb: 3 }}
                 >
-                    <Grid
-                        container
-                        spacing={2}
-                        sx={{
-                        overflowY: 'auto',
-                        maxHeight: '46vh',
-                        mb: 1
-                    }}
-                    >
-                        {/* Price Input with Total Price */}
-                        <Grid container spacing={2} alignItems="center" mt={1}>
-                            <Grid item sx={{ width: "40%" }}>
-                                <TextField
-                                    label={requiredFields.includes('price') ? `Price *` : 'Price'}
-                                    name="price"
-                                    variant="outlined"
-                                    value={formData.price}
-                                    onChange={handleChange}
-                                    error={!!errors['price']}
-                                    helperText={errors['price'] || ''}
-                                    type="number"
-                                    fullWidth
-                                />
-                            </Grid>
-                            <Grid item sx={{ width: "55%" }}>
-                                <TextField
-                                    label="Calculated Price"
-                                    variant="outlined"
-                                    name="calculatedPrice"
-                                    value={totalPrice ?? ''}
-                                    type="number"
-                                    disabled
-                                    fullWidth
-                                />
-                            </Grid>
-                        </Grid>
-
-                        {/* Date Picker */}
+                    {/* Date Picker */}
                     <Grid item sx={{width: "100%"}}>
                         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="da">
                             <DatePicker
@@ -288,6 +251,42 @@ const SalesOrdersCreateCard = () => {
                             />
                         </LocalizationProvider>
                     </Grid>
+                    {/* Price Input with Total Price */}
+                    <Grid container spacing={2} alignItems="center" mt={1}>
+                        <Grid item sx={{ width: "40%" }}>
+                            <TextField
+                                label={requiredFields.includes('price') ? `Price *` : 'Price'}
+                                name="price"
+                                variant="outlined"
+                                value={formData.price}
+                                onChange={handleChange}
+                                error={!!errors['price']}
+                                helperText={errors['price'] || ''}
+                                type="number"
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item sx={{ width: "55%" }}>
+                            <TextField
+                                label="Calculated Price"
+                                variant="outlined"
+                                name="calculatedPrice"
+                                value={totalPrice ?? ''}
+                                type="number"
+                                disabled
+                                fullWidth
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid
+                        container
+                        spacing={2}
+                        sx={{
+                        overflowY: 'auto',
+                        maxHeight: '40vh',
+                        mb: 1
+                    }}
+                    >
 
                     {/* Selected Products Section */}
                     <Grid item xs={12} sx={{width: "100%", textAlign: 'center'}}>
@@ -358,22 +357,23 @@ const SalesOrdersCreateCard = () => {
                 </Grid>
 
                     {/* Add Product Button */}
-                    <Grid item xs={12} display="flex" justifyContent="center">
-                        <Button
-                            variant="outlined"
-                            startIcon={<Add />}
-                            onClick={handleAddProduct}
-                            sx={{ mt: 1, px: 4 }}
-                        >
-                            Add Product
-                        </Button>
-                    </Grid>
+                    <Grid container spacing={1} alignItems="center" justifyContent="space-evenly">
+                        <Grid item xs={12} sx={{ width: '70%' }}>
+                            <Button
+                                variant="outlined"
+                                startIcon={<Add />}
+                                onClick={handleAddProduct}
+                            >
+                                Add Product
+                            </Button>
+                        </Grid>
 
-                    {/* Save Order Button */}
-                    <Grid item xs={12}>
-                        <Button variant="contained" color="primary" fullWidth onClick={handleSubmit}>
-                            Save Sales Order
-                        </Button>
+                        {/* Save Order Button */}
+                        <Grid item xs={12} sx={{ width: '25%' }}>
+                            <Button variant="contained" color="primary" onClick={handleSubmit}>
+                                Save
+                            </Button>
+                        </Grid>
                     </Grid>
                 </Grid>
             </CardContent>
