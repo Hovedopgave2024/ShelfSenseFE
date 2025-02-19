@@ -11,11 +11,14 @@ describe('createSalesOrder', () => {
 
     beforeEach(() => {
         mockSalesOrderData = {
-            quantity: '10',
             price: '100.50',
             createdDate: '2025-01-01',
-            productId: '123',
-            productName: 'Sample Product',
+            salesOrderProducts: [
+                {
+                    productId: 1,
+                    quantity: 10,
+                }
+            ]
         };
 
         global.fetch = vi.fn();
@@ -30,11 +33,14 @@ describe('createSalesOrder', () => {
     it('returns the created sales order on a successful creation (200)', async () => {
         const mockResponse = {
             id: 1,
-            quantity: 10,
             createdDate: '2025-01-01',
             price: 100.5,
-            productId: 123,
-            productName: 'Sample Product',
+            salesOrderProducts: [
+                {
+                    productId: 1,
+                    quantity: 10,
+                }
+            ]
         };
 
         global.fetch.mockResolvedValueOnce({
@@ -50,11 +56,14 @@ describe('createSalesOrder', () => {
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
             body: JSON.stringify({
-                quantity: 10,
                 price: 100.5,
                 createdDate: '2025-01-01',
-                productId: 123,
-                productName: 'Sample Product',
+                salesOrderProducts: [
+                    {
+                        productId: 1,
+                        quantity: 10,
+                    }
+                ]
             }),
         });
         expect(clearStoresAndLogout).not.toHaveBeenCalled();
