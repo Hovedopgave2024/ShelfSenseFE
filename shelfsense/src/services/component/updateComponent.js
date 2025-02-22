@@ -10,18 +10,38 @@ export const updateComponent = async (id, updatedData) => {
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify({
-                ...updatedData,
-                stockStatus: calculateStatus(parseInt(updatedData.stock), parseInt(updatedData.safetyStock), parseInt(updatedData.safetyStockRop)),
-                supplierStockStatus: updatedData.supplierStock != null
-                    ? calculateStatus(
-                        parseInt(updatedData.supplierStock),
-                        parseInt(updatedData.supplierSafetyStock),
-                        parseInt(updatedData.supplierSafetyStockRop)
-                    )
-                    : null
-            }),
+                body: JSON.stringify({
+                    name: updatedData.name,
+                    type: updatedData.type,
+                    footprint: updatedData.footprint,
+                    price: updatedData.price,
+                    stock: updatedData.stock,
+                    safetyStock: updatedData.safetyStock,
+                    safetyStockRop: updatedData.safetyStockRop,
+                    designator: updatedData.designator,
+                    stockStatus: calculateStatus(
+                        parseInt(updatedData.stock),
+                        parseInt(updatedData.safetyStock),
+                        parseInt(updatedData.safetyStockRop)
+                    ),
+                    supplier: {
+                        name: updatedData.supplier,
+                        manufacturer: updatedData.manufacturer,
+                        manufacturerPart: updatedData.manufacturerPart,
+                        safetyStock: updatedData.supplierSafetyStock,
+                        safetyStockRop: updatedData.supplierSafetyStockRop,
+                        supplierPart: updatedData.supplierPart,
+                        supplierStockStatus: updatedData.supplierStock != null
+                            ? calculateStatus(
+                                parseInt(updatedData.supplierStock),
+                                parseInt(updatedData.supplierSafetyStock),
+                                parseInt(updatedData.supplierSafetyStockRop)
+                            )
+                            : null
+                    }
+                })
+            })
         });
-
         if (response.status === 401) {
             await clearStoresAndLogout();
             return null;

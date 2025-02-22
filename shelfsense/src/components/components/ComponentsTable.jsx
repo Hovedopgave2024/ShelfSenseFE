@@ -13,8 +13,8 @@ const ComponentsTable = ({ onEdit, onAddStock, productComponentIds }) => {
     const [components, setComponents] = useState([]);
     const [filteredComponents, setFilteredComponents] = useState([]);
     const types = [...new Set(components.map(component => component.type))];
-    const manufacturers = [...new Set(components.map(component => component.manufacturer))];
-    const suppliers = [...new Set(components.map(component => component.supplier))];
+    const manufacturers = [...new Set(components.map(component => component.supplier.manufacturer))];
+    const suppliers = [...new Set(components.map(component => component.supplier.name))];
     const columnTitles = ["Name", "Manufacturer Part", "Supplier", "Footprint", "Stock", "Stock Status", "Safety Stock", "Supplier Stock", "Supplier Stock Status", "Supplier Incoming Stock", "Supplier Incoming Date", "Actions"];
     const theme = useTheme();
 
@@ -67,7 +67,7 @@ const ComponentsTable = ({ onEdit, onAddStock, productComponentIds }) => {
                 }))}
                 searchOptions={[
                     { key: 'name', label: 'Name' },
-                    { key: 'manufacturerPart', label: 'Manufacturer Part' },
+                    { key: 'component.supplier.manufacturerPart', label: 'Manufacturer Part' },
                 ]}
                 onClick={handleRemoveFilter}
             />

@@ -25,13 +25,19 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
 
     useEffect(() => {
         if (open && component) {
-            setFormData(component);
+            setFormData(
+                {
+                    name: component.name,
+                    type: component.type,
+                    
+                }
+            );
             setErrors({});
         }
     }, [open, component]);
 
     useEffect(() => {
-        const suppliers = [...new Set(components.map((comp) => comp.supplier))]; // Get unique supplier names
+        const suppliers = [...new Set(components.map((comp) => comp.supplier.name))]; // Get unique supplier names
         setUniqueSuppliers(['None', ...suppliers.filter(Boolean)]); // Add "None" as a hardcoded option and remove null/empty
     }, [components]);
 
@@ -52,10 +58,10 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
             'name',
             'type',
             'footprint',
-            'manufacturer',
-            'manufacturerPart',
+            'supplier.manufacturer',
+            'supplier.manufacturerPart',
             'price',
-            'supplier',
+            'supplier.name',
             'stock',
             'safetyStock',
             'safetyStockRop',
@@ -152,7 +158,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                     <CloseIcon />
                 </Button>
                 <Typography variant="h6" component="h2" mb={2}>
-                    {`${component.name} (${component.manufacturerPart})`}
+                    {`${component.name} (${component.supplier.manufacturerPart})`}
                 </Typography>
                 <Box
                     sx={{
@@ -171,15 +177,15 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                                         ![
                                             'id',
                                             'userId',
-                                            'supplierStock',
-                                            'supplierIncomingStock',
-                                            'supplierIncomingDate',
-                                            'supplierStockStatus',
+                                            'supplier.Stock',
+                                            'supplier.incomingStock',
+                                            'supplier.incomingDate',
+                                            'supplier.stockStatus',
                                             'stockStatus',
                                         ].includes(field)
                             ) // Exclude non-editable fields
                             .map((field) => (
-                                field === 'supplier' ? (
+                                field === 'supplier.name' ? (
                                     <Grid xs={12} lg={3} key={field}>
                                         <FormControl
                                             sx={{ width: 195 }}
@@ -211,7 +217,7 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                                         value={formData[field] || ''}
                                         onChange={handleChange}
                                         type={
-                                            ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplierSafetyStock', 'supplierSafetyStockRop'].includes(field)
+                                            ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplier.safetyStock', 'supplier.safetyStockRop'].includes(field)
                                                 ? 'number'
                                                 : 'text'
                                         }

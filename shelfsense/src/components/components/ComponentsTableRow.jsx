@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     TableRow,
     TableCell,
@@ -6,7 +6,7 @@ import {
     Chip,
     Box,
     Collapse,
-    IconButton, Typography
+    Typography
 } from '@mui/material';
 import { statusLabel } from '../../util/component/ComponentStatusLabel.jsx';
 
@@ -25,8 +25,8 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
             <TableRow hover key={component.id} onClick={handleToggle}>
 
                 <TableCell align="left">{component.name}</TableCell>
-                <TableCell align="left">{component.manufacturerPart}</TableCell>
-                <TableCell align="left">{component.supplier}</TableCell>
+                <TableCell align="left">{component.supplier.manufacturerPart}</TableCell>
+                <TableCell align="left">{component.supplier.name}</TableCell>
                 <TableCell align="left">{component.footprint}</TableCell>
                 <TableCell align="left">{component.stock}</TableCell>
                 <TableCell align="left">
@@ -50,11 +50,11 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                     })()}
                 </TableCell>
                 <TableCell align="left">{component.safetyStock}</TableCell>
-                <TableCell align="left">{component.supplierStock}</TableCell>
+                <TableCell align="left">{component.supplier.stock}</TableCell>
                 <TableCell align="left">
                     {(() => {
                         const { label, icon, color } = statusLabel(
-                            component.supplierStockStatus
+                            component.supplier.stockStatus
                         );
                         return (
                             <Chip
@@ -73,8 +73,8 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                         );
                     })()}
                 </TableCell>
-                <TableCell align="left">{component.supplierIncomingStock}</TableCell>
-                <TableCell align="left">{component.supplierIncomingDate}</TableCell>
+                <TableCell align="left">{component.supplier.incomingStock}</TableCell>
+                <TableCell align="left">{component.supplier.incomingDate}</TableCell>
                 <TableCell align="left">
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: 110 }}>
                         <Button variant="outlined" size="small" onClick={(e) => {e.stopPropagation();onAddStock(component);}}>
@@ -107,13 +107,13 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                                 <strong>Price:</strong> {component.price}
                             </Typography>
                             <Typography variant="body1" gutterBottom>
-                                <strong>Manufacturer:</strong> {component.manufacturer}
+                                <strong>Manufacturer:</strong> {component.supplier.manufacturer}
                             </Typography>
                             <Typography variant="body1" gutterBottom>
-                                <strong>Supplier:</strong> {component.supplier}
+                                <strong>Supplier:</strong> {component.supplier.name}
                             </Typography>
                             <Typography variant="body1" gutterBottom>
-                                <strong>Supplier Part:</strong> {component.supplierPart}
+                                <strong>Supplier Part:</strong> {component.supplier.supplierPart}
                             </Typography>
                             <Typography variant="body1" gutterBottom>
                                 <strong>Type:</strong> {component.type}
@@ -122,7 +122,7 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                                 <strong>Safety Stock ROP:</strong> {component.safetyStockRop}
                             </Typography>
                             <Typography variant="body1" gutterBottom>
-                                <strong>Supplier Safety Stock ROP:</strong> {component.supplierSafetyStockRop}
+                                <strong>Supplier Safety Stock ROP:</strong> {component.supplier.safetyStockRop}
                             </Typography>
                         </Box>
                     </Collapse>

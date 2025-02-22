@@ -49,7 +49,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
 
     // Extract unique suppliers from components
     useEffect(() => {
-        const suppliers = [...new Set(components.map((comp) => comp.supplier))]; // Get unique supplier names
+        const suppliers = [...new Set(components.map((comp) => comp.supplier.name))]; // Get unique supplier names
         setUniqueSuppliers(['None', ...suppliers.filter(Boolean)]); // Add "None" as a hardcoded option and remove null/empty
     }, [components]);
 
@@ -86,7 +86,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
     const handleSubmit = async () => {
         if (!validateForm()) return; // Prevent submission if validation fails
 
-        const result = await createComponent(formData); // Send form data to backend to create a component
+        const result = await createComponent(formData);
 
         if (!result) {
             showSnackbar('error', 'Error: Component was not created. Please try again or contact Support');

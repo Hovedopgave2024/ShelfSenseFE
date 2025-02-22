@@ -22,7 +22,6 @@ const ComponentsAddStockModal = ({ open, onClose, component }) => {
         const updatedComponent = {
             ...component,
             stock: component.stock + addStockValue,
-            supplierStock: component.supplierStock
         };
 
         const result = await updateComponent(component.id, updatedComponent);
