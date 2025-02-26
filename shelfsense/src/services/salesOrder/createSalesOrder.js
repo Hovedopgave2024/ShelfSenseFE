@@ -9,11 +9,12 @@ export const createSalesOrder = async (salesOrderData) => {
             headers: {"Content-Type": "application/json",},
             credentials: "include",
             body: JSON.stringify({
-                quantity: parseInt(salesOrderData.quantity, 10),
                 price: parseFloat(salesOrderData.price),
                 createdDate: salesOrderData.createdDate,
-                productId: parseInt(salesOrderData.productId, 10),
-                productName: salesOrderData.productName,
+                salesOrderProducts: salesOrderData.salesOrderProducts.map(sop => ({
+                    productId: parseInt(sop.productId),
+                    quantity: parseInt(sop.quantity),
+                }))
             }),
         });
 
