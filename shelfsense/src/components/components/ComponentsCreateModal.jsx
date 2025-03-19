@@ -49,7 +49,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
 
     // Extract unique suppliers from components
     useEffect(() => {
-        const suppliers = [...new Set(components.map((comp) => comp.supplier.name))]; // Get unique supplier names
+        const suppliers = [...new Set(components.map((comp) => comp.supplier?.name))]; // Get unique supplier names
         setUniqueSuppliers(['None', ...suppliers.filter(Boolean)]); // Add "None" as a hardcoded option and remove null/empty
     }, [components]);
 

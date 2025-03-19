@@ -6,29 +6,57 @@ import {
     Chip,
     Box,
     Collapse,
-    Typography
+    Typography,
+    IconButton,
+    Table,
+    TableBody,
+    TableHead,
+    TableContainer,
+    TableRow as MuiTableRow,
+    TableCell as MuiTableCell
 } from '@mui/material';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { statusLabel } from '../../util/component/ComponentStatusLabel.jsx';
 
 const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
-    // 1) Add local state for collapse
+    // Expand/collapse state
     const [open, setOpen] = useState(false);
 
-    // Helper to toggle
+    // Toggle function
     const handleToggle = () => {
         setOpen(!open);
     };
 
+    const additionalComponentFields = [
+        "price",
+        "safetyStockRop",
+        ""
+    ]
+    const additionalSupplierFields = [
+        "manufacturer",
+        "manufacturerPart",
+        "safetyStock",
+        "safetyStockRop",
+        "supplierPart",
+        "incomingStock",
+        "incomingDate"
+    ];
+
     return (
         <>
-            {/* This is your main row */}
-            <TableRow hover key={component.id} onClick={handleToggle}>
+            {/* Main Row */}
+            <TableRow hover key={component.id}>
+
+                {/* Expand/collapse button */}
+                <TableCell>
+                    <IconButton size="small" onClick={handleToggle}>
+                        {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                    </IconButton>
+                </TableCell>
 
                 <TableCell align="left">{component.name}</TableCell>
-                <TableCell align="left">{component.supplier.manufacturerPart}</TableCell>
-                <TableCell align="left">{component.supplier.name}</TableCell>
-                <TableCell align="left">{component.footprint}</TableCell>
-                <TableCell align="left">{component.stock}</TableCell>
+                <TableCell align="left">{component.price}</TableCell>
+
                 <TableCell align="left">
                     {(() => {
                         const { label, icon, color } = statusLabel(component.stockStatus);
@@ -42,20 +70,19 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                                     backgroundColor: color,
                                     color: 'white',
                                 }}
-                                color={color}
                                 label={label}
                                 avatar={icon}
                             />
                         );
                     })()}
                 </TableCell>
+                <TableCell align="left">{component.stock}</TableCell>
                 <TableCell align="left">{component.safetyStock}</TableCell>
-                <TableCell align="left">{component.supplier.stock}</TableCell>
+                <TableCell align="left">{component.safetyStockRop}</TableCell>
+                <TableCell align="left">{component.supplier?.name ?? "No Supplier"}</TableCell>
                 <TableCell align="left">
                     {(() => {
-                        const { label, icon, color } = statusLabel(
-                            component.supplier.stockStatus
-                        );
+                        const { label, icon, color } = statusLabel(component.supplier?.stockStatus);
                         return (
                             <Chip
                                 sx={{
@@ -66,67 +93,97 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                                     backgroundColor: color,
                                     color: 'white',
                                 }}
-                                color={color}
                                 label={label}
                                 avatar={icon}
                             />
                         );
                     })()}
                 </TableCell>
-                <TableCell align="left">{component.supplier.incomingStock}</TableCell>
-                <TableCell align="left">{component.supplier.incomingDate}</TableCell>
+                <TableCell align="left">{component.supplier?.stock ?? 0}</TableCell>
                 <TableCell align="left">
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: 110 }}>
-                        <Button variant="outlined" size="small" onClick={(e) => {e.stopPropagation();onAddStock(component);}}>
+                        <Button variant="outlined" size="small" onClick={(e) => { e.stopPropagation(); onAddStock(component); }}>
                             Add Stock
                         </Button>
-                        <Button variant="outlined" size="small" onClick={(e) => {e.stopPropagation(); onEdit(component)}}>
+                        <Button variant="outlined" size="small" onClick={(e) => { e.stopPropagation(); onEdit(component); }}>
                             Edit
                         </Button>
                     </Box>
                 </TableCell>
             </TableRow>
 
+            {/* Expanded Row - Supplier & Optional Fields */}
             <TableRow>
-                <TableCell
-                    style={{ paddingBottom: 0, paddingTop: 0 }}
-                    colSpan={13}
-                >
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={13}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box margin={2}>
+                            {/* Supplier Fields Table */}
                             <Typography variant="h6" gutterBottom>
-                                Extra Details
+                                Supplier Details
                             </Typography>
-                            <Typography variant="body1" gutterBottom>
-                                <strong>Name:</strong> {component.name}
+                            <TableContainer>
+                                <Table size="small">
+                                    <TableHead>
+                                        <MuiTableRow>
+                                            {component.supplier
+                                                ? additionalSupplierFields.map((key) => (
+                                                    <MuiTableCell key={key}>{key}</MuiTableCell>
+                                                ))
+                                                : <MuiTableCell></MuiTableCell>
+                                            }
+                                        </MuiTableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {component.supplier ? (
+                                            <MuiTableRow>
+                                                {additionalSupplierFields.map((key, index) => (
+                                                    <MuiTableCell key={index}>{component.supplier?.[key] || ''}</MuiTableCell>
+                                                ))}
+                                            </MuiTableRow>
+                                        ) : (
+                                            <MuiTableRow>
+                                                <MuiTableCell colSpan={additionalSupplierFields.length || 1} align="center">
+                                                    No Supplier
+                                                </MuiTableCell>
+                                            </MuiTableRow>
+                                        )}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+
+                            {/* Optional Fields Table */}
+                            <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+                                Optional Fields
                             </Typography>
-                            <Typography variant="body1" gutterBottom>
-                                <strong>Designator:</strong> {component.designator}
-                            </Typography>
-                            <Typography variant="body1" gutterBottom>
-                                <strong>Price:</strong> {component.price}
-                            </Typography>
-                            <Typography variant="body1" gutterBottom>
-                                <strong>Manufacturer:</strong> {component.supplier.manufacturer}
-                            </Typography>
-                            <Typography variant="body1" gutterBottom>
-                                <strong>Supplier:</strong> {component.supplier.name}
-                            </Typography>
-                            <Typography variant="body1" gutterBottom>
-                                <strong>Supplier Part:</strong> {component.supplier.supplierPart}
-                            </Typography>
-                            <Typography variant="body1" gutterBottom>
-                                <strong>Type:</strong> {component.type}
-                            </Typography>
-                            <Typography variant="body1" gutterBottom>
-                                <strong>Safety Stock ROP:</strong> {component.safetyStockRop}
-                            </Typography>
-                            <Typography variant="body1" gutterBottom>
-                                <strong>Supplier Safety Stock ROP:</strong> {component.supplier.safetyStockRop}
-                            </Typography>
+                            <TableContainer>
+                                <Table size="small">
+                                    <TableHead>
+                                        <MuiTableRow>
+                                            {component.optionalComponentFields?.length > 0 ? (
+                                                component.optionalComponentFields.map((field, index) => (
+                                                    <MuiTableCell key={index}>{field.name}</MuiTableCell>
+                                                ))
+                                            ) : (
+                                                <MuiTableCell></MuiTableCell>
+                                            )}
+                                        </MuiTableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        <MuiTableRow>
+                                            {component.optionalComponentFields?.length > 0 ? (
+                                                component.optionalComponentFields.map((field, index) => (
+                                                    <MuiTableCell key={index}>{field.value || ''}</MuiTableCell>
+                                                ))
+                                            ) : (
+                                                <MuiTableCell colSpan={1} align="center">No Additional Fields</MuiTableCell>
+                                            )}
+                                        </MuiTableRow>
+
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
                         </Box>
                     </Collapse>
-
                 </TableCell>
             </TableRow>
         </>

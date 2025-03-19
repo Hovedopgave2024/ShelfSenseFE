@@ -13,9 +13,9 @@ const ComponentsTable = ({ onEdit, onAddStock, productComponentIds }) => {
     const [components, setComponents] = useState([]);
     const [filteredComponents, setFilteredComponents] = useState([]);
     const types = [...new Set(components.map(component => component.type))];
-    const manufacturers = [...new Set(components.map(component => component.supplier.manufacturer))];
-    const suppliers = [...new Set(components.map(component => component.supplier.name))];
-    const columnTitles = ["Name", "Manufacturer Part", "Supplier", "Footprint", "Stock", "Stock Status", "Safety Stock", "Supplier Stock", "Supplier Stock Status", "Supplier Incoming Stock", "Supplier Incoming Date", "Actions"];
+    const manufacturers = [...new Set(components.map(component => component.supplier?.manufacturer))];
+    const suppliers = [...new Set(components.map(component => component.supplier?.name))];
+    const columnTitles = ["Expand", "Name", "Price", "Stock Status", "Stock", "Safety Stock", "Reorder Point", "Supplier", "Supplier Stock Status", "Supplier Stock", "Actions"];
     const theme = useTheme();
 
     const handleChangePage = (event, newPage) => {
