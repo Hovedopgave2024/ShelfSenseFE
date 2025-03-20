@@ -12,8 +12,8 @@ const ComponentsCreateModal = ({ open, onClose }) => {
     // Initial empty form data for creating a component
     const initialFormData = {
         name: '',
-        type: '',
-        footprint: '',
+        //type: '',
+        //footprint: '',
         manufacturerPart: '',
         price: 0,
         supplier: '',
@@ -22,15 +22,15 @@ const ComponentsCreateModal = ({ open, onClose }) => {
         safetyStockRop: 0,
         supplierSafetyStock: 0,
         supplierSafetyStockRop: 0,
-        designator: '',
+        // designator: '',
         manufacturer: '',
         supplierPart: '',
     };
 
     const requiredFields = [
         'name',
-        'type',
-        'footprint',
+        //'type',
+        //'footprint',
         'manufacturer',
         'manufacturerPart',
         'price',

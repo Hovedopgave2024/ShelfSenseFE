@@ -70,6 +70,7 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                                     backgroundColor: color,
                                     color: 'white',
                                 }}
+                                color={color}
                                 label={label}
                                 avatar={icon}
                             />
@@ -82,7 +83,9 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                 <TableCell align="left">{component.supplier?.name ?? "No Supplier"}</TableCell>
                 <TableCell align="left">
                     {(() => {
-                        const { label, icon, color } = statusLabel(component.supplier?.stockStatus);
+                        const { label, icon, color } = statusLabel(
+                            component.supplier.stockStatus
+                        );
                         return (
                             <Chip
                                 sx={{
@@ -93,6 +96,7 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                                     backgroundColor: color,
                                     color: 'white',
                                 }}
+                                color={color}
                                 label={label}
                                 avatar={icon}
                             />
@@ -102,10 +106,10 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                 <TableCell align="left">{component.supplier?.stock ?? 0}</TableCell>
                 <TableCell align="left">
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: 110 }}>
-                        <Button variant="outlined" size="small" onClick={(e) => { e.stopPropagation(); onAddStock(component); }}>
+                        <Button variant="outlined" size="small" onClick={(e) => {e.stopPropagation();onAddStock(component);}}>
                             Add Stock
                         </Button>
-                        <Button variant="outlined" size="small" onClick={(e) => { e.stopPropagation(); onEdit(component); }}>
+                        <Button variant="outlined" size="small" onClick={(e) => {e.stopPropagation(); onEdit(component)}}>
                             Edit
                         </Button>
                     </Box>

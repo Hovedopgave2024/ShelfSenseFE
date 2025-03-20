@@ -24,19 +24,24 @@ export const fetchAllData = async () => {
             return false;
         }
 
-        const components = userData.componentList?.map(
-            component => ({
+        const components = userData.componentList?.map(component => ({
             ...component,
-            stockStatus: calculateStatus(parseInt(component.stock), parseInt(component.safetyStock), parseInt(component.safetyStockRop)),
-                supplierStockStatus: component.supplierStock != null
+            stockStatus: calculateStatus(
+                parseInt(component.stock),
+                parseInt(component.safetyStock),
+                parseInt(component.safetyStockRop)
+            ),
+            supplier: {
+                ...component.supplier, // Ensure existing supplier properties are preserved
+                stockStatus: component.supplier?.stock != null
                     ? calculateStatus(
-                        parseInt(component.supplierStock),
-                        parseInt(component.supplierSafetyStock),
-                        parseInt(component.supplierSafetyStockRop)
+                        parseInt(component.supplier.stock),
+                        parseInt(component.supplier.safetyStock),
+                        parseInt(component.supplier.safetyStockRop)
                     )
                     : null
-            })
-        ) || null;
+            }
+        })) || null;
 
         const products = userData.productList ? [...userData.productList] : [];
         const salesOrders = userData.salesOrderList ? [...userData.salesOrderList] : [];
