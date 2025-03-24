@@ -27,19 +27,14 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
         setOpen(!open);
     };
 
-    const additionalComponentFields = [
-        "price",
-        "safetyStockRop",
-        ""
-    ]
     const additionalSupplierFields = [
-        "manufacturer",
-        "manufacturerPart",
-        "safetyStock",
-        "safetyStockRop",
-        "supplierPart",
-        "incomingStock",
-        "incomingDate"
+        { key: "manufacturer", label: "Manufacturer" },
+        { key: "manufacturerPart", label: "Manufacturer Part" },
+        { key: "safetyStock", label: "Safety Stock" },
+        { key: "safetyStockRop", label: "Reorder Point" },
+        { key: "supplierPart", label: "Supplier Part" },
+        { key: "incomingStock", label: "Incoming Stock" },
+        { key: "incomingDate", label: "Incoming Date" },
     ];
 
     return (
@@ -130,8 +125,8 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                                     <TableHead>
                                         <MuiTableRow>
                                             {component.supplier
-                                                ? additionalSupplierFields.map((key) => (
-                                                    <MuiTableCell key={key}>{key}</MuiTableCell>
+                                                ? additionalSupplierFields.map(({ label }) => (
+                                                    <MuiTableCell key={label}>{label}</MuiTableCell>
                                                 ))
                                                 : <MuiTableCell></MuiTableCell>
                                             }
@@ -140,8 +135,8 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                                     <TableBody>
                                         {component.supplier ? (
                                             <MuiTableRow>
-                                                {additionalSupplierFields.map((key, index) => (
-                                                    <MuiTableCell key={index}>{component.supplier?.[key] || ''}</MuiTableCell>
+                                                {additionalSupplierFields.map(({ key }) => (
+                                                    <MuiTableCell key={key}>{component.supplier?.[key] || ''}</MuiTableCell>
                                                 ))}
                                             </MuiTableRow>
                                         ) : (
@@ -165,7 +160,9 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                                         <MuiTableRow>
                                             {component.optionalComponentFields?.length > 0 ? (
                                                 component.optionalComponentFields.map((field, index) => (
-                                                    <MuiTableCell key={index}>{field.name}</MuiTableCell>
+                                                    <MuiTableCell key={index}>
+                                                        {field.name.charAt(0).toUpperCase() + field.name.slice(1)}
+                                                    </MuiTableCell>
                                                 ))
                                             ) : (
                                                 <MuiTableCell></MuiTableCell>
