@@ -29,16 +29,11 @@ const ComponentsCreateModal = ({ open, onClose }) => {
 
     const requiredFields = [
         'name',
-        //'type',
-        //'footprint',
-        'manufacturer',
-        'manufacturerPart',
         'price',
-        'supplier',
         'stock',
         'safetyStock',
         'safetyStockRop',
-    ]; // Fields that cannot be empty
+    ];
 
     const [formData, setFormData] = useState(initialFormData);
     const [errors, setErrors] = useState({});
