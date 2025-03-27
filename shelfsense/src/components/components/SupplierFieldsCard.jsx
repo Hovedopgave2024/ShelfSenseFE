@@ -120,6 +120,12 @@ const SupplierFieldsCard = ({ data, onValidation }) => {
                                                         }));
                                                     }
                                                 }}
+                                                ListboxProps={{
+                                                    style: {
+                                                        maxHeight: '150px', // approx 5 items
+                                                        overflowY: 'auto',
+                                                    },
+                                                }}
                                                 renderInput={(params) => (
                                                     <TextField
                                                         {...params}
