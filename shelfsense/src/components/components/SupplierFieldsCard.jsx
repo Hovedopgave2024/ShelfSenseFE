@@ -35,7 +35,7 @@ const SupplierFieldsCard = ({ data, onValidation }) => {
     },[data]);
 
     useEffect(() => {
-        if ('supplier' in formData) {
+        if ('name' in formData) {
             const suppliers = [...new Set(components.map((comp) => comp.supplier?.name))];
             setUniqueSuppliers(['None', ...suppliers.filter(Boolean)]);
         }
@@ -44,7 +44,6 @@ const SupplierFieldsCard = ({ data, onValidation }) => {
     useEffect(() => {
         if (onValidation) {
             if (!showFields) {
-                // Supplier section is collapsed, treat as not provided
                 onValidation({
                     isValid: true,
                     data: null,
@@ -90,34 +89,34 @@ const SupplierFieldsCard = ({ data, onValidation }) => {
                     <Collapse in={showFields}>
                         <Grid container alignItems="center" justifyContent="center" spacing={2}>
                             {Object.keys(formData).map((field) =>
-                                field === 'supplier' ? (
+                                field === 'name' ? (
                                     <Grid xs={12} lg={3} key={field}>
                                         <FormControl sx={{ width: 195 }} error={!!errors[field]}>
                                             <Autocomplete
                                                 freeSolo
                                                 options={uniqueSuppliers}
-                                                value={formData.supplier || ''}
+                                                value={formData.name || ''}
                                                 onChange={(e, newValue) => {
                                                     setFormData((prevData) => ({
                                                         ...prevData,
-                                                        supplier: newValue || '',
+                                                        name: newValue || '',
                                                     }));
-                                                    if (errors.supplier) {
+                                                    if (errors.name) {
                                                         setErrors((prevErrors) => ({
                                                             ...prevErrors,
-                                                            supplier: null,
+                                                            name: null,
                                                         }));
                                                     }
                                                 }}
                                                 onInputChange={(e, newInputValue) => {
                                                     setFormData((prevData) => ({
                                                         ...prevData,
-                                                        supplier: newInputValue || '',
+                                                        name: newInputValue || '',
                                                     }));
-                                                    if (errors.supplier) {
+                                                    if (errors.name) {
                                                         setErrors((prevErrors) => ({
                                                             ...prevErrors,
-                                                            supplier: null,
+                                                            name: null,
                                                         }));
                                                     }
                                                 }}
@@ -125,10 +124,10 @@ const SupplierFieldsCard = ({ data, onValidation }) => {
                                                     <TextField
                                                         {...params}
                                                         label="Supplier"
-                                                        name="supplier"
+                                                        name="name"
                                                         variant="outlined"
-                                                        error={!!errors.supplier}
-                                                        helperText={errors.supplier || ''}
+                                                        error={!!errors.name}
+                                                        helperText={errors.name || ''}
                                                     />
                                                 )}
                                             />

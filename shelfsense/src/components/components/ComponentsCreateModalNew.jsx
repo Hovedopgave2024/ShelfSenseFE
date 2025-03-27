@@ -7,6 +7,7 @@ import {createComponent} from "../../services/component/createComponent.js";
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 import ComponentFieldsCard from "./ComponentFieldsCard.jsx";
 import SupplierFieldsCard from "./SupplierFieldsCard.jsx";
+import OptionalComponentFieldsCard from "./OptionalComponentFieldsCard.jsx";
 
 const ComponentsCreateModalNew = ({ open, onClose }) => {
 
@@ -28,36 +29,38 @@ const ComponentsCreateModalNew = ({ open, onClose }) => {
         supplierPart: '',
     };
 
-    /*const initialOCFFormData = {
-        name: '',
-        value: '',
-    }*/
+    const initialOCFFormData = [
+        {
+            name: '',
+            value: '',
+        }
+    ];
 
 
     const [componentFormData, setComponentFormData] = useState(initialComponentFormData);
     const [supplierFormData, setSupplierFormData] = useState(initialSupplierFormData);
-    //const [OCFFormData, setOCFFormData] = useState(initialOCFFormData);
+    const [OCFFormData, setOCFFormData] = useState(initialOCFFormData);
     const addComponent = useComponentsStore((state) => state.addComponent);
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
     const [onComponentValidation, setOnComponentValidation] = useState(null);
     const [onSupplierValidation, setOnSupplierValidation] = useState(null);
-    //const [onOCFValidation, setOnOCFValidation] = useState(null);
+    const [onOCFValidation, setOnOCFValidation] = useState(null);
 
-    //const requiredOCFFields = ['name', 'value'];
+
 
     // Handle form submission
     const handleSubmit = async () => {
-        const [componentResult, supplierResult/*, ocfResult*/] = await Promise.all([
+        const [componentResult, supplierResult, ocfResult] = await Promise.all([
             new Promise(resolve => setOnComponentValidation(() => resolve)),
             new Promise(resolve => setOnSupplierValidation(() => resolve)),
-            //new Promise(resolve => setOnOCFValidation(() => resolve)),
+            new Promise(resolve => setOnOCFValidation(() => resolve)),
         ]);
 
-        if (!componentResult.isValid || !supplierResult.isValid/* || !ocfResult.isValid*/) {
+        if (!componentResult.isValid || !supplierResult.isValid || !ocfResult.isValid) {
             console.log({
                 componentErrors: componentResult.errors,
                 supplierErrors: supplierResult.errors,
-                //ocfErrors: ocfResult.errors,
+                ocfErrors: ocfResult.errors,
             });
             return;
         }
@@ -65,7 +68,7 @@ const ComponentsCreateModalNew = ({ open, onClose }) => {
         const mergedData = {
             ...componentResult.data,
             supplier: supplierResult.data,
-            //optionalComponentFields: ocfResult.data,
+            optionalComponentFields: ocfResult.data,
         };
 
         const created = await createComponent(mergedData);
@@ -80,7 +83,7 @@ const ComponentsCreateModalNew = ({ open, onClose }) => {
         onClose();
         setComponentFormData(initialComponentFormData);
         setSupplierFormData(initialSupplierFormData);
-        //setOCFFormData(initialOCFFormData);
+        setOCFFormData(initialOCFFormData);
     };
 
     // Reset form data and errors when the modal opens
@@ -88,7 +91,7 @@ const ComponentsCreateModalNew = ({ open, onClose }) => {
         if (open) {
             setComponentFormData(initialComponentFormData);
             setSupplierFormData(initialSupplierFormData);
-            //setOCFFormData(initialOCFFormData);
+            setOCFFormData(initialOCFFormData);
         }
     }, [open]);
 
@@ -138,6 +141,10 @@ const ComponentsCreateModalNew = ({ open, onClose }) => {
                         data={supplierFormData}
                         onValidation={onSupplierValidation}
                     />
+                    <OptionalComponentFieldsCard
+                        data={OCFFormData}
+                        onValidation={onOCFValidation}
+                        />
                 </Box>
 
                 <Button
