@@ -16,6 +16,7 @@ import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx";
 
 const ComponentsCreateModal = ({ open, onClose, component }) => {
 
+    // BUGS: 1. STATE FROM OPENING UPDATE COMPONENT MODAL IS NOT WORKING. 2. SUPPLIERSTOCK SHOULD NOT BE SET I FRONTEND. BUG WITH SUPPLIER STOCK STATUS.
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const updateComponentInStore = useComponentsStore((state) => state.updateComponent);
