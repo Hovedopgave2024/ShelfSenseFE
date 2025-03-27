@@ -6,6 +6,19 @@ export const createComponent = async (componentData) => {
 
     const BASE_URL = `${import.meta.env.VITE_API_URL}/components`;
     try {
+        const verifiedSupplier =
+            componentData.supplier && Object.keys(componentData.supplier).length > 0
+                ? { ...componentData.supplier, stockStatus: calculateStatus(
+                        parseInt(componentData.supplier.stock),
+                        parseInt(componentData.supplier.safetyStock),
+                        parseInt(componentData.supplier.safetyStockRop)
+                    ), }
+                : null;
+
+        const verifiedOptionalComponentFields =
+            componentData.optionalComponentFields && componentData.optionalComponentFields.length > 0
+                ? componentData.optionalComponentFields
+                : null;
 
         const response = await fetch(BASE_URL, {
             method: "POST",
@@ -21,7 +34,9 @@ export const createComponent = async (componentData) => {
                     parseInt(componentData.stock),
                     parseInt(componentData.safetyStock),
                     parseInt(componentData.safetyStockRop)
-                )
+                ),
+                supplier: verifiedSupplier,
+                optionalComponentFields: verifiedOptionalComponentFields
             })
         });
 

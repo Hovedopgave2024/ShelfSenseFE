@@ -6,10 +6,11 @@ import useComponentsStore from "../../stores/useComponentsStore.js";
 import {createComponent} from "../../services/component/createComponent.js";
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
 import ComponentFieldsCard from "./ComponentFieldsCard.jsx";
+import SupplierFieldsCard from "./SupplierFieldsCard.jsx";
 
 const ComponentsCreateModalNew = ({ open, onClose }) => {
 
-    const initialFormData = {
+    const initialComponentFormData = {
         name: '',
         price: '',
         stock: '',
@@ -17,28 +18,57 @@ const ComponentsCreateModalNew = ({ open, onClose }) => {
         safetyStockRop: '',
     };
 
-    const [formData, setFormData] = useState(initialFormData);
+    const initialSupplierFormData = {
+        name: '',
+        manufacturer: '',
+        manufacturerPart: '',
+        stock: '',
+        safetyStock: '',
+        safetyStockRop: '',
+        supplierPart: '',
+    };
+
+    /*const initialOCFFormData = {
+        name: '',
+        value: '',
+    }*/
+
+
+    const [componentFormData, setComponentFormData] = useState(initialComponentFormData);
+    const [supplierFormData, setSupplierFormData] = useState(initialSupplierFormData);
+    //const [OCFFormData, setOCFFormData] = useState(initialOCFFormData);
     const addComponent = useComponentsStore((state) => state.addComponent);
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
-    const [onValidation, setOnValidation] = useState(null);
+    const [onComponentValidation, setOnComponentValidation] = useState(null);
+    const [onSupplierValidation, setOnSupplierValidation] = useState(null);
+    //const [onOCFValidation, setOnOCFValidation] = useState(null);
 
-    const requiredComponentFields = ['name', 'price', 'stock', 'safetyStock', 'safetyStockRop'];
-    const positiveComponentNumberFields = ['price', 'stock', 'safetyStock', 'safetyStockRop'];
+    //const requiredOCFFields = ['name', 'value'];
 
     // Handle form submission
     const handleSubmit = async () => {
-        const result = await new Promise((resolve) => {
-            setOnValidation(() => resolve);
-        });
+        const [componentResult, supplierResult/*, ocfResult*/] = await Promise.all([
+            new Promise(resolve => setOnComponentValidation(() => resolve)),
+            new Promise(resolve => setOnSupplierValidation(() => resolve)),
+            //new Promise(resolve => setOnOCFValidation(() => resolve)),
+        ]);
 
-        if (!result.isValid) {
-            console.log(result.errors);
+        if (!componentResult.isValid || !supplierResult.isValid/* || !ocfResult.isValid*/) {
+            console.log({
+                componentErrors: componentResult.errors,
+                supplierErrors: supplierResult.errors,
+                //ocfErrors: ocfResult.errors,
+            });
             return;
         }
 
-        const resultData = result.data;
+        const mergedData = {
+            ...componentResult.data,
+            supplier: supplierResult.data,
+            //optionalComponentFields: ocfResult.data,
+        };
 
-        const created = await createComponent(resultData);
+        const created = await createComponent(mergedData);
 
         if (!created) {
             showSnackbar('error', 'Error: Component was not created. Please try again or contact Support');
@@ -48,13 +78,17 @@ const ComponentsCreateModalNew = ({ open, onClose }) => {
         addComponent(created);
         showSnackbar('success', 'Component created successfully');
         onClose();
-        setFormData(initialFormData);
+        setComponentFormData(initialComponentFormData);
+        setSupplierFormData(initialSupplierFormData);
+        //setOCFFormData(initialOCFFormData);
     };
 
     // Reset form data and errors when the modal opens
     useEffect(() => {
         if (open) {
-            setFormData(initialFormData);
+            setComponentFormData(initialComponentFormData);
+            setSupplierFormData(initialSupplierFormData);
+            //setOCFFormData(initialOCFFormData);
         }
     }, [open]);
 
@@ -89,12 +123,23 @@ const ComponentsCreateModalNew = ({ open, onClose }) => {
                 <Typography variant="h6" component="h2" mb={2}>
                     Create a New Component
                 </Typography>
-                <ComponentFieldsCard
-                    data={formData}
-                    onValidation={onValidation}
-                    requiredFields={requiredComponentFields}
-                    positiveNumberFields={positiveComponentNumberFields}
-                />
+                <Box
+                    sx={{
+                        overflowY: 'auto',
+                        maxHeight: '60vh',
+                        mb: 3,
+                    }}
+                >
+                    <ComponentFieldsCard
+                        data={componentFormData}
+                        onValidation={onComponentValidation}
+                    />
+                    <SupplierFieldsCard
+                        data={supplierFormData}
+                        onValidation={onSupplierValidation}
+                    />
+                </Box>
+
                 <Button
                     variant="contained"
                     color="primary"

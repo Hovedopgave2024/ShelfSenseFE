@@ -32,7 +32,7 @@ export const fetchAllData = async () => {
                 parseInt(component.safetyStockRop)
             ),
             supplier: {
-                ...component.supplier, // Ensure existing supplier properties are preserved
+                ...component.supplier,
                 stockStatus: component.supplier?.stock != null
                     ? calculateStatus(
                         parseInt(component.supplier.stock),
@@ -51,6 +51,8 @@ export const fetchAllData = async () => {
         useComponentsStore.getState().setComponents(components);
         useSalesOrdersStore.getState().setSalesOrders(salesOrders);
         useApiUpdateStore.getState().setApiUpdate(apiUpdate);
+
+        console.log(components);
 
         return true;
 
