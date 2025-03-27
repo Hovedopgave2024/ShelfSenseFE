@@ -1,123 +1,115 @@
 import {useEffect, useState} from 'react';
-import { Modal, Box, Typography, Button, TextField, FormControl } from '@mui/material/';
-import Grid from '@mui/material/Grid2';
-import Autocomplete from '@mui/material/Autocomplete';
+import { Modal, Box, Typography, Button } from '@mui/material/';
 import CloseIcon from '@mui/icons-material/Close';
 
 import useComponentsStore from "../../stores/useComponentsStore.js";
 import {createComponent} from "../../services/component/createComponent.js";
 import useSnackbarStore from "../../stores/useSnackbarStore.js";
+import ComponentFieldsCard from "./ComponentFieldsCard.jsx";
+import SupplierFieldsCard from "./SupplierFieldsCard.jsx";
+import OptionalComponentFieldsCard from "./OptionalComponentFieldsCard.jsx";
 
 const ComponentsCreateModal = ({ open, onClose }) => {
-    // Initial empty form data for creating a component
-    const initialFormData = {
+
+    const initialComponentFormData = {
         name: '',
-        //type: '',
-        //footprint: '',
-        manufacturerPart: '',
-        price: 0,
-        supplier: '',
-        stock: 0,
-        safetyStock: 0,
-        safetyStockRop: 0,
-        supplierSafetyStock: 0,
-        supplierSafetyStockRop: 0,
-        // designator: '',
+        price: '',
+        stock: '',
+        safetyStock: '',
+        safetyStockRop: '',
+    };
+
+    const initialSupplierFormData = {
+        name: '',
         manufacturer: '',
+        manufacturerPart: '',
+        stock: '',
+        safetyStock: '',
+        safetyStockRop: '',
         supplierPart: '',
     };
 
-    const requiredFields = [
-        'name',
-        'price',
-        'stock',
-        'safetyStock',
-        'safetyStockRop',
+    const initialOCFFormData = [
+        {
+            name: '',
+            value: '',
+        }
     ];
 
-    const [formData, setFormData] = useState(initialFormData);
-    const [errors, setErrors] = useState({});
-    const [uniqueSuppliers, setUniqueSuppliers] = useState([]); // Store unique suppliers
+    const [componentFormData, setComponentFormData] = useState(initialComponentFormData);
+    const [supplierFormData, setSupplierFormData] = useState(initialSupplierFormData);
+    const [OCFFormData, setOCFFormData] = useState(initialOCFFormData);
     const addComponent = useComponentsStore((state) => state.addComponent);
-    const components = useComponentsStore((state) => state.components); // Retrieve components from the store
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
+    const [onComponentValidation, setOnComponentValidation] = useState(null);
+    const [onSupplierValidation, setOnSupplierValidation] = useState(null);
+    const [onOCFValidation, setOnOCFValidation] = useState(null);
 
-    // Extract unique suppliers from components
-    useEffect(() => {
-        const suppliers = [...new Set(components.map((comp) => comp.supplier?.name))]; // Get unique supplier names
-        setUniqueSuppliers(['None', ...suppliers.filter(Boolean)]); // Add "None" as a hardcoded option and remove null/empty
-    }, [components]);
 
-    // Handle changes in form input fields
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-        // Clear the error when the user starts typing
-        if (errors[name]) {
-            setErrors((prevErrors) => ({
-                ...prevErrors,
-                [name]: null,
-            }));
-        }
-    };
-
-    // Validate form data
-    const validateForm = () => {
-        const newErrors = {};
-        requiredFields.forEach((field) => {
-            if (!formData[field]) {
-                newErrors[field] = `Required`; // Error message for empty fields
-            }
-        });
-        setErrors(newErrors);
-        showSnackbar('warning', 'Please fill out all required fields and try again');
-        return Object.keys(newErrors).length === 0; // Return true if no errors
-    };
 
     // Handle form submission
     const handleSubmit = async () => {
-        if (!validateForm()) return; // Prevent submission if validation fails
+        const [componentResult, supplierResult, ocfResult] = await Promise.all([
+            new Promise(resolve => setOnComponentValidation(() => resolve)),
+            new Promise(resolve => setOnSupplierValidation(() => resolve)),
+            new Promise(resolve => setOnOCFValidation(() => resolve)),
+        ]);
 
-        const result = await createComponent(formData);
+        if (!componentResult.isValid || !supplierResult.isValid || !ocfResult.isValid) {
+            console.log({
+                componentErrors: componentResult.errors,
+                supplierErrors: supplierResult.errors,
+                ocfErrors: ocfResult.errors,
+            });
+            return;
+        }
 
-        if (!result) {
+        const mergedData = {
+            ...componentResult.data,
+            supplier: supplierResult.data,
+            optionalComponentFields: ocfResult.data,
+        };
+
+        const created = await createComponent(mergedData);
+
+        if (!created) {
             showSnackbar('error', 'Error: Component was not created. Please try again or contact Support');
             return;
         }
-        addComponent(result);
+
+        addComponent(created);
         showSnackbar('success', 'Component created successfully');
         onClose();
-        setFormData(initialFormData);
-        setErrors({});
+        setComponentFormData(initialComponentFormData);
+        setSupplierFormData(initialSupplierFormData);
+        setOCFFormData(initialOCFFormData);
     };
 
     // Reset form data and errors when the modal opens
     useEffect(() => {
         if (open) {
-            setFormData(initialFormData);
-            setErrors({});
+            setComponentFormData(initialComponentFormData);
+            setSupplierFormData(initialSupplierFormData);
+            setOCFFormData(initialOCFFormData);
         }
     }, [open]);
 
     return (
         <Modal open={open} onClose={onClose}>
             <Box alignItems="center" justifyContent="center"
-                sx={{
-                    position: 'absolute',
-                    maxHeight: '80vh',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    bgcolor: 'background.paper',
-                    borderRadius: 2,
-                    boxShadow: 24,
-                    p: 4,
-                    display: 'flex',
-                    flexDirection: 'column',
-                }}
+                 sx={{
+                     position: 'absolute',
+                     maxHeight: '80vh',
+                     top: '50%',
+                     left: '50%',
+                     transform: 'translate(-50%, -50%)',
+                     bgcolor: 'background.paper',
+                     borderRadius: 2,
+                     boxShadow: 24,
+                     p: 4,
+                     display: 'flex',
+                     flexDirection: 'column',
+                 }}
             >
                 <Button
                     onClick={onClose}
@@ -140,83 +132,20 @@ const ComponentsCreateModal = ({ open, onClose }) => {
                         mb: 3,
                     }}
                 >
-                    <Grid container alignItems="center" justifyContent="center" spacing={2}>
-                        <>
-                            {Object.keys(formData).map((field) => (
-                                field === 'supplier' ? (
-                                    <Grid xs={12} lg={3} key={field}>
-                                        <FormControl
-                                            sx={{ width: 195 }}
-                                            error={!!errors[field]}
-                                        >
-                                            <Autocomplete
-                                                freeSolo
-                                                options={uniqueSuppliers}
-                                                value={formData.supplier || ''}
-                                                onChange={(e, newValue) => {
-                                                    setFormData((prevData) => ({
-                                                        ...prevData,
-                                                        supplier: newValue || '',
-                                                    }));
-                                                    // Clear the error when a new value is selected
-                                                    if (errors.supplier) {
-                                                        setErrors((prevErrors) => ({
-                                                            ...prevErrors,
-                                                            supplier: null,
-                                                        }));
-                                                    }
-                                                }}
-                                                onInputChange={(e, newInputValue) => {
-                                                    setFormData((prevData) => ({
-                                                        ...prevData,
-                                                        supplier: newInputValue || '',
-                                                    }));
-                                                    // Clear the error when the user starts typing
-                                                    if (errors.supplier) {
-                                                        setErrors((prevErrors) => ({
-                                                            ...prevErrors,
-                                                            supplier: null,
-                                                        }));
-                                                    }
-                                                }}
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        {...params}
-                                                        label="Supplier"
-                                                        name="supplier"
-                                                        variant="outlined"
-                                                        error={!!errors.supplier}
-                                                        helperText={errors.supplier || ''}
-                                                    />
-                                                )}
-                                            />
-                                        </FormControl>
-                                    </Grid>
-                                ) : (
-                                <Grid xs={12} lg={3} key={field}>
-                                    <TextField
-                                        label={requiredFields.includes(field)
-                                            ? `${field} *`
-                                            : field}
-                                        name={field}
-                                        variant="outlined"
-                                        sx={{ width: 195 }}
-                                        value={formData[field]}
-                                        onChange={handleChange}
-                                        error={!!errors[field]} // Adds red border if there’s an error
-                                        helperText={errors[field] || ''} // Displays error message below the field
-                                        type={
-                                            ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplierSafetyStock', 'supplierSafetyStockRop'].includes(field)
-                                                ? 'number'
-                                                : 'text'
-                                        }
-                                    />
-                                </Grid>
-                                )
-                            ))}
-                        </>
-                    </Grid>
+                    <ComponentFieldsCard
+                        data={componentFormData}
+                        onValidation={onComponentValidation}
+                    />
+                    <SupplierFieldsCard
+                        data={supplierFormData}
+                        onValidation={onSupplierValidation}
+                    />
+                    <OptionalComponentFieldsCard
+                        data={OCFFormData}
+                        onValidation={onOCFValidation}
+                        />
                 </Box>
+
                 <Button
                     variant="contained"
                     color="primary"

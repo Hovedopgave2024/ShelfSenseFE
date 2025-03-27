@@ -2,11 +2,11 @@ import { Container, Typography, Box, Button } from '@mui/material';
 import ComponentTable from '../components/components/ComponentsTable';
 import {useState} from "react";
 import {Sidebar} from "../components/sidebar/sidebar.jsx";
-import ComponentsCreateModal from "../components/components/ComponentsCreateModal.jsx";
 import ComponentsEditModal from "../components/components/ComponentsEditModal.jsx";
 import ComponentsAddStockModal from "../components/components/ComponentsAddStockModal.jsx";
 import {useLocation, useNavigate} from "react-router-dom";
-import ComponentsCreateModalNew from "../components/components/ComponentsCreateModalNew.jsx";
+import ComponentsCreateModal from "../components/components/ComponentsCreateModal.jsx";
+import ComponentsEditModalNew from "../components/components/ComponentsEditModalNew.jsx";
 
 const ComponentsPage = () => {
     const [open, setOpen] = useState(false);
@@ -70,10 +70,10 @@ const ComponentsPage = () => {
                     onAddStock={handleAddStock}
                     productComponentIds={passedComponentIds}/>
 
-                <ComponentsCreateModalNew open={CreateModal} onClose={toggleCloseCreateModal} />
+                <ComponentsCreateModal open={CreateModal} onClose={toggleCloseCreateModal} />
                 <>
                     {componentToEdit && (
-                        <ComponentsEditModal
+                        <ComponentsEditModalNew
                             open={EditModal}
                             onClose={() => setEditModal(false)}
                             component={componentToEdit}

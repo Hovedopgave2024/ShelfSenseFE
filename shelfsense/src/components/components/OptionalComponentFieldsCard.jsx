@@ -62,6 +62,15 @@ const OptionalComponentFieldsCard = ({ data, onValidation }) => {
     useEffect(() => {
         setSelectedComponents(data);
         setErrors({});
+
+        const hasAnyValue = data.some(obj =>
+            Object.values(obj).some(value => value !== '' && value != null)
+        );
+
+        if (hasAnyValue) {
+            setShowFields(true);
+        }
+
     },[data]);
 
     useEffect(() => {

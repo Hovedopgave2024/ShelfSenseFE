@@ -32,6 +32,13 @@ const SupplierFieldsCard = ({ data, onValidation }) => {
     useEffect(() => {
         setFormData(data);
         setErrors({});
+
+        const hasAnyValue = Object.values(data).some(value => value !== '' && value != null);
+
+        if (hasAnyValue) {
+            setShowFields(true);
+        }
+
     },[data]);
 
     useEffect(() => {

@@ -9,46 +9,17 @@ import ComponentFieldsCard from "./ComponentFieldsCard.jsx";
 import SupplierFieldsCard from "./SupplierFieldsCard.jsx";
 import OptionalComponentFieldsCard from "./OptionalComponentFieldsCard.jsx";
 
-const ComponentsCreateModalNew = ({ open, onClose }) => {
+const ComponentsCreateModal = ({ open, onClose, component }) => {
 
-    const initialComponentFormData = {
-        name: '',
-        price: '',
-        stock: '',
-        safetyStock: '',
-        safetyStockRop: '',
-    };
-
-    const initialSupplierFormData = {
-        name: '',
-        manufacturer: '',
-        manufacturerPart: '',
-        stock: '',
-        safetyStock: '',
-        safetyStockRop: '',
-        supplierPart: '',
-    };
-
-    const initialOCFFormData = [
-        {
-            name: '',
-            value: '',
-        }
-    ];
-
-
-    const [componentFormData, setComponentFormData] = useState(initialComponentFormData);
-    const [supplierFormData, setSupplierFormData] = useState(initialSupplierFormData);
-    const [OCFFormData, setOCFFormData] = useState(initialOCFFormData);
+    const [componentFormData, setComponentFormData] = useState([]);
+    const [supplierFormData, setSupplierFormData] = useState([]);
+    const [OCFFormData, setOCFFormData] = useState([]);
     const addComponent = useComponentsStore((state) => state.addComponent);
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
     const [onComponentValidation, setOnComponentValidation] = useState(null);
     const [onSupplierValidation, setOnSupplierValidation] = useState(null);
     const [onOCFValidation, setOnOCFValidation] = useState(null);
 
-
-
-    // Handle form submission
     const handleSubmit = async () => {
         const [componentResult, supplierResult, ocfResult] = await Promise.all([
             new Promise(resolve => setOnComponentValidation(() => resolve)),
@@ -81,19 +52,38 @@ const ComponentsCreateModalNew = ({ open, onClose }) => {
         addComponent(created);
         showSnackbar('success', 'Component created successfully');
         onClose();
-        setComponentFormData(initialComponentFormData);
-        setSupplierFormData(initialSupplierFormData);
-        setOCFFormData(initialOCFFormData);
     };
 
-    // Reset form data and errors when the modal opens
     useEffect(() => {
+        if (!open || !component) return;
+
         if (open) {
-            setComponentFormData(initialComponentFormData);
-            setSupplierFormData(initialSupplierFormData);
-            setOCFFormData(initialOCFFormData);
+
+            setComponentFormData({
+                name: component?.name || '',
+                price: component?.price || '',
+                stock: component?.stock || '',
+                safetyStock: component?.safetyStock || '',
+                safetyStockRop: component?.safetyStockRop || '',
+            });
+
+            setSupplierFormData({
+                name: component?.supplier?.name || '',
+                manufacturer: component?.supplier?.manufacturer || '',
+                manufacturerPart: component?.supplier?.manufacturerPart || '',
+                stock: component?.supplier?.stock || '',
+                safetyStock: component?.supplier?.safetyStock || '',
+                safetyStockRop: component?.supplier?.safetyStockRop || '',
+                supplierPart: component?.supplier?.supplierPart || '',
+            });
+
+            setOCFFormData(
+                component?.optionalComponentFields?.length > 0
+                    ? component.optionalComponentFields
+                    : [{name: '', value: ''}]
+            );
         }
-    }, [open]);
+    }, [open, component]);
 
     return (
         <Modal open={open} onClose={onClose}>
@@ -144,7 +134,7 @@ const ComponentsCreateModalNew = ({ open, onClose }) => {
                     <OptionalComponentFieldsCard
                         data={OCFFormData}
                         onValidation={onOCFValidation}
-                        />
+                    />
                 </Box>
 
                 <Button
@@ -161,4 +151,4 @@ const ComponentsCreateModalNew = ({ open, onClose }) => {
     );
 };
 
-export default ComponentsCreateModalNew;
+export default ComponentsCreateModal;
