@@ -5,41 +5,39 @@ export const updateComponent = async (id, updatedData) => {
     const BASE_URL = `${import.meta.env.VITE_API_URL}/components/${id}`;
 
     try {
+
+        const verifiedSupplier =
+            updatedData.supplier && Object.keys(updatedData.supplier).length > 0
+                ? { ...updatedData.supplier, stockStatus: calculateStatus(
+                        parseInt(updatedData.supplier.stock),
+                        parseInt(updatedData.supplier.safetyStock),
+                        parseInt(updatedData.supplier.safetyStockRop)
+                    ), }
+                : null;
+
+        const verifiedOptionalComponentFields =
+            updatedData.optionalComponentFields && updatedData.optionalComponentFields.length > 0
+                ? updatedData.optionalComponentFields
+                : null;
+
+
         const response = await fetch(BASE_URL, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify({
-                body: JSON.stringify({
-                    name: updatedData.name,
-                    type: updatedData.type,
-                    footprint: updatedData.footprint,
-                    price: updatedData.price,
-                    stock: updatedData.stock,
-                    safetyStock: updatedData.safetyStock,
-                    safetyStockRop: updatedData.safetyStockRop,
-                    designator: updatedData.designator,
-                    stockStatus: calculateStatus(
-                        parseInt(updatedData.stock),
-                        parseInt(updatedData.safetyStock),
-                        parseInt(updatedData.safetyStockRop)
-                    ),
-                    supplier: {
-                        name: updatedData.supplier,
-                        manufacturer: updatedData.manufacturer,
-                        manufacturerPart: updatedData.manufacturerPart,
-                        safetyStock: updatedData.supplierSafetyStock,
-                        safetyStockRop: updatedData.supplierSafetyStockRop,
-                        supplierPart: updatedData.supplierPart,
-                        supplierStockStatus: updatedData.supplierStock != null
-                            ? calculateStatus(
-                                parseInt(updatedData.supplierStock),
-                                parseInt(updatedData.supplierSafetyStock),
-                                parseInt(updatedData.supplierSafetyStockRop)
-                            )
-                            : null
-                    }
-                })
+                name: updatedData.name,
+                price: updatedData.price,
+                stock: updatedData.stock,
+                safetyStock: updatedData.safetyStock,
+                safetyStockRop: updatedData.safetyStockRop,
+                stockStatus: calculateStatus(
+                    parseInt(updatedData.stock),
+                    parseInt(updatedData.safetyStock),
+                    parseInt(updatedData.safetyStockRop)
+                ),
+                supplier: verifiedSupplier,
+                optionalComponentFields: verifiedOptionalComponentFields
             })
         });
         if (response.status === 401) {

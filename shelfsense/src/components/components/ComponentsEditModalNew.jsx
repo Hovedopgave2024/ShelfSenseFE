@@ -8,14 +8,25 @@ import useSnackbarStore from "../../stores/useSnackbarStore.js";
 import ComponentFieldsCard from "./ComponentFieldsCard.jsx";
 import SupplierFieldsCard from "./SupplierFieldsCard.jsx";
 import OptionalComponentFieldsCard from "./OptionalComponentFieldsCard.jsx";
+import {updateComponent} from "../../services/component/updateComponent.js";
+import useProductsStore from "../../stores/useProductsStore.js";
+import {deleteComponent} from "../../services/component/deleteComponent.js";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx";
 
 const ComponentsCreateModal = ({ open, onClose, component }) => {
+
+
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const updateComponentInStore = useComponentsStore((state) => state.updateComponent);
+    const deleteComponentInStore = useComponentsStore((state) => state.deleteComponent);
+    const components = useComponentsStore((state) => state.components);
+    const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
 
     const [componentFormData, setComponentFormData] = useState([]);
     const [supplierFormData, setSupplierFormData] = useState([]);
     const [OCFFormData, setOCFFormData] = useState([]);
-    const addComponent = useComponentsStore((state) => state.addComponent);
-    const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
+
     const [onComponentValidation, setOnComponentValidation] = useState(null);
     const [onSupplierValidation, setOnSupplierValidation] = useState(null);
     const [onOCFValidation, setOnOCFValidation] = useState(null);
@@ -42,17 +53,50 @@ const ComponentsCreateModal = ({ open, onClose, component }) => {
             optionalComponentFields: ocfResult.data,
         };
 
-        const created = await createComponent(mergedData);
+        console.log(mergedData);
 
-        if (!created) {
+        const updated = await updateComponent(component.id, mergedData);
+
+        if (!updated) {
             showSnackbar('error', 'Error: Component was not created. Please try again or contact Support');
             return;
         }
 
-        addComponent(created);
+        updateComponentInStore(updated);
+
+        console.log(updated);
         showSnackbar('success', 'Component created successfully');
         onClose();
     };
+
+    const isComponentLinked = (componentId) => {
+        const products = useProductsStore.getState().products; // Get products from the store
+        return products.some((product) =>
+            product.productComponentList.some((productComponent) => productComponent.componentId === componentId)
+        );
+    };
+
+    const handleDeleteComponent = async () => {
+        if (isComponentLinked(component.id)) {
+            showSnackbar('error', 'Error: This component is linked to a product and cannot be deleted.');
+            return;
+        }
+        setDialogOpen(true);
+    };
+
+    const confirmDeleteComponent = async () => {
+        setDialogOpen(false);
+        const result = await deleteComponent(component.id);
+        if (!result){
+            showSnackbar('error', 'Error: Failed to delete the component. Please try again or contact Support.');
+            return;
+        }
+        deleteComponentInStore(component.id);
+        showSnackbar('success', 'Component deleted successfully.');
+        onClose();
+    };
+
+    const handleCloseDialog = () => setDialogOpen(false);
 
     useEffect(() => {
         if (!open || !component) return;
@@ -114,7 +158,7 @@ const ComponentsCreateModal = ({ open, onClose, component }) => {
                     <CloseIcon />
                 </Button>
                 <Typography variant="h6" component="h2" mb={2}>
-                    Create a New Component
+                    {`${component.name} (${component.supplier.manufacturerPart})`}
                 </Typography>
                 <Box
                     sx={{
@@ -136,16 +180,44 @@ const ComponentsCreateModal = ({ open, onClose, component }) => {
                         onValidation={onOCFValidation}
                     />
                 </Box>
-
-                <Button
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    sx={{ mt: 'auto' }}
-                    onClick={handleSubmit}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        width: '100%',
+                        mt: 'auto',
+                    }}
                 >
-                    Save Component
-                </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{ flexGrow: 1, mr: 2 }}
+                        onClick={handleSubmit}
+                    >
+                        Update Component
+                    </Button>
+                    <Button
+                        color="error"
+                        onClick={handleDeleteComponent}
+                        sx={{
+                            minWidth: 'auto',
+                            p: 1,
+                        }}
+                    >
+                        <DeleteOutlineIcon />
+                    </Button>
+                </Box>
+                <ConfirmDialog
+                    open={dialogOpen}
+                    onClose={handleCloseDialog}
+                    headline="Confirm Deletion"
+                    text="Are you sure you want to delete this component? This action cannot be undone."
+                    onAccept={confirmDeleteComponent}
+                    onDecline={handleCloseDialog}
+                    acceptText="Delete"
+                    declineText="Cancel"
+                />
             </Box>
         </Modal>
     );
