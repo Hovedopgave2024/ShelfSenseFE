@@ -79,7 +79,7 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                 <TableCell align="left">
                     {(() => {
                         const { label, icon, color } = statusLabel(
-                            component.supplier.stockStatus
+                            component.supplier?.stockStatus
                         );
                         return (
                             <Chip

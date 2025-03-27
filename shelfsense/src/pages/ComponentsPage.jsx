@@ -6,6 +6,7 @@ import ComponentsCreateModal from "../components/components/ComponentsCreateModa
 import ComponentsEditModal from "../components/components/ComponentsEditModal.jsx";
 import ComponentsAddStockModal from "../components/components/ComponentsAddStockModal.jsx";
 import {useLocation, useNavigate} from "react-router-dom";
+import ComponentsCreateModalNew from "../components/components/ComponentsCreateModalNew.jsx";
 
 const ComponentsPage = () => {
     const [open, setOpen] = useState(false);
@@ -69,7 +70,7 @@ const ComponentsPage = () => {
                     onAddStock={handleAddStock}
                     productComponentIds={passedComponentIds}/>
 
-                <ComponentsCreateModal open={CreateModal} onClose={toggleCloseCreateModal} />
+                <ComponentsCreateModalNew open={CreateModal} onClose={toggleCloseCreateModal} />
                 <>
                     {componentToEdit && (
                         <ComponentsEditModal
