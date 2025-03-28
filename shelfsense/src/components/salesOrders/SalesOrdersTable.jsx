@@ -22,6 +22,7 @@ const SalesOrdersTable = ({ onDelete }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [filteredSalesOrders, setFilteredSalesOrders] = useState([]);
+    
     const theme = useTheme();
 
     const columnTitles = ["Created Date", "Price", "Products", "Actions"];
