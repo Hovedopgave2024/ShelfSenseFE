@@ -117,11 +117,11 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box margin={2}>
                             {/* Supplier Fields Table */}
-                            <Typography variant="h6" gutterBottom>
+                            <Typography gutterBottom>
                                 Supplier Details
                             </Typography>
                             <TableContainer>
-                                <Table size="small">
+                            <Table size="small">
                                     <TableHead>
                                         <MuiTableRow>
                                             {component.supplier
@@ -151,7 +151,7 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                             </TableContainer>
 
                             {/* Optional Fields Table */}
-                            <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+                            <Typography gutterBottom sx={{ mt: 2 }}>
                                 Optional Fields
                             </Typography>
                             <TableContainer>

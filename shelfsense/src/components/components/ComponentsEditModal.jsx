@@ -59,7 +59,7 @@ const ComponentsEditModal = ({ open, onClose, component }) => {
             supplier: isSupplierEmpty ? null : supplierResult.data,
             optionalComponentFields: isOCFEmpty ? null : ocfResult.data,
         };
-        
+
         const updated = await updateComponent(component.id, mergedData);
 
         if (!updated) {
