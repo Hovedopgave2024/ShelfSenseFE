@@ -1,17 +1,19 @@
 import {clearStoresAndLogout} from "../../util/user/clearStoresAndLogout.js";
 import calculateStatus from "../../util/component/calculateStockStatus.js";
+import useComponentsStore from "../../stores/useComponentsStore.js";
 
 
 export const createComponent = async (componentData) => {
 
     const BASE_URL = `${import.meta.env.VITE_API_URL}/components`;
+
     try {
         const verifiedSupplier =
             componentData.supplier && Object.keys(componentData.supplier).length > 0
                 ? { ...componentData.supplier, stockStatus: calculateStatus(
-                        parseInt(componentData.supplier.stock),
-                        parseInt(componentData.supplier.safetyStock),
-                        parseInt(componentData.supplier.safetyStockRop)
+                        parseInt( null),
+                        parseInt(componentData.supplier.safetyStock ?? null),
+                        parseInt(componentData.supplier.safetyStockRop ?? null)
                     ), }
                 : null;
 

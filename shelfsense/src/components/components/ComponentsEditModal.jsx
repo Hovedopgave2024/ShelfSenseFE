@@ -1,103 +1,75 @@
-import { useState, useEffect } from 'react';
-import { Modal, Box, Typography, Button, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material/';
-import Grid from '@mui/material/Grid2';
-import useComponentsStore from "../../stores/useComponentsStore.js";
-import useProductsStore from "../../stores/useProductsStore.js";
-import {deleteComponent} from "../../services/component/deleteComponent.js";
-import {updateComponent} from "../../services/component/updateComponent.js";
-import useSnackbarStore from "../../stores/useSnackbarStore.js";
-import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx"
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import {useEffect, useState} from 'react';
+import { Modal, Box, Typography, Button } from '@mui/material/';
 import CloseIcon from '@mui/icons-material/Close';
 
-const ComponentsEditModal = ({ open, onClose, component}) => {
-    const [formData, setFormData] = useState(null);
-    const [errors, setErrors] = useState({});
-    const [uniqueSuppliers, setUniqueSuppliers] = useState([]); // Store unique suppliers
-    const [dialogOpen, setDialogOpen] = useState(false);
+import useComponentsStore from "../../stores/useComponentsStore.js";
+import useSnackbarStore from "../../stores/useSnackbarStore.js";
+import ComponentFieldsCard from "./ComponentFieldsCard.jsx";
+import SupplierFieldsCard from "./SupplierFieldsCard.jsx";
+import OptionalComponentFieldsCard from "./OptionalComponentFieldsCard.jsx";
+import {updateComponent} from "../../services/component/updateComponent.js";
+import useProductsStore from "../../stores/useProductsStore.js";
+import {deleteComponent} from "../../services/component/deleteComponent.js";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx";
 
+const ComponentsEditModal = ({ open, onClose, component }) => {
+
+    // BUGS: 1. STATE FROM OPENING UPDATE COMPONENT MODAL IS NOT WORKING. 2. SUPPLIERSTOCK SHOULD NOT BE SET I FRONTEND. BUG WITH SUPPLIER STOCK STATUS.
+
+    const [dialogOpen, setDialogOpen] = useState(false);
     const updateComponentInStore = useComponentsStore((state) => state.updateComponent);
     const deleteComponentInStore = useComponentsStore((state) => state.deleteComponent);
-    const components = useComponentsStore((state) => state.components); // Retrieve components from the store
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
 
-    const handleCloseDialog = () => setDialogOpen(false);
+    const [componentFormData, setComponentFormData] = useState([]);
+    const [supplierFormData, setSupplierFormData] = useState([]);
+    const [OCFFormData, setOCFFormData] = useState([]);
 
-    useEffect(() => {
-        if (open && component) {
-            setFormData(
-                {
-                    name: component.name,
-                    type: component.type,
-                    
-                }
-            );
-            setErrors({});
-        }
-    }, [open, component]);
-
-    useEffect(() => {
-        const suppliers = [...new Set(components.map((comp) => comp.supplier.name))]; // Get unique supplier names
-        setUniqueSuppliers(['None', ...suppliers.filter(Boolean)]); // Add "None" as a hardcoded option and remove null/empty
-    }, [components]);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-        setErrors((prevErrors) => ({
-            ...prevErrors,
-            [name]: '',
-        }));
-    };
-
-    const validateFields = () => {
-        const requiredFields = [
-            'name',
-            'type',
-            'footprint',
-            'supplier.manufacturer',
-            'supplier.manufacturerPart',
-            'price',
-            'supplier.name',
-            'stock',
-            'safetyStock',
-            'safetyStockRop',
-        ];
-        const newErrors = {};
-
-        requiredFields.forEach((field) => {
-            if (!formData[field] || formData[field].toString().trim() === '') {
-                newErrors[field] = 'Required';
-            }
-        });
-        setErrors(newErrors);
-        showSnackbar('warning', 'Please fill out all required fields and try again.');
-        return Object.keys(newErrors).length === 0;
-    };
+    const [onComponentValidation, setOnComponentValidation] = useState(null);
+    const [onSupplierValidation, setOnSupplierValidation] = useState(null);
+    const [onOCFValidation, setOnOCFValidation] = useState(null);
 
     const handleSubmit = async () => {
-        if (!formData) return;
+        const [componentResult, supplierResult, ocfResult] = await Promise.all([
+            new Promise(resolve => setOnComponentValidation(() => resolve)),
+            new Promise(resolve => setOnSupplierValidation(() => resolve)),
+            new Promise(resolve => setOnOCFValidation(() => resolve)),
+        ]);
 
-        if (!validateFields()) {
+        if (!componentResult.isValid || !supplierResult.isValid || !ocfResult.isValid) {
+            console.log({
+                componentErrors: componentResult.errors,
+                supplierErrors: supplierResult.errors,
+                ocfErrors: ocfResult.errors,
+            });
             return;
         }
 
-        const updatedComponent = {
-            ...formData,
-            supplierStock: component.supplierStock
-        }
+        const isSupplierEmpty = !supplierResult?.data || Object.values(supplierResult.data).every(val => !val);
 
-        const result = await updateComponent(formData.id, updatedComponent);
+        const isOCFEmpty =
+            !ocfResult?.data ||
+            (ocfResult.data.length === 1 &&
+                !ocfResult.data[0].name &&
+                !ocfResult.data[0].value);
 
-        if (!result) {
-            showSnackbar('error', 'Error: Component was not updated. Please try again or contact Support.');
+        const mergedData = {
+            ...componentResult.data,
+            supplier: isSupplierEmpty ? null : supplierResult.data,
+            optionalComponentFields: isOCFEmpty ? null : ocfResult.data,
+        };
+        
+        const updated = await updateComponent(component.id, mergedData);
+
+        if (!updated) {
+            showSnackbar('error', 'Error: Component was not created. Please try again or contact Support');
             return;
         }
-        updateComponentInStore(result);
-        showSnackbar('success', 'Component updated successfully');
+
+        updateComponentInStore(updated);
+
+        showSnackbar('success', 'Component created successfully');
         onClose();
     };
 
@@ -128,23 +100,72 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
         onClose();
     };
 
+    const handleCloseDialog = () => setDialogOpen(false);
+
+    useEffect(() => {
+        if (open && component) {
+            // Populate with existing component data
+            setComponentFormData({
+                name: component?.name || '',
+                price: component?.price || '',
+                stock: component?.stock || '',
+                safetyStock: component?.safetyStock || '',
+                safetyStockRop: component?.safetyStockRop || '',
+            });
+
+            setSupplierFormData({
+                name: component?.supplier?.name || '',
+                manufacturer: component?.supplier?.manufacturer || '',
+                manufacturerPart: component?.supplier?.manufacturerPart || '',
+                safetyStock: component?.supplier?.safetyStock || '',
+                safetyStockRop: component?.supplier?.safetyStockRop || '',
+                supplierPart: component?.supplier?.supplierPart || '',
+            });
+
+            setOCFFormData(
+                component?.optionalComponentFields?.length > 0
+                    ? component.optionalComponentFields
+                    : [{ name: '', value: '' }]
+            );
+        } else {
+            // Clear form data on modal close
+            setComponentFormData({
+                name: '',
+                price: '',
+                stock: '',
+                safetyStock: '',
+                safetyStockRop: '',
+            });
+
+            setSupplierFormData({
+                name: '',
+                manufacturer: '',
+                manufacturerPart: '',
+                safetyStock: '',
+                safetyStockRop: '',
+                supplierPart: '',
+            });
+
+            setOCFFormData([{ name: '', value: '' }]);
+        }
+    }, [open, component]);
 
     return (
         <Modal open={open} onClose={onClose}>
             <Box alignItems="center" justifyContent="center"
-                sx={{
-                    position: 'absolute',
-                    maxHeight: '80vh',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    bgcolor: 'background.paper',
-                    borderRadius: 2,
-                    boxShadow: 24,
-                    p: 4,
-                    display: 'flex',
-                    flexDirection: 'column',
-                }}
+                 sx={{
+                     position: 'absolute',
+                     maxHeight: '80vh',
+                     top: '50%',
+                     left: '50%',
+                     transform: 'translate(-50%, -50%)',
+                     bgcolor: 'background.paper',
+                     borderRadius: 2,
+                     boxShadow: 24,
+                     p: 4,
+                     display: 'flex',
+                     flexDirection: 'column',
+                 }}
             >
                 <Button
                     onClick={onClose}
@@ -158,77 +179,27 @@ const ComponentsEditModal = ({ open, onClose, component}) => {
                     <CloseIcon />
                 </Button>
                 <Typography variant="h6" component="h2" mb={2}>
-                    {`${component.name} (${component.supplier.manufacturerPart})`}
+                    {`${component.name} (${component.supplier.manufacturerPart ?? ''})`}
                 </Typography>
                 <Box
                     sx={{
                         overflowY: 'auto',
                         maxHeight: '60vh',
                         mb: 3,
-                        p: 1,
                     }}
                 >
-                    <Grid container alignItems="center" justifyContent="center" spacing={2}>
-                        <>
-                        {formData &&
-                            Object.keys(formData)
-                                .filter(
-                                    (field) =>
-                                        ![
-                                            'id',
-                                            'userId',
-                                            'supplier.Stock',
-                                            'supplier.incomingStock',
-                                            'supplier.incomingDate',
-                                            'supplier.stockStatus',
-                                            'stockStatus',
-                                        ].includes(field)
-                            ) // Exclude non-editable fields
-                            .map((field) => (
-                                field === 'supplier.name' ? (
-                                    <Grid xs={12} lg={3} key={field}>
-                                        <FormControl
-                                            sx={{ width: 195 }}
-                                        >
-                                            <InputLabel>Supplier</InputLabel>
-                                            <Select
-                                                variant="outlined"
-                                                name={field}
-                                                value={formData[field] || ''}
-                                                onChange={(e) => handleChange(e)}
-                                                label="Supplier"
-                                                fullWidth
-                                            >
-                                                {uniqueSuppliers.map((supplier) => (
-                                                    <MenuItem key={supplier} value={supplier}>
-                                                        {supplier}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                ) : (
-                                <Grid xs={12} lg={3} key={field}>
-                                    <TextField
-                                        label={field}
-                                        sx={{ width: 195 }}
-                                        name={field}
-                                        variant="outlined"
-                                        value={formData[field] || ''}
-                                        onChange={handleChange}
-                                        type={
-                                            ['price', 'stock', 'safetyStock', 'safetyStockRop', 'supplier.safetyStock', 'supplier.safetyStockRop'].includes(field)
-                                                ? 'number'
-                                                : 'text'
-                                        }
-                                        error={!!errors[field]}
-                                        helperText={errors[field] || ''}
-                                    />
-                                </Grid>
-                                )
-                            ))}
-                        </>
-                    </Grid>
+                    <ComponentFieldsCard
+                        data={componentFormData}
+                        onValidation={onComponentValidation}
+                    />
+                    <SupplierFieldsCard
+                        data={supplierFormData}
+                        onValidation={onSupplierValidation}
+                    />
+                    <OptionalComponentFieldsCard
+                        data={OCFFormData}
+                        onValidation={onOCFValidation}
+                    />
                 </Box>
                 <Box
                     sx={{

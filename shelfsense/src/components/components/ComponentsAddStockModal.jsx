@@ -73,7 +73,7 @@ const ComponentsAddStockModal = ({ open, onClose, component }) => {
                     <CloseIcon />
                 </Button>
                 <Typography variant="h6">
-                    {`${component.name} (${component.manufacturerPart})`}
+                    {`${component.name} ${component.supplier?.manufacturerPart ? `(${component.supplier.manufacturerPart})` : ''}`}
                 </Typography>
                 <TextField
                     label="Stock to Add"

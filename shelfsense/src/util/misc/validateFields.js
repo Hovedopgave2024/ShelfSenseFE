@@ -11,8 +11,9 @@ const validateFields = (formData, requiredFields = [], positiveNumberFields = []
 
     // Positive number check
     positiveNumberFields.forEach(field => {
-        const value = Number(formData[field]);
-        if (!isNaN(value) && value <= 0) {
+        const numberValue = Number(formData[field]);
+        const rawValue = formData[field];
+        if (!isNaN(numberValue) && numberValue <= 0 && rawValue !== null && rawValue !== undefined && rawValue !== '') {
             errors[field] = 'Must be greater than 0';
         }
     });

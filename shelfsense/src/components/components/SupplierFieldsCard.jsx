@@ -14,8 +14,8 @@ const SupplierFieldsCard = ({ data, onValidation }) => {
     const [uniqueSuppliers, setUniqueSuppliers] = useState([]);
     const [showFields, setShowFields] = useState(false);
 
-    const requiredFields = ['name', 'stock', 'manufacturer', 'manufacturerPart', 'safetyStock', 'safetyStockRop'];
-    const positiveNumberFields = ['stock', 'safetyStock', 'safetyStockRop'];
+    const requiredFields = ['name', 'manufacturer', 'manufacturerPart'];
+    const positiveNumberFields = ['safetyStock', 'safetyStockRop'];
 
     const handleChange = (e) => {
         const { name, value } = e.target;

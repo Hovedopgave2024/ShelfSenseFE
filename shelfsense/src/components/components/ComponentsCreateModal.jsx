@@ -23,7 +23,6 @@ const ComponentsCreateModal = ({ open, onClose }) => {
         name: '',
         manufacturer: '',
         manufacturerPart: '',
-        stock: '',
         safetyStock: '',
         safetyStockRop: '',
         supplierPart: '',
@@ -64,10 +63,18 @@ const ComponentsCreateModal = ({ open, onClose }) => {
             return;
         }
 
+        const isSupplierEmpty = !supplierResult?.data || Object.values(supplierResult.data).every(val => !val);
+
+        const isOCFEmpty =
+            !ocfResult?.data ||
+            (ocfResult.data.length === 1 &&
+                !ocfResult.data[0].name &&
+                !ocfResult.data[0].value);
+
         const mergedData = {
             ...componentResult.data,
-            supplier: supplierResult.data,
-            optionalComponentFields: ocfResult.data,
+            supplier: isSupplierEmpty ? null : supplierResult.data,
+            optionalComponentFields: isOCFEmpty ? null : ocfResult.data,
         };
 
         const created = await createComponent(mergedData);

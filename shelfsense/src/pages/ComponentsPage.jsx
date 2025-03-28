@@ -2,11 +2,10 @@ import { Container, Typography, Box, Button } from '@mui/material';
 import ComponentTable from '../components/components/ComponentsTable';
 import {useState} from "react";
 import {Sidebar} from "../components/sidebar/sidebar.jsx";
-import ComponentsEditModal from "../components/components/ComponentsEditModal.jsx";
 import ComponentsAddStockModal from "../components/components/ComponentsAddStockModal.jsx";
 import {useLocation, useNavigate} from "react-router-dom";
 import ComponentsCreateModal from "../components/components/ComponentsCreateModal.jsx";
-import ComponentsEditModalNew from "../components/components/ComponentsEditModalNew.jsx";
+import ComponentsEditModal from "../components/components/ComponentsEditModal.jsx";
 
 const ComponentsPage = () => {
     const [open, setOpen] = useState(false);
@@ -31,7 +30,7 @@ const ComponentsPage = () => {
 
     const toggleCloseCreateModal = () => {
         setCreateModal((prevOpen) => !prevOpen);
-        navigate(0);
+        //navigate(0);
     };
 
     const handleEdit = (component) => {
@@ -73,7 +72,7 @@ const ComponentsPage = () => {
                 <ComponentsCreateModal open={CreateModal} onClose={toggleCloseCreateModal} />
                 <>
                     {componentToEdit && (
-                        <ComponentsEditModalNew
+                        <ComponentsEditModal
                             open={EditModal}
                             onClose={() => setEditModal(false)}
                             component={componentToEdit}
