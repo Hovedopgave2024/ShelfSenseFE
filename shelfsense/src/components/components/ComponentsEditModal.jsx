@@ -179,7 +179,7 @@ const ComponentsEditModal = ({ open, onClose, component }) => {
                     <CloseIcon />
                 </Button>
                 <Typography variant="h6" component="h2" mb={2}>
-                    {`${component.name} (${component.supplier.manufacturerPart ?? ''})`}
+                    {`${component.name} ${component.supplier?.manufacturerPart ? `(${component.supplier.manufacturerPart})` : ''}`}
                 </Typography>
                 <Box
                     sx={{
