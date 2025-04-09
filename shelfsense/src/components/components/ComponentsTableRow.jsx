@@ -13,13 +13,16 @@ import {
     TableHead,
     TableContainer,
     TableRow as MuiTableRow,
-    TableCell as MuiTableCell
+    TableCell as MuiTableCell, Paper
 } from '@mui/material';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { statusLabel } from '../../util/component/ComponentStatusLabel.jsx';
+import { useTheme } from '@mui/material/styles';
 
 const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
     // Expand/collapse state
+    const theme = useTheme();
+    const isDarkMode = theme.palette.mode === 'dark';
     const [open, setOpen] = useState(false);
 
     // Toggle function
@@ -120,63 +123,130 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                             <Typography gutterBottom>
                                 Supplier Details
                             </Typography>
-                            <TableContainer>
+                            <TableContainer
+                                component={Paper}
+                                sx={{
+                                    borderRadius: 2,
+                                    overflow: 'auto',
+                                    backgroundColor: theme.palette.background.paper,
+                                }}
+                            >
                             <Table size="small">
                                     <TableHead>
-                                        <MuiTableRow>
-                                            {component.supplier
-                                                ? additionalSupplierFields.map(({ label }) => (
-                                                    <MuiTableCell key={label}>{label}</MuiTableCell>
+                                        <MuiTableRow sx={{ backgroundColor: isDarkMode ? '#353535' : '#f5f5f5' }}>
+                                            {component.supplier ? (
+                                                additionalSupplierFields.map(({ label }) => (
+                                                    <MuiTableCell
+                                                        key={label}
+                                                        sx={{
+                                                            fontWeight: 600,
+                                                            color: theme.palette.text.primary,
+                                                            padding: '8px 12px',
+                                                        }}
+                                                    >
+                                                        {label}
+                                                    </MuiTableCell>
                                                 ))
-                                                : <MuiTableCell></MuiTableCell>
-                                            }
+                                            ) : (
+                                                <MuiTableCell/>
+                                            )}
                                         </MuiTableRow>
                                     </TableHead>
-                                    <TableBody>
+                                <TableBody>
+                                    <MuiTableRow
+                                        sx={{
+                                            '&:nth-of-type(odd)': {
+                                                backgroundColor: isDarkMode ? '#474747' : '#fafafa',
+                                            },
+                                        }}
+                                    >
                                         {component.supplier ? (
-                                            <MuiTableRow>
-                                                {additionalSupplierFields.map(({ key }) => (
-                                                    <MuiTableCell key={key}>{component.supplier?.[key] || ''}</MuiTableCell>
-                                                ))}
-                                            </MuiTableRow>
-                                        ) : (
-                                            <MuiTableRow>
-                                                <MuiTableCell colSpan={additionalSupplierFields.length || 1} align="center">
-                                                    No Supplier
+                                            additionalSupplierFields.map(({ key }) => (
+                                                <MuiTableCell
+                                                    key={key}
+                                                    sx={{
+                                                        padding: '8px 12px',
+                                                        color: theme.palette.text.primary,
+                                                    }}
+                                                >
+                                                    {component.supplier?.[key] || ''}
                                                 </MuiTableCell>
-                                            </MuiTableRow>
+                                            ))
+                                        ) : (
+                                            <MuiTableCell
+                                                colSpan={1}
+                                                align="center"
+                                                sx={{ padding: '12px', color: theme.palette.text.secondary }}
+                                            >
+                                                No Supplier
+                                            </MuiTableCell>
                                         )}
-                                    </TableBody>
-                                </Table>
+                                    </MuiTableRow>
+                                </TableBody>
+                            </Table>
                             </TableContainer>
 
                             {/* Optional Fields Table */}
                             <Typography gutterBottom sx={{ mt: 2 }}>
                                 Optional Fields
                             </Typography>
-                            <TableContainer>
+                            <TableContainer
+                                component={Paper}
+                                sx={{
+                                    borderRadius: 2,
+                                    overflow: 'auto',
+                                    backgroundColor: theme.palette.background.paper,
+                                }}
+                            >
                                 <Table size="small">
                                     <TableHead>
-                                        <MuiTableRow>
-                                            {component.optionalComponentFields?.length > 0 ? (
+                                        <MuiTableRow sx={{ backgroundColor: isDarkMode ? '#353535' : '#f5f5f5' }}>
+                                        {component.optionalComponentFields?.length > 0 ? (
                                                 component.optionalComponentFields.map((field, index) => (
-                                                    <MuiTableCell key={index}>
+                                                    <MuiTableCell
+                                                        key={index}
+                                                        sx={{
+                                                            fontWeight: 600,
+                                                            color: theme.palette.text.primary,
+                                                            padding: '8px 12px',
+                                                        }}
+                                                    >
                                                         {field.name.charAt(0).toUpperCase() + field.name.slice(1)}
                                                     </MuiTableCell>
                                                 ))
                                             ) : (
-                                                <MuiTableCell></MuiTableCell>
+                                                <MuiTableCell/>
                                             )}
                                         </MuiTableRow>
                                     </TableHead>
                                     <TableBody>
-                                        <MuiTableRow>
+                                        <MuiTableRow
+                                            sx={{
+                                                '&:nth-of-type(odd)': {
+                                                    backgroundColor: isDarkMode ? '#474747' : '#fafafa',
+                                                },
+                                            }}
+                                        >
                                             {component.optionalComponentFields?.length > 0 ? (
                                                 component.optionalComponentFields.map((field, index) => (
-                                                    <MuiTableCell key={index}>{field.value || ''}</MuiTableCell>
+                                                    <MuiTableCell
+                                                        key={index}
+                                                        sx={{
+                                                            padding: '8px 12px',
+                                                            color: theme.palette.text.primary,
+                                                        }}
+                                                    >
+                                                        {field.value || ''}
+                                                    </MuiTableCell>
                                                 ))
                                             ) : (
-                                                <MuiTableCell colSpan={1} align="center">No Additional Fields</MuiTableCell>
+                                                <MuiTableCell
+                                                    colSpan={1}
+                                                    align="center"
+                                                    sx={{ padding: '12px', color: theme.palette.text.secondary }}
+                                                >
+                                                    No Additional Fields
+                                                </MuiTableCell>
                                             )}
                                         </MuiTableRow>
 
