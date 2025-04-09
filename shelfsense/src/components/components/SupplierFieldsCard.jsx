@@ -78,7 +78,7 @@ const SupplierFieldsCard = ({ data, onValidation }) => {
         >
             {!showFields ? (
                 <Box textAlign="center">
-                    <Typography variant="body1">
+                    <Typography variant="body1" mb={1}>
                         Add Supplier Details
                     </Typography>
                     <Button variant="outlined" onClick={() => setShowFields(true)}>
@@ -90,7 +90,10 @@ const SupplierFieldsCard = ({ data, onValidation }) => {
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={2} mr={2}>
                         <Typography variant="h6">Supplier Fields</Typography>
                         <Button variant="outlined" onClick={() => setShowFields(false)}>
-                            Collapse
+                            <Typography variant="body2" align="center">
+                                Collapse<br />
+                                <Typography variant="caption" component="span">(Data Not Saved)</Typography>
+                            </Typography>
                         </Button>
                     </Box>
                     <Collapse in={showFields}>

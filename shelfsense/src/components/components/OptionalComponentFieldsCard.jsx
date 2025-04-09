@@ -98,7 +98,7 @@ const OptionalComponentFieldsCard = ({ data, onValidation }) => {
         <Box sx={{ mb: 3 }}>
             {!showFields ? (
                 <Box textAlign="center">
-                    <Typography variant="body1">Add Optional Fields</Typography>
+                    <Typography variant="body1" mb={1}>Add Optional Fields</Typography>
                     <Button variant="outlined" onClick={() => setShowFields(true)}>Add Fields</Button>
                 </Box>
             ) : (
@@ -106,7 +106,10 @@ const OptionalComponentFieldsCard = ({ data, onValidation }) => {
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={2} mr={2}>
                         <Typography variant="h6">Optional Component Fields</Typography>
                         <Button variant="outlined" onClick={() => setShowFields(false)}>
-                            Collapse
+                            <Typography variant="body2" align="center">
+                                Collapse<br />
+                                <Typography variant="caption" component="span">(Data Not Saved)</Typography>
+                            </Typography>
                         </Button>
                     </Box>
                     <Collapse in={showFields}>
