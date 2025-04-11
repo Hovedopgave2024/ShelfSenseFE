@@ -1,5 +1,6 @@
 import {Box, TextField, Autocomplete, Card, CardContent, Typography, Button} from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { da } from 'date-fns/locale';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useEffect, useState } from "react";
@@ -135,7 +136,7 @@ const StatisticsPage = () => {
     }, [salesOrders, selectedProducts, selectedComponents, startDate, endDate]);
 
     return (
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={da}>
             <Box sx={{ display: 'flex' }}>
                 <Sidebar open={open} toggleDrawer={toggleDrawer} />
                 <Box

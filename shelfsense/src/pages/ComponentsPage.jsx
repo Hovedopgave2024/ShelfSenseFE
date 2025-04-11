@@ -2,10 +2,10 @@ import { Container, Typography, Box, Button } from '@mui/material';
 import ComponentTable from '../components/components/ComponentsTable';
 import {useState} from "react";
 import {Sidebar} from "../components/sidebar/sidebar.jsx";
-import ComponentsCreateModal from "../components/components/ComponentsCreateModal.jsx";
-import ComponentsEditModal from "../components/components/ComponentsEditModal.jsx";
 import ComponentsAddStockModal from "../components/components/ComponentsAddStockModal.jsx";
 import {useLocation, useNavigate} from "react-router-dom";
+import ComponentsCreateModal from "../components/components/ComponentsCreateModal.jsx";
+import ComponentsEditModal from "../components/components/ComponentsEditModal.jsx";
 
 const ComponentsPage = () => {
     const [open, setOpen] = useState(false);

@@ -88,7 +88,6 @@ const SalesOrdersCreateCard = () => {
         calculateTotalPrice(updatedProducts);
     };
 
-
     const calculateTotalPrice = (selectedProducts) => {
         let total = 0;
 
