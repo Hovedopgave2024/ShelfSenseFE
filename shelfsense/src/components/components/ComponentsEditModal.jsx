@@ -15,16 +15,38 @@ import ConfirmDialog from "../confirmDialog/ConfirmDialog.jsx";
 
 const ComponentsEditModal = ({ open, onClose, component }) => {
 
-    // BUGS: 1. STATE FROM OPENING UPDATE COMPONENT MODAL IS NOT WORKING. 2. SUPPLIERSTOCK SHOULD NOT BE SET I FRONTEND. BUG WITH SUPPLIER STOCK STATUS.
+    const defaultComponentFormData = {
+        name: '',
+        price: '',
+        stock: '',
+        safetyStock: '',
+        safetyStockRop: '',
+    };
+
+    const defaultSupplierFormData = {
+        name: '',
+        manufacturer: '',
+        manufacturerPart: '',
+        safetyStock: '',
+        safetyStockRop: '',
+        supplierPart: '',
+    };
+
+    const defaultOCFFormData = [
+        {
+            name: '',
+            value: '',
+        }
+    ];
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const updateComponentInStore = useComponentsStore((state) => state.updateComponent);
     const deleteComponentInStore = useComponentsStore((state) => state.deleteComponent);
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
 
-    const [componentFormData, setComponentFormData] = useState([]);
-    const [supplierFormData, setSupplierFormData] = useState([]);
-    const [OCFFormData, setOCFFormData] = useState([]);
+    const [componentFormData, setComponentFormData] = useState(defaultComponentFormData);
+    const [supplierFormData, setSupplierFormData] = useState(defaultSupplierFormData);
+    const [OCFFormData, setOCFFormData] = useState(defaultOCFFormData);
 
     const [onComponentValidation, setOnComponentValidation] = useState(null);
     const [onSupplierValidation, setOnSupplierValidation] = useState(null);
@@ -129,24 +151,9 @@ const ComponentsEditModal = ({ open, onClose, component }) => {
             );
         } else {
             // Clear form data on modal close
-            setComponentFormData({
-                name: '',
-                price: '',
-                stock: '',
-                safetyStock: '',
-                safetyStockRop: '',
-            });
-
-            setSupplierFormData({
-                name: '',
-                manufacturer: '',
-                manufacturerPart: '',
-                safetyStock: '',
-                safetyStockRop: '',
-                supplierPart: '',
-            });
-
-            setOCFFormData([{ name: '', value: '' }]);
+            setComponentFormData(defaultComponentFormData);
+            setSupplierFormData(defaultSupplierFormData);
+            setOCFFormData(defaultOCFFormData);
         }
     }, [open, component]);
 

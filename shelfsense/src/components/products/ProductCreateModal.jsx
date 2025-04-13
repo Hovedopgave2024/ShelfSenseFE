@@ -239,7 +239,7 @@ function CreateProductModal({ open, onClose }) {
                                             )}
                                             // How each option is displayed
                                             getOptionLabel={(option) =>
-                                                `${option.name} (${option.manufacturerPart})`
+                                                `${option.name} (${option.supplier ? option.supplier.manufacturerPart : 'No Supplier'})`
                                             }
                                             // Match the selected component by ID
                                             value={
