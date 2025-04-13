@@ -13,7 +13,8 @@ const ComponentsTable = ({ onEdit, onAddStock, productComponentIds }) => {
     const [components, setComponents] = useState([]);
     const [filteredComponents, setFilteredComponents] = useState([]);
     const stockStatuses = [...new Set(components.map(component => component.stockStatus))];
-    const columnTitles = ["Expand", "Name", "Price", "Stock Status", "Stock", "Safety Stock", "Reorder Point"];
+    const columnTitles = ["Expand", "Name", "Price", "Stock Status", "Stock", "Safety Stock", "Reorder Point", "Supplier", "Supplier Stock Status", "Supplier Stock", "Actions"];
+    const componentSortingOptions = ["Name", "Price", "Stock Status", "Stock", "Safety Stock", "Reorder Point"];
     const theme = useTheme();
 
     const handleChangePage = (event, newPage) => {
@@ -57,7 +58,7 @@ const ComponentsTable = ({ onEdit, onAddStock, productComponentIds }) => {
                     { key: 'stockStatus', label: 'Stock Status', values: stockStatuses },
                 ]}
                 initialSortKey={'name'}
-                sortOptions={columnTitles.map((title) => ({
+                sortOptions={componentSortingOptions.map((title) => ({
                     key: title.toLowerCase(),
                     label: title,
                 }))}
