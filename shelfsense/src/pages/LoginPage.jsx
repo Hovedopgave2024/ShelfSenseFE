@@ -5,6 +5,11 @@ import { login } from '../services/user/login.js';
 import { useNavigate } from 'react-router-dom';
 import useSessionStore from '../stores/useSessionStore';
 import useSnackbarStore from '../stores/useSnackbarStore';
+import useComponentsStore from "../stores/useComponentsStore.js";
+import useProductsStore from "../stores/useProductsStore.js";
+import useSalesOrdersStore from "../stores/useSalesOrdersStore.js";
+import useApiUpdateStore from "../stores/useApiUpdateStore.js";
+import calculateStatus from "../util/component/calculateStockStatus.js";
 
 const LoginPage = () => {
     const [name, setName] = useState('');
@@ -13,6 +18,10 @@ const LoginPage = () => {
     const navigate = useNavigate();
     const setGlobalUser = useSessionStore((state) => state.setUser);
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
+    const setComponents = useComponentsStore((state) => state.setComponents);
+    const setProducts = useProductsStore((state) => state.setProducts);
+    const setSalesOrders = useSalesOrdersStore((state) => state.setSalesOrders);
+    const setApiUpdate = useApiUpdateStore((state) => state.setApiUpdate);
 
     const handleNavigation = () => {
         navigate('/products');
@@ -36,6 +45,30 @@ const LoginPage = () => {
                 setLoading(false);
                 return;
             }
+
+            const processedComponents = dataFetched.components.map(component => ({
+                ...component,
+                stockStatus: calculateStatus(
+                    parseInt(component.stock),
+                    parseInt(component.safetyStock),
+                    parseInt(component.safetyStockRop)
+                ),
+                supplier: {
+                    ...component.supplier,
+                    stockStatus: component.supplier?.stock != null
+                        ? calculateStatus(
+                            parseInt(component.supplier.stock),
+                            parseInt(component.supplier.safetyStock),
+                            parseInt(component.supplier.safetyStockRop)
+                        )
+                        : null
+                }
+            }));
+
+            setComponents(processedComponents);
+            setProducts(dataFetched.products);
+            setSalesOrders(dataFetched.salesOrders);
+            setApiUpdate(dataFetched.apiUpdate);
 
             setLoading(false);
 
