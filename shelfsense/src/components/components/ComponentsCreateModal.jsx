@@ -55,7 +55,7 @@ const ComponentsCreateModal = ({ open, onClose }) => {
         ]);
 
         if (!componentResult.isValid || !supplierResult.isValid || !ocfResult.isValid) {
-            console.log({
+            console.error({
                 componentErrors: componentResult.errors,
                 supplierErrors: supplierResult.errors,
                 ocfErrors: ocfResult.errors,

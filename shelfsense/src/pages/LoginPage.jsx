@@ -101,10 +101,6 @@ const LoginPage = () => {
                 getSalesOrders.length === dataLength.salesOrders;
 
             if (ready) {
-                console.log('✅ All data populated in Zustand. Navigating...');
-                console.log("Components in store on login: ", getComponents);
-                console.log("Products in store on login: ", getProducts);
-                console.log("Sales Orders in store on login: ", getSalesOrders);
                 setLoading(false);
                 setExpectingData(false);
                 navigate('/products');

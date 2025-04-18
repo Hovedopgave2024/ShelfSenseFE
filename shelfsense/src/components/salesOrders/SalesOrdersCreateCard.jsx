@@ -97,8 +97,6 @@ const SalesOrdersCreateCard = () => {
                 total += (parseFloat(selectedProduct.price) || 0) * (parseInt(product.quantity) || 0);
             }
         }) : null;
-
-        console.log("total:", total);
         setTotalPrice(total);
     };
 

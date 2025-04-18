@@ -121,8 +121,6 @@ const StatisticsPage = () => {
             )
             setPiaData(productUsage);
 
-            console.log(pieData)
-
             const monthlyStockUsage = calculateMonthlyStockUsage(
                 salesOrders,
                 products,

@@ -60,7 +60,7 @@ const ComponentsEditModal = ({ open, onClose, component }) => {
         ]);
 
         if (!componentResult.isValid || !supplierResult.isValid || !ocfResult.isValid) {
-            console.log({
+            console.error({
                 componentErrors: componentResult.errors,
                 supplierErrors: supplierResult.errors,
                 ocfErrors: ocfResult.errors,
