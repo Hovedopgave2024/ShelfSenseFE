@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { Box, Button, Card, CardContent, TextField, Typography, CircularProgress } from '@mui/material';
 import { fetchAllData } from '../services/user/fetchAllData.js';
 import { login } from '../services/user/login.js';
@@ -15,17 +15,23 @@ const LoginPage = () => {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [expectingData, setExpectingData] = useState(false);
+    const [dataLength, setDataLength] = useState({
+        components: 0,
+        products: 0,
+        salesOrders: 0,
+        apiUpdate: 0,
+    });
     const navigate = useNavigate();
     const setGlobalUser = useSessionStore((state) => state.setUser);
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
+    const getComponents = useComponentsStore((state) => state.components);
     const setComponents = useComponentsStore((state) => state.setComponents);
+    const getProducts = useProductsStore((state) => state.products);
     const setProducts = useProductsStore((state) => state.setProducts);
+    const getSalesOrders = useSalesOrdersStore((state) => state.salesOrders);
     const setSalesOrders = useSalesOrdersStore((state) => state.setSalesOrders);
     const setApiUpdate = useApiUpdateStore((state) => state.setApiUpdate);
-
-    const handleNavigation = () => {
-        navigate('/products');
-    };
 
     const handleLogin = async () => {
         setLoading(true);
@@ -70,9 +76,14 @@ const LoginPage = () => {
             setSalesOrders(dataFetched.salesOrders);
             setApiUpdate(dataFetched.apiUpdate);
 
-            setLoading(false);
+            setDataLength({
+                components: processedComponents.length,
+                products: dataFetched.products.length,
+                salesOrders: dataFetched.salesOrders.length,
+                apiUpdate: dataFetched.apiUpdate,
+            });
 
-            handleNavigation();
+            setExpectingData(true);
 
         } catch (error) {
             console.error('Unexpected error during login process:', error);
@@ -81,6 +92,25 @@ const LoginPage = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (expectingData) {
+            const ready =
+                getComponents.length === dataLength.components &&
+                getProducts.length === dataLength.products &&
+                getSalesOrders.length === dataLength.salesOrders;
+
+            if (ready) {
+                console.log('✅ All data populated in Zustand. Navigating...');
+                console.log("Components in store on login: ", getComponents);
+                console.log("Products in store on login: ", getProducts);
+                console.log("Sales Orders in store on login: ", getSalesOrders);
+                setLoading(false);
+                setExpectingData(false);
+                navigate('/products');
+            }
+        }
+    }, [expectingData, dataLength]);
 
     return (
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
