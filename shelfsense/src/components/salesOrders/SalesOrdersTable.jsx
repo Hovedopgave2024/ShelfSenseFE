@@ -26,7 +26,12 @@ const SalesOrdersTable = ({ onDelete }) => {
         { key: "createdDate", label: "Created Date" },
         { key: "price", label: "Price" },
     ];
-    
+    const searchOptions = [
+        { key: "createdDate", label: "Created Date" },
+        { key: "price", label: "Price" },
+    ]
+    // products i en sales order har ikke navn... så søgning på produkt navn bliver noget rod
+
     const theme = useTheme();
 
     const columnTitles = ["Created Date", "Price", "Products", "Actions"];
@@ -47,7 +52,7 @@ const SalesOrdersTable = ({ onDelete }) => {
                 onUpdate={setFilteredSalesOrders}
                 filterOptions={[]} // No filtering right now
                 sortOptions={sortOptions}
-                searchOptions={[]} // Searching per sales order, not per product
+                searchOptions={searchOptions} // Searching per sales order, not per product
             />
             <Paper
                 sx={{
