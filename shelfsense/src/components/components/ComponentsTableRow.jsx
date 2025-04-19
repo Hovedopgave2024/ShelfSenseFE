@@ -131,59 +131,59 @@ const ComponentsTableRow = ({ component, onEdit, onAddStock }) => {
                                     backgroundColor: theme.palette.background.paper,
                                 }}
                             >
-                            <Table size="small">
-                                    <TableHead>
-                                        <MuiTableRow sx={{ backgroundColor: isDarkMode ? '#353535' : '#f5f5f5' }}>
+                                <Table size="small">
+                                        <TableHead>
+                                            <MuiTableRow sx={{ backgroundColor: isDarkMode ? '#353535' : '#f5f5f5' }}>
+                                                {component.supplier ? (
+                                                    additionalSupplierFields.map(({ label }) => (
+                                                        <MuiTableCell
+                                                            key={label}
+                                                            sx={{
+                                                                fontWeight: 600,
+                                                                color: theme.palette.text.primary,
+                                                                padding: '8px 12px',
+                                                            }}
+                                                        >
+                                                            {label}
+                                                        </MuiTableCell>
+                                                    ))
+                                                ) : (
+                                                    <MuiTableCell/>
+                                                )}
+                                            </MuiTableRow>
+                                        </TableHead>
+                                    <TableBody>
+                                        <MuiTableRow
+                                            sx={{
+                                                '&:nth-of-type(odd)': {
+                                                    backgroundColor: isDarkMode ? '#474747' : '#fafafa',
+                                                },
+                                            }}
+                                        >
                                             {component.supplier ? (
-                                                additionalSupplierFields.map(({ label }) => (
+                                                additionalSupplierFields.map(({ key }) => (
                                                     <MuiTableCell
-                                                        key={label}
+                                                        key={key}
                                                         sx={{
-                                                            fontWeight: 600,
-                                                            color: theme.palette.text.primary,
                                                             padding: '8px 12px',
+                                                            color: theme.palette.text.primary,
                                                         }}
                                                     >
-                                                        {label}
+                                                        {component.supplier?.[key] || ''}
                                                     </MuiTableCell>
                                                 ))
                                             ) : (
-                                                <MuiTableCell/>
+                                                <MuiTableCell
+                                                    colSpan={1}
+                                                    align="center"
+                                                    sx={{ padding: '12px', color: theme.palette.text.secondary }}
+                                                >
+                                                    No Supplier
+                                                </MuiTableCell>
                                             )}
                                         </MuiTableRow>
-                                    </TableHead>
-                                <TableBody>
-                                    <MuiTableRow
-                                        sx={{
-                                            '&:nth-of-type(odd)': {
-                                                backgroundColor: isDarkMode ? '#474747' : '#fafafa',
-                                            },
-                                        }}
-                                    >
-                                        {component.supplier ? (
-                                            additionalSupplierFields.map(({ key }) => (
-                                                <MuiTableCell
-                                                    key={key}
-                                                    sx={{
-                                                        padding: '8px 12px',
-                                                        color: theme.palette.text.primary,
-                                                    }}
-                                                >
-                                                    {component.supplier?.[key] || ''}
-                                                </MuiTableCell>
-                                            ))
-                                        ) : (
-                                            <MuiTableCell
-                                                colSpan={1}
-                                                align="center"
-                                                sx={{ padding: '12px', color: theme.palette.text.secondary }}
-                                            >
-                                                No Supplier
-                                            </MuiTableCell>
-                                        )}
-                                    </MuiTableRow>
-                                </TableBody>
-                            </Table>
+                                    </TableBody>
+                                </Table>
                             </TableContainer>
 
                             {/* Optional Fields Table */}

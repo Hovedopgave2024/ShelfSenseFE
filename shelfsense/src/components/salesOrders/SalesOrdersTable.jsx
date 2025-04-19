@@ -22,6 +22,10 @@ const SalesOrdersTable = ({ onDelete }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [filteredSalesOrders, setFilteredSalesOrders] = useState([]);
+    const sortOptions = [
+        { key: "createdDate", label: "Created Date" },
+        { key: "price", label: "Price" },
+    ];
     
     const theme = useTheme();
 
@@ -42,10 +46,7 @@ const SalesOrdersTable = ({ onDelete }) => {
                 data={salesOrders}
                 onUpdate={setFilteredSalesOrders}
                 filterOptions={[]} // No filtering right now
-                sortOptions={columnTitles.map((title) => ({
-                    key: title.toLowerCase(),
-                    label: title,
-                }))}
+                sortOptions={sortOptions}
                 searchOptions={[]} // Searching per sales order, not per product
             />
             <Paper
