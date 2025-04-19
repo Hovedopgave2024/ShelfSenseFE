@@ -76,7 +76,7 @@ function ProductModal({ open, onClose, product }) {
                             }
 
                             const stockStatusValue = component.stockStatus || Infinity; // Use Infinity if no stockStatus
-                            const supplierStockStatusValue = component.supplier.stockStatus || Infinity; // Use Infinity if no supplierStockStatus
+                            const supplierStockStatusValue = component.supplier?.stockStatus || Infinity; // Use Infinity if no supplierStockStatus
 
                             return {
                                 productComponent,
@@ -103,7 +103,7 @@ function ProductModal({ open, onClose, product }) {
 
                         // Retrieve stockStatus and supplierStockStatus
                         const stockStatusValue = component.stockStatus;
-                        const supplierStockStatusValue = component.supplier.stockStatus;
+                        const supplierStockStatusValue = component.supplier?.stockStatus;
 
                         // Get status details using statusLabel
                         const stockStatus = stockStatusValue

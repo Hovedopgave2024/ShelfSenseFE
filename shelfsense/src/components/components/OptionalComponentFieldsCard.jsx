@@ -115,7 +115,7 @@ const OptionalComponentFieldsCard = ({ data, onValidation }) => {
                     <Collapse in={showFields}>
                         <Grid container spacing={2}>
                             {selectedComponents.map((item, index) => (
-                                <Grid container xs={12} spacing={1} key={index} alignItems="center">
+                                <Grid container item xs={12} spacing={1} key={index} alignItems="center">
                                     <Grid item xs={5}>
                                         <TextField
                                             label="Name *"
