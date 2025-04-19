@@ -21,7 +21,6 @@ const StatisticsPage = () => {
 
     const salesOrdersData= useSalesOrdersStore((state) => state.salesOrders);
 
-
     const [selectedProducts, setSelectedProducts] = useState([]);
 
     const [open, setOpen] = useState(false);
@@ -40,7 +39,7 @@ const StatisticsPage = () => {
 
     const [totalRevenue, setTotalRevenue] = useState(0);
 
-    const [pieData, setPiaData] = useState([]);
+    const [pieData, setPieData] = useState([]);
 
 
     const toggleDrawer = () => {
@@ -67,7 +66,7 @@ const StatisticsPage = () => {
                 null,
                 products
             )
-            setPiaData(productUsage);
+            setPieData(productUsage);
 
             // Calculate initial chart data with all products and components
             const monthlyEarnings = calculateMonthlyEarnings(
@@ -119,7 +118,7 @@ const StatisticsPage = () => {
                 endDate,
                 products
             )
-            setPiaData(productUsage);
+            setPieData(productUsage);
 
             const monthlyStockUsage = calculateMonthlyStockUsage(
                 salesOrders,
@@ -180,15 +179,21 @@ const StatisticsPage = () => {
                     </Box>
 
                     {/* Filters */}
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 3 }}>
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: { xs: 'column', md: 'row' },
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginBottom: 3
+                    }}>
 
                         {/* Left Side (Bigger & Centered Date Pickers) */}
                         <Box sx={{
                             display: 'flex',
                             flexDirection: 'column',
-                            alignItems: 'center',  // Center Date Pickers
-                            gap: 3,  // Add more spacing
-                            width: '50%'
+                            alignItems: 'center',
+                            gap: 3,
+                            width: { xs: '100%', sm: '80%', md: '50%' },
                         }}>
                             <DatePicker
                                 label="Start Date"
@@ -242,7 +247,6 @@ const StatisticsPage = () => {
                                     setEndDate(null);
                                 }}
                                 sx={{
-                                    width: '39%',
                                     height: '40px',
                                     fontSize: '1rem',
                                 }}
@@ -252,7 +256,13 @@ const StatisticsPage = () => {
                         </Box>
 
                         {/* Right Side (Pie Chart) */}
-                        <Box sx={{ width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <Box sx={{
+                            width: { xs: '100%', sm: '80%', md: '50%' },
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            paddingTop: '1rem',
+                        }}>
                             {/* Headline */}
                             <Typography variant="h6" sx={{ marginBottom: 2, fontWeight: 'bold', mr: 10 }}>
                                 Yearly Product Usage
