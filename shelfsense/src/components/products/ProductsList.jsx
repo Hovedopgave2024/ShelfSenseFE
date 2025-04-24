@@ -19,9 +19,7 @@ const ProductsList = () => {
             <DataManipulationBar
                 data={products}
                 onUpdate={setFilteredProducts}
-                filterOptions={[
-                    { key: 'name', label: 'Name', values: ["Hello world"]    },
-                ]}
+                filterOptions={[]}
                 sortOptions={productSortParameters.map((title) => ({
                     key: title.toLowerCase(),
                     label: title,

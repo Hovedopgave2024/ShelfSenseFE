@@ -1,22 +1,37 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { Box, Button, Card, CardContent, TextField, Typography, CircularProgress } from '@mui/material';
 import { fetchAllData } from '../services/user/fetchAllData.js';
 import { login } from '../services/user/login.js';
 import { useNavigate } from 'react-router-dom';
 import useSessionStore from '../stores/useSessionStore';
 import useSnackbarStore from '../stores/useSnackbarStore';
+import useComponentsStore from "../stores/useComponentsStore.js";
+import useProductsStore from "../stores/useProductsStore.js";
+import useSalesOrdersStore from "../stores/useSalesOrdersStore.js";
+import useApiUpdateStore from "../stores/useApiUpdateStore.js";
+import calculateStatus from "../util/component/calculateStockStatus.js";
 
 const LoginPage = () => {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [expectingData, setExpectingData] = useState(false);
+    const [dataLength, setDataLength] = useState({
+        components: 0,
+        products: 0,
+        salesOrders: 0,
+        apiUpdate: 0,
+    });
     const navigate = useNavigate();
     const setGlobalUser = useSessionStore((state) => state.setUser);
     const showSnackbar = useSnackbarStore((state) => state.showSnackbar);
-
-    const handleNavigation = () => {
-        navigate('/products');
-    };
+    const getComponents = useComponentsStore((state) => state.components);
+    const setComponents = useComponentsStore((state) => state.setComponents);
+    const getProducts = useProductsStore((state) => state.products);
+    const setProducts = useProductsStore((state) => state.setProducts);
+    const getSalesOrders = useSalesOrdersStore((state) => state.salesOrders);
+    const setSalesOrders = useSalesOrdersStore((state) => state.setSalesOrders);
+    const setApiUpdate = useApiUpdateStore((state) => state.setApiUpdate);
 
     const handleLogin = async () => {
         setLoading(true);
@@ -37,9 +52,38 @@ const LoginPage = () => {
                 return;
             }
 
-            setLoading(false);
+            const processedComponents = dataFetched.components.map(component => ({
+                ...component,
+                stockStatus: calculateStatus(
+                    parseInt(component.stock),
+                    parseInt(component.safetyStock),
+                    parseInt(component.safetyStockRop)
+                ),
+                supplier: {
+                    ...component.supplier,
+                    stockStatus: component.supplier?.stock != null
+                        ? calculateStatus(
+                            parseInt(component.supplier.stock),
+                            parseInt(component.supplier.safetyStock),
+                            parseInt(component.supplier.safetyStockRop)
+                        )
+                        : null
+                }
+            }));
 
-            handleNavigation();
+            setComponents(processedComponents);
+            setProducts(dataFetched.products);
+            setSalesOrders(dataFetched.salesOrders);
+            setApiUpdate(dataFetched.apiUpdate);
+
+            setDataLength({
+                components: processedComponents.length,
+                products: dataFetched.products.length,
+                salesOrders: dataFetched.salesOrders.length,
+                apiUpdate: dataFetched.apiUpdate,
+            });
+
+            setExpectingData(true);
 
         } catch (error) {
             console.error('Unexpected error during login process:', error);
@@ -48,6 +92,21 @@ const LoginPage = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (expectingData) {
+            const ready =
+                getComponents.length === dataLength.components &&
+                getProducts.length === dataLength.products &&
+                getSalesOrders.length === dataLength.salesOrders;
+
+            if (ready) {
+                setLoading(false);
+                setExpectingData(false);
+                navigate('/products');
+            }
+        }
+    }, [expectingData, dataLength]);
 
     return (
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">

@@ -38,7 +38,7 @@ const ProductsCard = ({ product }) => {
     // Extract all supplierStockStatus values from the product's components
     const supplierStockStatuses = product.productComponentList.map((productComponent) => {
         const component = components.find(c => c.id === productComponent.componentId);
-        return component ? component.supplier.stockStatus : null;
+        return component?.supplier?.stockStatus;
     }).filter(status => status !== null);
 
     // Determine the lowest (most critical) stockStatus

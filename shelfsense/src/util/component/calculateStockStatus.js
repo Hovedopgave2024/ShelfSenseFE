@@ -1,10 +1,6 @@
 const calculateStatus = (stock, safetyStock, safetyStockROP) => {
     const median = (safetyStock + safetyStockROP) / 2;
 
-    console.log("stock: " + stock);
-    console.log("safetyStock: " + safetyStock);
-    console.log("safetyStockROP: " + safetyStockROP);
-
     if (!stock || !safetyStock || !safetyStockROP) {
         return 0;
     }

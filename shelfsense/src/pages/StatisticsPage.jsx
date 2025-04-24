@@ -21,8 +21,7 @@ const StatisticsPage = () => {
 
     const salesOrdersData= useSalesOrdersStore((state) => state.salesOrders);
 
-
-    const [selectedProducts, setSelectedProducts] = useState([]);
+    //const [selectedProducts, setSelectedProducts] = useState([]);
 
     const [open, setOpen] = useState(false);
 
@@ -40,16 +39,16 @@ const StatisticsPage = () => {
 
     const [totalRevenue, setTotalRevenue] = useState(0);
 
-    const [pieData, setPiaData] = useState([]);
+    const [pieData, setPieData] = useState([]);
 
 
     const toggleDrawer = () => {
         setOpen((prevOpen) => !prevOpen);
     };
 
-    /* const handleProductChange = (event, newValue) => {
+    /*const handleProductChange = (event, newValue) => {
         setSelectedProducts(newValue);
-    }; */
+    };*/
 
     const handleComponentChange = (event, newValue) => {
         setSelectedComponents(newValue);
@@ -67,7 +66,7 @@ const StatisticsPage = () => {
                 null,
                 products
             )
-            setPiaData(productUsage);
+            setPieData(productUsage);
 
             // Calculate initial chart data with all products and components
             const monthlyEarnings = calculateMonthlyEarnings(
@@ -119,9 +118,7 @@ const StatisticsPage = () => {
                 endDate,
                 products
             )
-            setPiaData(productUsage);
-
-            console.log(pieData)
+            setPieData(productUsage);
 
             const monthlyStockUsage = calculateMonthlyStockUsage(
                 salesOrders,
@@ -133,7 +130,7 @@ const StatisticsPage = () => {
             );
             setStockUsageData(monthlyStockUsage);
         }
-    }, [salesOrders, selectedProducts, selectedComponents, startDate, endDate]);
+    }, [salesOrders, selectedComponents, startDate, endDate]);
 
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={da}>
@@ -147,7 +144,7 @@ const StatisticsPage = () => {
                         flexDirection: 'column',
                     }}
                 >
-                    {/* Cards Container */}
+                    {/* Cards Top Bar Container */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                         <Card sx={{ width: '30%', borderRadius: "20px 0 0 20px" }}>
                             <CardContent>
@@ -181,16 +178,22 @@ const StatisticsPage = () => {
                         </Card>
                     </Box>
 
-                    {/* Filters */}
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 3 }}>
+                    {/* Date picker and products pie chart box */}
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: { xs: 'column', md: 'row' },
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginBottom: 3
+                    }}>
 
-                        {/* Left Side (Bigger & Centered Date Pickers) */}
+                        {/* Left Side (Date Pickers) */}
                         <Box sx={{
                             display: 'flex',
                             flexDirection: 'column',
-                            alignItems: 'center',  // Center Date Pickers
-                            gap: 3,  // Add more spacing
-                            width: '50%'
+                            alignItems: 'center',
+                            gap: 3,
+                            width: { xs: '100%', sm: '80%', md: '50%' },
                         }}>
                             <DatePicker
                                 label="Start Date"
@@ -244,7 +247,6 @@ const StatisticsPage = () => {
                                     setEndDate(null);
                                 }}
                                 sx={{
-                                    width: '39%',
                                     height: '40px',
                                     fontSize: '1rem',
                                 }}
@@ -254,7 +256,13 @@ const StatisticsPage = () => {
                         </Box>
 
                         {/* Right Side (Pie Chart) */}
-                        <Box sx={{ width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <Box sx={{
+                            width: { xs: '100%', sm: '80%', md: '50%' },
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            paddingTop: '1rem',
+                        }}>
                             {/* Headline */}
                             <Typography variant="h6" sx={{ marginBottom: 2, fontWeight: 'bold', mr: 10 }}>
                                 Yearly Product Usage
@@ -278,6 +286,7 @@ const StatisticsPage = () => {
                         </Box>
                     </Box>
 
+                    {/* Monthly Revenue Bar Chart */}
                     <Box
                         sx={{
                             flexGrow: 1,
@@ -291,6 +300,8 @@ const StatisticsPage = () => {
                             margin={{ left: 80 }}
                         />
                     </Box>
+
+                    {/* Components Usage Bar Chart */}
                     <Box>
                         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                             <Autocomplete
@@ -300,7 +311,7 @@ const StatisticsPage = () => {
                                 value={selectedComponents}
                                 onChange={handleComponentChange}
                                 renderInput={(params) => (
-                                    <TextField {...params} label="Components" placeholder="Select components" />
+                                    <TextField {...params} label="Select Components" placeholder="Select components" />
                                 )}
                                 sx={{ width: 300, marginRight: 2 }}
                             />
@@ -316,7 +327,6 @@ const StatisticsPage = () => {
                                 xAxis={[{ dataKey: 'month', scaleType: 'band' }]}
                                 series={[
                                     { dataKey: 'componentUsage', label: 'Monthly Component Usage', color: '#1976d2' }, // Blue
-                                    { dataKey: 'productUsage', label: 'Monthly Product Usage', color: '#d32f2f' }, // Red
                                 ]}
                                 height={400}
                                 dataset={stockUsageData}
@@ -325,6 +335,29 @@ const StatisticsPage = () => {
 
                         </Box>
                     </Box>
+
+                    {/*
+                        Products Usage Bar Chart
+                        <Box>
+                            <Box
+                                sx={{
+                                    flexGrow: 1,
+                                    marginTop: 4,
+                                }}
+                            >
+                                <LineChart
+                                    xAxis={[{ dataKey: 'month', scaleType: 'band' }]}
+                                    series={[
+                                        { dataKey: 'productUsage', label: 'Monthly Product Usage', color: '#d32f2f' }, // Red
+                                    ]}
+                                    height={400}
+                                    dataset={stockUsageData}
+                                    margin={{ left: 80 }}
+                                />
+
+                            </Box>
+                        </Box>
+                    */ }
                 </Box>
             </Box>
         </LocalizationProvider>

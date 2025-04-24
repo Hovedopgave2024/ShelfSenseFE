@@ -12,10 +12,9 @@ const ComponentsTable = ({ onEdit, onAddStock, productComponentIds }) => {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [components, setComponents] = useState([]);
     const [filteredComponents, setFilteredComponents] = useState([]);
-    const types = [...new Set(components.map(component => component.type))];
-    const manufacturers = [...new Set(components.map(component => component.supplier?.manufacturer))];
-    const suppliers = [...new Set(components.map(component => component.supplier?.name))];
+    const stockStatuses = [...new Set(components.map(component => component.stockStatus))];
     const columnTitles = ["Expand", "Name", "Price", "Stock Status", "Stock", "Safety Stock", "Reorder Point", "Supplier", "Supplier Stock Status", "Supplier Stock", "Actions"];
+    const componentSortingOptions = ["Name", "Price", "Stock Status", "Stock", "Safety Stock", "Reorder Point"];
     const theme = useTheme();
 
     const handleChangePage = (event, newPage) => {
@@ -56,18 +55,15 @@ const ComponentsTable = ({ onEdit, onAddStock, productComponentIds }) => {
                 data={components}
                 onUpdate={setFilteredComponents}
                 filterOptions={[
-                    { key: 'type', label: 'Type', values: types },
-                    { key: 'manufacturer', label: 'Manufacturer', values: manufacturers },
-                    { key: 'supplier', label: 'Supplier', values: suppliers },
+                    { key: 'stockStatus', label: 'Stock Status', values: stockStatuses },
                 ]}
                 initialSortKey={'name'}
-                sortOptions={columnTitles.map((title) => ({
+                sortOptions={componentSortingOptions.map((title) => ({
                     key: title.toLowerCase(),
                     label: title,
                 }))}
                 searchOptions={[
                     { key: 'name', label: 'Name' },
-                    { key: 'component.supplier.manufacturerPart', label: 'Manufacturer Part' },
                 ]}
                 onClick={handleRemoveFilter}
             />

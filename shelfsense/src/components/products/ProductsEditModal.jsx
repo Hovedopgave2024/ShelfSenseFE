@@ -293,7 +293,7 @@ function UpdateProductModal({ open, onClose, product }) {
                                             )
                                         )}
                                         getOptionLabel={(option) =>
-                                            `${option.name} (${option.manufacturerPart})`
+                                            `${option.name} (${option.supplier ? option.supplier.manufacturerPart : 'No Supplier'})`
                                         }
                                         isOptionEqualToValue={(option, value) =>
                                             option.id === value.id
